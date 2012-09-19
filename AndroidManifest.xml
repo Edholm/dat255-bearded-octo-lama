@@ -23,6 +23,7 @@
         
         <activity
             android:name=".SettingsActivity"
+            android:exported="false"
             android:label="activity_settings" >
             <intent-filter>
                 <action android:name="android.intent.action.SETTINGS" />
@@ -33,6 +34,7 @@
         
         <activity
             android:name=".NotificationActivity"
+            android:exported="false"
             android:label="activity_notification" >
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFICATION" />
