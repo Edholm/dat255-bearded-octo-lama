@@ -3,12 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <AnalogClock
+        android:id="@+id/analogClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+        android:layout_marginTop="58dp" />
+
+    <Button
+        android:id="@+id/snoozeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/analogClock"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Leave me alone!" />
+    
+    <Button
+        android:id="@+id/alarmOffButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/snoozeButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="Im awake already, shaddup!" />
 
 </RelativeLayout>
