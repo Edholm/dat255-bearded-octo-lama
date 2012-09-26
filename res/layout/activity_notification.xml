@@ -12,23 +12,21 @@
         android:layout_weight="70" >
         
         <TextView
-	        android:id="@+id/currentTime"
+	        android:id="@id/currentTime"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"
 	        android:layout_centerHorizontal="true"
 	        android:textColor="@color/white"
-	        android:textSize="70sp" 
-	        android:text="13:37"/>
+	        android:textSize="70sp"/>
     
     	<TextView
-	        android:id="@+id/currentDate"
+	        android:id="@id/currentDate"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:layout_centerHorizontal="true"
 	        android:layout_below="@+id/currentTime"
 	        android:textColor="@color/white"
-	        android:text="26 Sep, 2012"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
     
     </RelativeLayout>
