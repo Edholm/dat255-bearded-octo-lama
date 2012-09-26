@@ -57,7 +57,7 @@
         android:layout_below="@+id/currentDate"
         android:layout_marginTop="130dp"
         android:textColor="@color/white"
-        android:text="Nästa larm:"
+        android:text="@string/next_alarm"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <TextView
@@ -67,7 +67,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/nextAlarm"
         android:textColor="@color/white"
-        android:text="08:00 om 18 timmar"
+        android:text="08:00, in 18 hours"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
