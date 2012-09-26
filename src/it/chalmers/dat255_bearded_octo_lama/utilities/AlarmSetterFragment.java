@@ -5,6 +5,7 @@ import it.chalmers.dat255_bearded_octo_lama.AlarmReceiver;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
@@ -25,7 +26,6 @@ public class AlarmSetterFragment extends DialogFragment implements OnTimeSetList
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int minutes = cal.get(Calendar.MINUTE);
@@ -35,7 +35,6 @@ public class AlarmSetterFragment extends DialogFragment implements OnTimeSetList
 	
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 		// This will actually be called twice because of a bug in the Jelly Bean SDK. Hopefully this will be fixed soon.
-		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		cal.set(Calendar.MINUTE, minute);
@@ -46,6 +45,6 @@ public class AlarmSetterFragment extends DialogFragment implements OnTimeSetList
 		
 		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
 		
-		Toast.makeText(getActivity(), "Alarm set at:" + hourOfDay + minute, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), "Alarm set", Toast.LENGTH_LONG).show();
 	}
 }
