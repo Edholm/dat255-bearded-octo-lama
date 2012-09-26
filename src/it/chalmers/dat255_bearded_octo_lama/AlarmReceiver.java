@@ -3,6 +3,7 @@ package it.chalmers.dat255_bearded_octo_lama;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
