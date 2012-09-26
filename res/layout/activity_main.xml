@@ -43,5 +43,13 @@
         android:textColor="@color/white"
         android:text="08:00 om 18 timmar"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <Button
+        android:id="@+id/settingsBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="TmpSettings"/>
 
 </RelativeLayout>

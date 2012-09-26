@@ -5,11 +5,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
+	Button settingsBtn;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,8 @@ public class MainActivity extends Activity {
         
         currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
+        
+        initButtons();
     }
 
 	@Override
@@ -26,6 +33,16 @@ public class MainActivity extends Activity {
 		super.onResume();
 		
 		setClock();
+	}
+	
+	private void initButtons() {
+		settingsBtn = (Button) findViewById(R.id.settingsBtn);
+		settingsBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(), SettingsActivity.class));
+			}
+		});
 	}
 
 	private void setClock() {
