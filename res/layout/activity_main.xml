@@ -1,32 +1,55 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/black" >
 
-    <AnalogClock
-        android:id="@+id/analogClock"
+    <TextView
+        android:id="@+id/currentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="58dp" />
+        android:layout_marginTop="56dp"
+        android:textColor="@color/white"
+        android:textSize="70sp" />
 
-    <Button
-        android:id="@+id/snoozeButton"
+    <TextView
+        android:id="@+id/currentDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/analogClock"
+		android:layout_centerHorizontal="true"
+        android:layout_below="@+id/currentTime"
+        android:textColor="@color/white"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/nextAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="Leave me alone!" />
+        android:layout_below="@+id/currentDate"
+        android:layout_marginTop="130dp"
+        android:textColor="@color/white"
+        android:text="Nästa larm:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
     
-    <Button
-        android:id="@+id/alarmOffButton"
+    <TextView
+        android:id="@+id/timeTilAlarmTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/snoozeButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:text="Im awake already, shaddup!" />
+        android:layout_below="@+id/nextAlarm"
+        android:textColor="@color/white"
+        android:text="08:00 om 18 timmar"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <Button
+        android:id="@+id/settingsBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="TmpSettings"/>
 
 </RelativeLayout>
