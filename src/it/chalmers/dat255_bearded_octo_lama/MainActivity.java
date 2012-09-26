@@ -10,10 +10,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
-	Button settingsBtn;
+	Button settingsBtn, notificationBtn, newAlaramBtn;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,16 +35,6 @@ public class MainActivity extends Activity {
 		setClock();
 	}
 	
-	private void initButtons() {
-		settingsBtn = (Button) findViewById(R.id.settingsBtn);
-		settingsBtn.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), SettingsActivity.class));
-			}
-		});
-	}
-
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.
 		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
@@ -51,5 +42,33 @@ public class MainActivity extends Activity {
 		
 		currentTimeView.setText(currentTimeString);
 		currentDateView.setText(currentDateString);
+	}
+	
+	private void initButtons() {
+		settingsBtn = (Button) findViewById(R.id.settingsBtn);
+		notificationBtn = (Button) findViewById(R.id.notificationBtn);
+		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
+		
+		settingsBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(), SettingsActivity.class));
+			}
+		});
+		
+		notificationBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(), NotificationActivity.class));
+			}
+		});
+		
+		newAlaramBtn.setOnClickListener(new View.OnClickListener() {
+			
+			//TODO: Add proper implementation
+			public void onClick(View v) {
+				Toast.makeText(v.getContext(), "New alarm clicked", Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 }
