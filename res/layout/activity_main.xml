@@ -6,27 +6,27 @@
 	
     <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="100">
+        android:layout_height="50dp"
+        android:weightSum="3">
         
         <Button 
-            android:layout_width="wrap_content"
+            android:id="@+id/newAlarmBtn"
             android:layout_height="match_parent"
-            android:layout_weight="25"/>
-        <Button 
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="25"/>
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:textSize="25sp"
+            android:text="@string/new_alarm"/>
         <Button 
             android:id="@+id/notificationBtn"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="25"/>
+            android:layout_width="match_parent"
+            android:layout_weight="1"/>
         <Button 
             android:id="@+id/settingsBtn"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="25"/>
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:text="@string/menu_settings"/>
         
     </LinearLayout>
     
