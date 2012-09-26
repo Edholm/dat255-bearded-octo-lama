@@ -12,26 +12,24 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="56dp"
         android:textColor="@color/white"
-        android:text="13:37"
         android:textSize="70sp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/currentDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
         android:layout_below="@+id/currentTime"
         android:textColor="@color/white"
-        android:text="19 sep 2012"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/nextAlarm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="130dp"
+        android:layout_below="@+id/currentDate"
+        android:layout_marginTop="130dp"
         android:textColor="@color/white"
         android:text="Nästa larm:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
