@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <it.chalmers.dat255_bearded_octo_lama.utilities.ToggleGroup
+        android:id="@+id/toggleGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:stretchMode="columnWidth" >
+
+        <ToggleButton
+            android:id="@+id/btn_at"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:onClick="onToggle"
+            android:tag="at"
+            android:textOff="Alarm AT"
+            android:textOn="Alarm AT"
+            android:textSize="14sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_in"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onToggle"
+            android:tag="in"
+            android:textOff="Alarm IN"
+            android:textOn="Alarm IN"
+            android:textSize="14sp" />
+    </it.chalmers.dat255_bearded_octo_lama.utilities.ToggleGroup>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:text="Alarm:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="00:00 tomorrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timeSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/h0"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="0" 
+            android:background="@color/green"
+            />
+
+        <Button
+            android:id="@+id/h1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="0" 
+            android:background="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text=":"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/m0"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/m1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="0" 
+            android:background="@color/white"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
