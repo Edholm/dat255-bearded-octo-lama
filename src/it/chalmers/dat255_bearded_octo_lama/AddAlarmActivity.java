@@ -20,6 +20,7 @@ package it.chalmers.dat255_bearded_octo_lama;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
 	
 	private Button currentTimeButton;
+	private final TimeFilter filter = new TimeFilter();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
 		
 		currentTimeButton = (Button)findViewById(id);
+		filter.setTimeButtonId(id);
 		currentTimeButton.setBackgroundColor(getResources().getColor(R.color.green));
 	}
 	
@@ -85,7 +88,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			default:
 				selectTimeButton(id.h0);
 				break;
-				
 		}
 	}
 	
@@ -109,11 +111,11 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	
 	public void onNumpadClick(View view) {
 		// Check if allowed number and if so, select next time button
-		
-		String numClicked = ((Button)view).getText().toString();
-		currentTimeButton.setText(numClicked);
-		
-		selectNextTimeButton();
+		int numClicked = Integer.parseInt(((Button)view).getText().toString());
+		if(filter.accept(numClicked)) {
+			currentTimeButton.setText(numClicked + "");
+			selectNextTimeButton();
+		}
 	}
 	
 	public void onTimeClick(View view) {
@@ -122,11 +124,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	
 	public void onItemSelected(AdapterView<?> parent, View view, 
             int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-		
-		
-		
 		String option = String.valueOf(parent.getItemAtPosition(pos));
 		TypedArray options = getResources().obtainTypedArray(array.time_options_array);
 		//TODO: choose how to calc alarm
@@ -160,5 +157,26 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	    return true;
 	}
 
-	
+	private static class TimeFilter implements Filter<Integer> {
+		private int selectedTimeButtonId;
+		
+		public boolean accept(Integer i) {
+			switch(selectedTimeButtonId) {
+				case id.h0:
+					return i <= 2;
+				case id.h1:
+					return i <= 3;
+				case id.m0:
+					return i <= 5;
+				case id.m1:
+					return i <= 9;
+			}
+			return false;
+		}
+		
+		public void setTimeButtonId(int id) {
+			selectedTimeButtonId = id;
+		}
+		
+	}
 }
