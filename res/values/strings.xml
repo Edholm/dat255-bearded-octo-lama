@@ -5,6 +5,13 @@
     <string name="title_activity_main">Alarmy</string>
     <string name="new_alarm">+</string>
     <string name="next_alarm">Next Alarm:</string>
-    <string name="title_activity_add_alarm">Add alarm</string>
+    <string name="title_activity_add_alarm">New alarm</string>
+    <string-array name="time_options_array">
+        <item>Alarm at</item>
+        <item>Alarm in</item>
+    </string-array>
+    <string name="button_add">Add alarm</string>
+    <string name="tomorrow">tomorrow</string>
+    <string name="today">today</string>
 
 </resources>
