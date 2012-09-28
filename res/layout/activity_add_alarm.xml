@@ -10,8 +10,9 @@
         android:id="@+id/LinearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginTop="15dp" >
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp" >
 
         <TextView
             android:id="@+id/textView1"
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight="1"
-            android:text="Alarm:"
+            android:text="Alarm set to:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -32,19 +33,21 @@
             android:text="00:00 tomorrow" />
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/time_options_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:entries="@array/time_options_array" />
+
     <LinearLayout
         android:id="@+id/timeSelector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal" >
-
-        <Spinner
-            android:id="@+id/time_options_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/time_options_array" />
 
         <Button
             android:id="@+id/h0"
@@ -52,6 +55,8 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@color/green"
+            android:onClick="onTimeClick"
+            android:tag="@string/h0"
             android:text="0" />
 
         <Button
@@ -60,6 +65,8 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@color/white"
+            android:onClick="onTimeClick"
+            android:tag="@string/h1"
             android:text="0" />
 
         <TextView
@@ -76,6 +83,8 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@color/white"
+            android:onClick="onTimeClick"
+            android:tag="@string/m0"
             android:text="0" />
 
         <Button
@@ -84,6 +93,8 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@color/white"
+            android:onClick="onTimeClick"
+            android:tag="@string/m1"
             android:text="0" />
 
     </LinearLayout>
@@ -92,7 +103,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:columnCount="3"
         android:gravity="center"
         android:rowCount="4" >
@@ -105,6 +116,7 @@
             android:layout_column="0"
             android:layout_gravity="left"
             android:layout_row="0"
+            android:onClick="onNumpadClick"
             android:text="1" />
 
         <Button
@@ -115,6 +127,7 @@
             android:layout_column="1"
             android:layout_gravity="left"
             android:layout_row="0"
+            android:onClick="onNumpadClick"
             android:text="2" />
 
         <Button
@@ -125,6 +138,7 @@
             android:layout_column="2"
             android:layout_gravity="left"
             android:layout_row="0"
+            android:onClick="onNumpadClick"
             android:text="3" />
 
         <Button
@@ -135,6 +149,7 @@
             android:layout_column="0"
             android:layout_gravity="left"
             android:layout_row="1"
+            android:onClick="onNumpadClick"
             android:text="4" />
 
         <Button
@@ -146,6 +161,7 @@
             android:layout_gravity="left|bottom"
             android:layout_row="1"
             android:layout_weight="1"
+            android:onClick="onNumpadClick"
             android:text="5" />
 
         <Button
@@ -156,6 +172,7 @@
             android:layout_column="2"
             android:layout_gravity="left|bottom"
             android:layout_row="1"
+            android:onClick="onNumpadClick"
             android:text="6" />
 
         <Button
@@ -166,6 +183,7 @@
             android:layout_column="0"
             android:layout_gravity="left"
             android:layout_row="2"
+            android:onClick="onNumpadClick"
             android:text="7" />
 
         <Button
@@ -176,6 +194,7 @@
             android:layout_column="1"
             android:layout_gravity="left"
             android:layout_row="2"
+            android:onClick="onNumpadClick"
             android:text="8" />
 
         <Button
@@ -186,6 +205,7 @@
             android:layout_column="2"
             android:layout_gravity="left"
             android:layout_row="2"
+            android:onClick="onNumpadClick"
             android:text="9" />
 
         <Button
@@ -196,20 +216,8 @@
             android:layout_column="1"
             android:layout_gravity="left"
             android:layout_row="3"
+            android:onClick="onNumpadClick"
             android:text="0" />
     </GridLayout>
-
-    <FrameLayout
-        android:id="@+id/FrameLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent" >
-
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:text="@string/button_add" />
-    </FrameLayout>
 
 </LinearLayout>

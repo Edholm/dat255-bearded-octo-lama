@@ -13,5 +13,9 @@
     <string name="button_add">Add alarm</string>
     <string name="tomorrow">tomorrow</string>
     <string name="today">today</string>
+    <string name="h0">H0</string>
+    <string name="h1">H1</string>
+    <string name="m0">M0</string>
+    <string name="m1">M1</string>
 
 </resources>

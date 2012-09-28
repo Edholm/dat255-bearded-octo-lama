@@ -67,7 +67,9 @@ public class MainActivity extends Activity {
 			//TODO: Add proper implementation
 			//This will cause the alarm to go off in 5 seconds.
 			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), AddAlarmActivity.class));
+				Intent i = new Intent(v.getContext(), AddAlarmActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
 			}
 		});
 	}
