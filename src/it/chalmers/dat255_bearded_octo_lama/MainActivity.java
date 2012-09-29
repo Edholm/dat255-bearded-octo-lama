@@ -2,18 +2,14 @@ package it.chalmers.dat255_bearded_octo_lama;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
@@ -71,15 +67,9 @@ public class MainActivity extends Activity {
 			//TODO: Add proper implementation
 			//This will cause the alarm to go off in 5 seconds.
 			public void onClick(View v) {
-				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.MILLISECOND, 5000);
-				
-				AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-				PendingIntent pIntent = PendingIntent.getBroadcast(v.getContext(),
-		                0, new Intent(v.getContext(), AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
-				
-				am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
-				Toast.makeText(v.getContext(), "Alarm set", Toast.LENGTH_LONG).show();
+				Intent i = new Intent(v.getContext(), AddAlarmActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
 			}
 		});
 	}
