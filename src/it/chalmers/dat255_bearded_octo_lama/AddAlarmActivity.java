@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 /**
+ * Lets the user selects an alarm time and add it.
  * @author Emil Edholm
  * @date 27 sep 2012
  */
@@ -44,6 +45,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
+	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,22 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		super.onResume();
 	}
 	
+	/**
+	 * Retrieves the time from the "time" buttons.
+	 * @return returns an integer array with four values representing the time in hh:mm format where {@code h0 = int[0]; h1 = int[1]} etc.
+	 */
+	private int[] queryTimeValues() {
+		int[] time = new int[4];
+		
+		time[0] = getButtonNumber(R.id.h0);
+		time[1] = getButtonNumber(R.id.h1);
+		time[2] = getButtonNumber(R.id.m0);
+		time[3] = getButtonNumber(R.id.m1);
+		
+		return time;
+	}
+	
+	/** Select a specific time button based on ID */
 	private void selectTimeButton(int id) {
 		if(currentTimeButton != null)
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
@@ -74,6 +92,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		currentTimeButton.setBackgroundColor(getResources().getColor(R.color.green));
 	}
 	
+	/** Selects the next "time" button */
 	private void selectNextTimeButton() {
 		switch(currentTimeButton.getId()) {
 			case R.id.h0: 
@@ -91,44 +110,72 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 	}
 	
+	/** Add a new alarm based on the time chosen */
 	private void addAlarm() {
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//		cal.set(Calendar.MINUTE, minute);
-//		
-//		AlarmManager am = (AlarmManager) con.getSystemService(Context.ALARM_SERVICE);
-//		PendingIntent pIntent = PendingIntent.getBroadcast(view.getContext(),
-//                0, new Intent(view.getContext(), AlarmReceiver.class), 0);
-//		
-//		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
-//		
-//		Toast.makeText(getActivity(), "Alarm set", Toast.LENGTH_LONG).show();
+		int[] time = queryTimeValues();
+		Alarm alarm = null;
+		if(setAlarmAT)
+			alarm = Alarm.newAlarmAt(time[0], time[1], time[2], time[3]);
+		else
+			alarm = Alarm.newAlarmIn(time[0], time[1], time[2], time[3]);
+			
 		
 		
-		Toast t = Toast.makeText(getApplicationContext(), "Alarm add", Toast.LENGTH_SHORT);
+		alarm.activateAlarm(getApplicationContext());
+		Toast t = Toast.makeText(getApplicationContext(), "Alarm added at " + alarm.toString() + ". Time left: " + alarm.getTimeLeft(), Toast.LENGTH_SHORT);
 		t.show();
 	}
 	
+	
+	/**
+	 * Event handler for when one of the buttons on the numbpad is clicked.
+	 * @param view the button that was clicked.
+	 */
 	public void onNumpadClick(View view) {
 		// Check if allowed number and if so, select next time button
-		int numClicked = Integer.parseInt(((Button)view).getText().toString());
+		int numClicked = getButtonNumber((Button)view);
 		if(filter.accept(numClicked)) {
 			currentTimeButton.setText(numClicked + "");
 			selectNextTimeButton();
 		}
 	}
 	
+	/**
+	 * @return number on the button
+	 */
+	private int getButtonNumber(Button button) {
+		return Integer.parseInt(button.getText().toString());
+	}
+	
+	/**
+	 * @return the number on the button, -1 if not a button or error occurred.
+	 */
+	private int getButtonNumber(int id) {
+		View v = findViewById(id);
+		if(v instanceof Button)
+			return getButtonNumber((Button)v);
+		
+		return -1;
+	}
+
+	/**
+	 * Event handler for when one of the buttons indicating the time is clicked.
+	 * @param view the button that was clicked.
+	 */
 	public void onTimeClick(View view) {
 		selectTimeButton(view.getId());
 	}
 	
+	/** What happens when an item is selected on the options spinner */
 	public void onItemSelected(AdapterView<?> parent, View view, 
             int pos, long id) {
 		String option = String.valueOf(parent.getItemAtPosition(pos));
 		TypedArray options = getResources().obtainTypedArray(array.time_options_array);
-		//TODO: choose how to calc alarm
-		Toast t = Toast.makeText(getApplicationContext(), options.getText(0), Toast.LENGTH_SHORT);
-		t.show();
+		
+		// Assumes a static position of the options value and "Alarm at" at position 0 and "Alarm in" at pos 1.
+		// There is probably a better way to do this...
+		
+		setAlarmAT = option.equals(options.getString(0));
     }
 	
 	public void onNothingSelected(AdapterView<?> parent) { /* Do nothing  */ }

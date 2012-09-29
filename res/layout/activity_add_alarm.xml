@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textView1"
@@ -24,7 +25,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/alarmTimetextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
