@@ -134,8 +134,16 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	public void onNumpadClick(View view) {
 		// Check if allowed number and if so, select next time button
 		int numClicked = getButtonNumber((Button)view);
+		int h1 = getButtonNumber(id.h1);
 		if(filter.accept(numClicked)) {
 			currentTimeButton.setText(numClicked + "");
+			
+			if(currentTimeButton.getId() == R.id.h0) {
+				if(numClicked == 2 && h1 > 3) {
+					Button b = (Button) findViewById(R.id.h1);
+					b.setText("0");
+				}
+			}
 			selectNextTimeButton();
 		}
 	}
@@ -205,14 +213,15 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	}
 
 	private static class TimeFilter implements Filter<Integer> {
-		private int selectedTimeButtonId;
+		private int selectedTimeButtonId, h0;
 		
 		public boolean accept(Integer i) {
 			switch(selectedTimeButtonId) {
 				case id.h0:
+					h0 = i;
 					return i <= 2;
 				case id.h1:
-					return i <= 3;
+					return i <= 3 || h0 != 2;
 				case id.m0:
 					return i <= 5;
 				case id.m1:
