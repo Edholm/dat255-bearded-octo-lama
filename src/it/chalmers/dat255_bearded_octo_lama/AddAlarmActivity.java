@@ -21,7 +21,6 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -40,7 +39,7 @@ import android.widget.Toast;
  * @author Emil Edholm
  * @date 27 sep 2012
  */
-public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
+public final class AddAlarmActivity extends AbstractActivity implements OnItemSelectedListener {
 	
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();

@@ -17,32 +17,45 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SettingsActivity extends ListActivity {
+public class SettingsActivity extends AbstractActivity {
 	
+	ListView settingsList;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setContentView(R.layout.activity_settings);
+        
+        initListView();
+    }
+    
+    private void initListView() {
+        settingsList = (ListView) findViewById(R.id.settingsListView);
+        
+        //TODO: Remove example code and implement real items.
         String[] testValues = new String [] {"Activate alarm", "Set alarm"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testValues);
         
+        settingsList.setAdapter(adapter);
         
-        setListAdapter(adapter);
-    }
-    
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-      String item = (String) getListAdapter().getItem(position);
-      Toast.makeText(this, item + " clicked", Toast.LENGTH_LONG).show();
-    }
+		settingsList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String item = (String) settingsList.getAdapter().getItem(position);
+		        Toast.makeText(view.getContext(), item + " clicked", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
