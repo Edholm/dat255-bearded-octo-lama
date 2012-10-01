@@ -100,7 +100,9 @@
 
     </LinearLayout>
 
-    <GridLayout
+    <android.support.v7.widget.GridLayout
+        xmlns:grid="http://schemas.android.com/apk/res-auto"
+		xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -114,9 +116,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="0"
+            grid:layout_column="0"
             android:layout_gravity="left"
-            android:layout_row="0"
+            grid:layout_row="0"
             android:onClick="onNumpadClick"
             android:text="1" />
 
@@ -125,9 +127,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
+            grid:layout_column="1"
             android:layout_gravity="left"
-            android:layout_row="0"
+            grid:layout_row="0"
             android:onClick="onNumpadClick"
             android:text="2" />
 
@@ -136,9 +138,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="2"
+            grid:layout_column="2"
             android:layout_gravity="left"
-            android:layout_row="0"
+            grid:layout_row="0"
             android:onClick="onNumpadClick"
             android:text="3" />
 
@@ -147,9 +149,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="0"
+            grid:layout_column="0"
             android:layout_gravity="left"
-            android:layout_row="1"
+            grid:layout_row="1"
             android:onClick="onNumpadClick"
             android:text="4" />
 
@@ -158,9 +160,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
+            grid:layout_column="1"
             android:layout_gravity="left|bottom"
-            android:layout_row="1"
+            grid:layout_row="1"
             android:layout_weight="1"
             android:onClick="onNumpadClick"
             android:text="5" />
@@ -170,9 +172,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="2"
+            grid:layout_column="2"
             android:layout_gravity="left|bottom"
-            android:layout_row="1"
+            grid:layout_row="1"
             android:onClick="onNumpadClick"
             android:text="6" />
 
@@ -181,9 +183,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="0"
+            grid:layout_column="0"
             android:layout_gravity="left"
-            android:layout_row="2"
+            grid:layout_row="2"
             android:onClick="onNumpadClick"
             android:text="7" />
 
@@ -192,9 +194,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
+            grid:layout_column="1"
             android:layout_gravity="left"
-            android:layout_row="2"
+            grid:layout_row="2"
             android:onClick="onNumpadClick"
             android:text="8" />
 
@@ -203,9 +205,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="2"
+            grid:layout_column="2"
             android:layout_gravity="left"
-            android:layout_row="2"
+            grid:layout_row="2"
             android:onClick="onNumpadClick"
             android:text="9" />
 
@@ -214,11 +216,11 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
+            grid:layout_column="1"
             android:layout_gravity="left"
-            android:layout_row="3"
+            grid:layout_row="3"
             android:onClick="onNumpadClick"
             android:text="0" />
-    </GridLayout>
+    </android.support.v7.widget.GridLayout>
 
 </LinearLayout>

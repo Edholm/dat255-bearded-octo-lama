@@ -21,8 +21,6 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -41,7 +39,7 @@ import android.widget.Toast;
  * @author Emil Edholm
  * @date 27 sep 2012
  */
-public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
+public final class AddAlarmActivity extends AbstractActivity implements OnItemSelectedListener {
 	
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
@@ -51,8 +49,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ActionBar actionBar = getActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(layout.activity_add_alarm);
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
@@ -191,12 +187,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, MainActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            return true;
 	        case R.id.menu_add:
 	        	addAlarm(); 
 	        	return true;
