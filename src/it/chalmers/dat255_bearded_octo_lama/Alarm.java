@@ -122,5 +122,7 @@ public class Alarm implements Parcelable {
 		public static final String TIME = "TIME_IN_MS";
 		public static final String ENABLED = "ENABLED";
 		
+		// Some convenience fields
+		public static final String[] ALL_COLUMNS = {HOUR, MINUTE, TIME, ENABLED};
 	}
 }
