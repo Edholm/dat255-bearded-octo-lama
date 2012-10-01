@@ -97,6 +97,15 @@ public class Alarm implements Parcelable {
 	public boolean isEnabled() {
 		return enabled;
 	}
+	
+	@Override
+	public String toString() {
+		return "Alarm " + id + " {\n" +
+				"\tHour: " + hour +
+				"\tMInute: " + minute +
+				"\tTime (millisec): " + timeInMS +
+				"\tIs enabled: " + enabled + "\n}";
+	}
 
 	public int describeContents() { return 0; }
 
