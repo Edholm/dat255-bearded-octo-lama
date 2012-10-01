@@ -102,9 +102,9 @@ public class Alarm implements Parcelable {
 	public String toString() {
 		return "Alarm " + id + " {\n" +
 				"\tHour: " + hour +
-				"\tMInute: " + minute +
-				"\tTime (millisec): " + timeInMS +
-				"\tIs enabled: " + enabled + "\n}";
+				"\n\tMInute: " + minute +
+				"\n\tTime (millisec): " + timeInMS +
+				"\n\tIs enabled: " + enabled + "\n}";
 	}
 
 	public int describeContents() { return 0; }
