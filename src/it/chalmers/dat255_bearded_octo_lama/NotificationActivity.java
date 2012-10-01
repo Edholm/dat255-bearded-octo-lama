@@ -21,11 +21,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class NotificationActivity extends Activity {
+public class NotificationActivity extends AbstractActivity {
 	TextView currentTimeView, currentDateView;
 	
 	@Override

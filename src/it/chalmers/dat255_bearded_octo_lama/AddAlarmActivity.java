@@ -21,7 +21,6 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -51,8 +50,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ActionBar actionBar = getActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(layout.activity_add_alarm);
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
