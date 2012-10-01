@@ -44,11 +44,11 @@ public class Alarm implements Parcelable {
 	 * @param c the cursor object tied to the content provider.
 	 */
 	public Alarm(Cursor c) {	
-		this.id       = c.getInt(c.getColumnIndex(AlarmColumns._ID));
-		this.hour     = c.getInt(c.getColumnIndex(AlarmColumns.HOUR));
-		this.minute   = c.getInt(c.getColumnIndex(AlarmColumns.MINUTE));
-		this.timeInMS = c.getLong(c.getColumnIndex(AlarmColumns.TIME));
-		this.enabled  = c.getInt(c.getColumnIndex(AlarmColumns.ENABLED)) == 1;
+		this.id       = c.getInt(AlarmColumns.ID_ID);
+		this.hour     = c.getInt(AlarmColumns.HOUR_ID);
+		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
+		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
+		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
 	}
 	
 	/**
@@ -131,7 +131,13 @@ public class Alarm implements Parcelable {
 		public static final String TIME = "TIME_IN_MS";
 		public static final String ENABLED = "ENABLED";
 		
-		// Some convenience fields
-		public static final String[] ALL_COLUMNS = {HOUR, MINUTE, TIME, ENABLED};
+		// Some convenience fields. Makes a lot of stuff easier.
+		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED};
+		
+		public static final int ID_ID      = 0;
+		public static final int HOUR_ID    = 1;
+		public static final int MINUTE_ID  = 2;
+		public static final int TIME_ID    = 3;
+		public static final int ENABLED_ID = 4;
 	}
 }
