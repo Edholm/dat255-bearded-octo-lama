@@ -1,0 +1,148 @@
+/**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ *
+ * This file is part of dat255-bearded-octo-lama
+ *
+ *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  dat255-bearded-octo-lama is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package it.chalmers.dat255_bearded_octo_lama;
+
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.net.Uri;
+
+/**
+ * Handles the contact with the database.
+ * @author Emil Edholm
+ * @date 1 okt 2012
+ */
+public final class AlarmContentProvider extends ContentProvider{
+
+    private DatabaseHelper      dbHelper;
+    private static final String DATABASE_NAME    = "alarms.db";
+    private static final int    DATABASE_VERSION = 1;
+    private static final String TABLE_NAME       = "Alarms";
+    private static final String TAG              = "AlarmContentProvider";
+    
+    private static final int CODE_ALARMS = 1;
+    private static final int CODE_ALARMS_ID = 2;
+    private static final UriMatcher alarmUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static {
+    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm", CODE_ALARMS);
+    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm/#", CODE_ALARMS_ID);
+    }
+
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+
+        DatabaseHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            //create table to store user names
+            db.execSQL("Create table " + TABLE_NAME + "( " + 
+                       "_id INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                       "HOUR INTEGER, " +
+                       "MINUTE INTEGER, " +
+                       "TIME_IN_MS INTEGER, " +
+            		   "ENABLED INTEGER);");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        	// Should probably add a debug message here. "Upgrading from oldVersion to newVersion" or some such...
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            onCreate(db);
+        }
+    }
+	
+	@Override
+	public boolean onCreate() {
+		// Create or update the database.
+		dbHelper = new DatabaseHelper(getContext());
+		return dbHelper == null ? false : true;
+	}
+
+	@Override
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		
+        // Decide whether or not to query all alarms or a single id.
+        int matchID = alarmUriMatcher.match(uri);
+        if(matchID == CODE_ALARMS_ID) {
+        	qb.setTables(TABLE_NAME);
+            qb.appendWhere("_id=");
+            qb.appendWhere(uri.getPathSegments().get(1)); // Get id from end of uri and add to query builder.
+        }else if(matchID == CODE_ALARMS) {
+        	qb.setTables(TABLE_NAME);
+        } else {
+        	throw new IllegalArgumentException("Unrecognizable uri: " + uri);
+        }
+
+        
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        // TODO: Handle failure from the query...
+
+        return c;
+	}
+	
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		if (alarmUriMatcher.match(uri) != CODE_ALARMS) {
+            throw new IllegalArgumentException("Cannot insert into URI: " + uri);
+        }
+		
+		// get database to insert records
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        
+        long rowId = db.insert(TABLE_NAME, "", values);
+        if (rowId > 0) {
+            Uri rowUri = ContentUris.withAppendedId(Alarm.AlarmColumns.CONTENT_URI, rowId);
+            getContext().getContentResolver().notifyChange(rowUri, null);
+            return rowUri;
+        }
+        
+        throw new SQLException("Failed to insert row into " + uri);
+	}
+	
+	@Override
+	public int update(Uri uri, ContentValues values, String selection,
+			String[] selectionArgs) {
+		// TODO Implement database update query.
+		return 0;
+	}
+
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		// TODO Implement database delete query.
+		return 0;
+	}
+
+	@Override
+	public String getType(Uri uri) { return null; }
+}

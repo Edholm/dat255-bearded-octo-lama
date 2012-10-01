@@ -45,6 +45,7 @@
     
         <receiver  android:process=":remote" android:name="AlarmReceiver"></receiver>
         <activity android:name="AddAlarmActivity" android:label="@string/title_activity_add_alarm"></activity>
+        <provider android:name="AlarmContentProvider" android:authorities="it.chalmers.dat255-bearded-octo-lama" />
     </application>
 
 </manifest>
