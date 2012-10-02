@@ -1,4 +1,6 @@
 /**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ * 
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -17,13 +19,9 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.BaseColumns;
 
 
 /**
@@ -33,142 +31,89 @@ import android.content.Intent;
  */
 public class Alarm {
 	
-	/** The time when the alarm is set to go off */
-	private final Calendar then;
-	
-	private PendingIntent alarmIntent;
+	private final int id;
+	private final int hour, minute;
+	private final long timeInMS;
+	private final boolean enabled;
+	// More options goes here later...
 	
 	/**
-	 * Construct a new alarm in the format of hh:mm (h0 h1 : m0 m1).
-	 * @param h0 the 1st hour
-	 * @param h1 the 2nd hour
-	 * @param m0 the 1st minute
-	 * @param m1 the 2nd minute
+	 * Create a new Alarm from a content provider.
+	 * @param c the cursor object tied to the content provider.
 	 */
-	private Alarm(int h0, int h1, int m0, int m1) {
-		this(h0 * 10 + h1, m0 * 10 + m1);
-	}
-	
-	private Alarm(int hour, int minute) {
-		then = Calendar.getInstance();
-		then.set(Calendar.HOUR_OF_DAY, hour);
-		then.set(Calendar.MINUTE, minute);
-		
-		if(then.before(Calendar.getInstance())) // Before "now" means we have to add a day
-			then.add(Calendar.DAY_OF_YEAR, 1);
+	public Alarm(Cursor c) {	
+		this.id       = c.getInt(AlarmColumns.ID_ID);
+		this.hour     = c.getInt(AlarmColumns.HOUR_ID);
+		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
+		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
+		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
 	}
 	
 	/**
-	 * Create a new alarm at the specified hour and time but does not activate it.
-	 * 
+	 * @return the alarm id
 	 */
-	public static Alarm newAlarmAt(int h0, int h1, int m0, int m1) {
-		return new Alarm(h0, h1, m0, m1);
+	public int getId() {
+		return id;
 	}
-	
-	/**
-	 * Create a new alarm IN the specified amount of time but does not activate it
-	 */
-	public static Alarm newAlarmIn(int h0, int h1, int m0, int m1) {
-		int h = h0 * 10 + h1;
-		int m = m0 * 10 + m1;
 
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR, h);
-		cal.add(Calendar.MINUTE, m);
-		
-		return new Alarm(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-	}
-	
-	/** Activate the alarm */
-	public void activateAlarm(Context con) {		
-		AlarmManager am = (AlarmManager)con.getSystemService(Context.ALARM_SERVICE);
-		
-		if(alarmIntent == null)
-			alarmIntent = PendingIntent.getBroadcast(con, 0, new Intent(con, AlarmReceiver.class), 0);
-		
-		am.set(AlarmManager.RTC_WAKEUP, then.getTimeInMillis(), alarmIntent);
-	}
-	
-	/** Deactivate the alarm */
-	public void deactivateAlarm(Context con) {
-		AlarmManager am = (AlarmManager)con.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(alarmIntent);
-	}
-	
-	/** @return true of alarm is activated, else false */
-	public boolean isAlarmActivated() { 
-		// TODO: fix actual query.
-		return false;
-	}
-	
 	/**
-	 * Toggles alarm state. If alarm is inactivated, it is  activated and vice versa.
+	 * @return the hour the alarm is set to (Range: 0-24)
 	 */
-	public void toggleAlarm(Context con) {
-		if(!isAlarmActivated()) {
-			deactivateAlarm(con);
-			return;
-		}
-		
-		activateAlarm(con);
-	}
-	
-	/** Retrieves the hour the alarm is set to go off */
 	public int getHour() {
-		return then.get(Calendar.HOUR_OF_DAY);
+		return hour;
 	}
-	
-	/** Retrieves the minute the alarm is set to go off */
-	public int getMinute() {
-		return then.get(Calendar.MINUTE);
-	}
-	
+
 	/**
-	 * @return returns the time left until the alarm time (regardless of activation state) in format {@code hh:mm:ss}.
+	 * @return the minute the alarm is set to (Range: 0-59).
 	 */
-	public String getTimeLeft() {
-		Calendar now = Calendar.getInstance();
-		
-		long millis = then.getTimeInMillis() - now.getTimeInMillis();
-		
-		long hours = TimeUnit.MILLISECONDS.toHours(millis);
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - 
-			    		TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - 
-			    		TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
-		
-		return String.format("%d hour %d min, %d sec", hours , minutes, seconds);
+	public int getMinute() {
+		return minute;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getHour();
-		result = prime * result + getMinute();
-		return result;
+	/**
+	 * @return the time in milliseconds the alarm is set to.
+	 */
+	public long getTimeInMS() {
+		return timeInMS;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof Alarm))
-			return false;
-
-		Alarm other = (Alarm) obj;
-		if (getHour() != other.getHour() || 
-				getMinute() != other.getMinute())
-			return false;
-		return true;
+	/**
+	 * @return whether or not the alarm is enabled.
+	 */
+	public boolean isEnabled() {
+		return enabled;
 	}
-
+	
 	@Override
 	public String toString() {
-		return getHour() + ":" + getMinute();
+		return "Alarm " + id + " {\n" +
+				"\tHour: " + hour +
+				"\n\tMInute: " + minute +
+				"\n\tTime (millisec): " + timeInMS +
+				"\n\tIs enabled: " + enabled + "\n}";
 	}
 	
-	
-
+	/** 
+	 * This class describes the columns for use with a ContentProvider 
+	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
+	 */
+	public static class AlarmColumns implements BaseColumns {
+		/** The uri that represents an alarm */
+		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
+		
+		// The rest is pretty self explanatory
+		public static final String HOUR = "HOUR";
+		public static final String MINUTE = "MINUTE";
+		public static final String TIME = "TIME_IN_MS";
+		public static final String ENABLED = "ENABLED";
+		
+		// Some convenience fields. Makes a lot of stuff easier.
+		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED};
+		
+		public static final int ID_ID      = 0;
+		public static final int HOUR_ID    = 1;
+		public static final int MINUTE_ID  = 2;
+		public static final int TIME_ID    = 3;
+		public static final int ENABLED_ID = 4;
+	}
 }

@@ -1,4 +1,6 @@
 /**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ * 
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -21,7 +23,12 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -105,22 +112,51 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 	}
 	
-	/** Add a new alarm based on the time chosen */
+	/** When the user clicks the add button (ie. when he is finished) */
 	private void addAlarm() {
 		int[] time = queryTimeValues();
-		Alarm alarm = null;
-		if(setAlarmAT)
-			alarm = Alarm.newAlarmAt(time[0], time[1], time[2], time[3]);
-		else
-			alarm = Alarm.newAlarmIn(time[0], time[1], time[2], time[3]);
+		
+		int hour, minute;
+		// Combine values from format hh:mm to h:m.
+		if(setAlarmAT) {
+			hour   = time[0] * 10 + time[1];
+			minute = time[2] * 10 + time[3];
+		}
+		else {
+			hour   = time[0] * 10 + time[1];
+			minute = time[2] * 10 + time[3];
 			
+			// Time now + value selected equals sometime in the future.
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.HOUR, hour);
+			cal.add(Calendar.MINUTE, minute);
+			
+			hour   = cal.get(Calendar.HOUR);
+			minute = cal.get(Calendar.MINUTE);
+		}
+			
+		AlarmController ac = AlarmController.INSTANCE;
+		Uri uri = ac.addAlarm(this, true, hour, minute);
+		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 		
-		
-		alarm.activateAlarm(getApplicationContext());
-		Toast t = Toast.makeText(getApplicationContext(), "Alarm added at " + alarm.toString() + ". Time left: " + alarm.getTimeLeft(), Toast.LENGTH_SHORT);
-		t.show();
+		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
+		finish();
 	}
 	
+	/** Returns the time left until a specified time (in ms) */
+	private String getTimeLeft(long then) {
+		Calendar now = Calendar.getInstance();
+		
+		long millis = then - now.getTimeInMillis();
+		
+		long hours   = TimeUnit.MILLISECONDS.toHours(millis);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - 
+			    		TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - 
+			    		TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
+		
+		return String.format("%d hour %d min, %d sec", hours , minutes, seconds);
+	}
 	
 	/**
 	 * Event handler for when one of the buttons on the numbpad is clicked.
