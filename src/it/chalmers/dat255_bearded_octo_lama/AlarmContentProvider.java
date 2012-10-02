@@ -30,6 +30,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 /**
  * Handles the contact with the database.
@@ -42,7 +44,6 @@ public final class AlarmContentProvider extends ContentProvider{
     private static final String DATABASE_NAME    = "alarms.db";
     private static final int    DATABASE_VERSION = 1;
     private static final String TABLE_NAME       = "Alarms";
-    private static final String TAG              = "AlarmContentProvider";
     
     // For use in matching uri.
     private static final int ALARMS = 1;
@@ -142,8 +143,28 @@ public final class AlarmContentProvider extends ContentProvider{
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Implement database delete query.
-		return 0;
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int count;
+		
+        int matchID = alarmUriMatcher.match(uri);
+        switch(matchID){
+        	case ALARMS:
+        		count = db.delete(TABLE_NAME, selection, selectionArgs);
+        		break;
+        	case ALARMS_ID:
+        		// Get the ID.
+        		String id = uri.getPathSegments().get(1);
+        		String where = BaseColumns._ID + "=" + id + 
+        				(!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
+        		
+        		count = db.delete(TABLE_NAME, where, selectionArgs);
+                break;
+            default:
+            	throw new IllegalArgumentException("Unrecognizable uri: " + uri);
+        }
+        
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
 	}
 
 	@Override
