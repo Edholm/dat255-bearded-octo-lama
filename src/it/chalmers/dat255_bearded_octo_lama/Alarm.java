@@ -62,6 +62,7 @@ public class Alarm {
 	 * Create a new alarm at the specified hour and time but does not activate it.
 	 * 
 	 */
+	//TODO javadoc for paramenters
 	public static Alarm newAlarmAt(int h0, int h1, int m0, int m1) {
 		return new Alarm(h0, h1, m0, m1);
 	}
@@ -69,6 +70,7 @@ public class Alarm {
 	/**
 	 * Create a new alarm IN the specified amount of time but does not activate it
 	 */
+	//TODO javadoc for paramenters
 	public static Alarm newAlarmIn(int h0, int h1, int m0, int m1) {
 		int h = h0 * 10 + h1;
 		int m = m0 * 10 + m1;
