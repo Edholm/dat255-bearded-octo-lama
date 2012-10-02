@@ -28,6 +28,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 		try {
 			Intent notificationIntent = new Intent(context, NotificationActivity.class);
 			notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			notificationIntent.putExtras(intent); // Forward all extras.
+			
 			context.startActivity(notificationIntent);
 		}
 		catch (Exception e) {
