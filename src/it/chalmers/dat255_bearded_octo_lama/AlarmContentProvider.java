@@ -137,8 +137,27 @@ public final class AlarmContentProvider extends ContentProvider{
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		// TODO Implement database update query.
-		return 0;
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int count;
+		
+        int matchID = alarmUriMatcher.match(uri);
+        switch(matchID){
+        	case ALARMS:
+        		count = db.update(TABLE_NAME, values, selection, selectionArgs);
+        		break;
+        	case ALARMS_ID:
+        		// Get the ID.
+        		String id = uri.getPathSegments().get(1);
+        		String where = BaseColumns._ID + "=" + id;
+        		
+        		count = db.update(TABLE_NAME, values, where, selectionArgs);
+                break;
+            default:
+            	throw new IllegalArgumentException("Unrecognizable uri: " + uri);
+        }
+        
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
 	}
 
 	@Override
