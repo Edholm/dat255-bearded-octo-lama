@@ -21,8 +21,6 @@ package it.chalmers.dat255_bearded_octo_lama;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.BaseColumns;
 
 
@@ -31,7 +29,7 @@ import android.provider.BaseColumns;
  * @author Emil Edholm
  * @date 28 sep 2012
  */
-public class Alarm implements Parcelable {
+public class Alarm {
 	
 	private final int id;
 	private final int hour, minute;
@@ -49,18 +47,6 @@ public class Alarm implements Parcelable {
 		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
 		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
 		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
-	}
-	
-	/**
-	 * Create a new alarm from a {@code Parcel}
-	 * @param p the parcel that contains all information about the alarm.
-	 */
-	public Alarm(Parcel p) {
-		this.id       = p.readInt();
-		this.hour     = p.readInt();
-		this.minute   = p.readInt();
-		this.timeInMS = p.readLong();
-		this.enabled  = p.readInt() == 1;
 	}
 	
 	/**
@@ -105,16 +91,6 @@ public class Alarm implements Parcelable {
 				"\n\tMInute: " + minute +
 				"\n\tTime (millisec): " + timeInMS +
 				"\n\tIs enabled: " + enabled + "\n}";
-	}
-
-	public int describeContents() { return 0; }
-
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeInt(hour);
-		dest.writeInt(minute);
-		dest.writeLong(timeInMS);
-		dest.writeInt(enabled ? 1 : 0); // No writeToBoolean :(
 	}
 	
 	/** 
