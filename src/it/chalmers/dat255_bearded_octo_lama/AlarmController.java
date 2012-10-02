@@ -84,6 +84,20 @@ public enum AlarmController {
 		renewAlarmQueue(c);
 	}
 	
+	public void toggleAlarm(Context c, int alarmID) {
+		ContentResolver cr = c.getContentResolver();
+		Alarm alarm = getAlarm(c, alarmID);
+		
+		Uri uri = Alarm.AlarmColumns.CONTENT_URI.buildUpon().appendPath(alarmID + "").build();
+		ContentValues values = new ContentValues();
+		
+		// Reverse enabled
+		values.put(Alarm.AlarmColumns.ENABLED, alarm.isEnabled() ? 0 : 1);
+		
+		cr.update(uri, values, null, null);
+		renewAlarmQueue(c);
+	}
+	
 	/**
 	 * Returns the alarm with the specified ID.
 	 * @param c the context
@@ -167,10 +181,11 @@ public enum AlarmController {
 				// Fetch the first enabled alarm that hasn't expired.
 				alarm = new Alarm(c);
 				if(alarm.getTimeInMS() < now) {
-					// TODO: Disable logic goes here.
+					// Always disables an alarm since we only have enabled alarms.
+					toggleAlarm(context, alarm.getId());
 				}
 				else {
-					// No need to loop anymore.
+					// No need to loop anymore; we have our match.
 					break;
 				}
 			} while(c.moveToNext());
@@ -179,20 +194,26 @@ public enum AlarmController {
 		return alarm;
 	}
 	
-	/** Remove all alarms that have expired from the database */ 
-	private void clearExpired() {
-		// TODO: Implement clearExpired()
+	/** Remove all alarms that have expired (time for their alert has passed) from the database */ 
+	public void clearExpired(Context c) {
+		ContentResolver cr = c.getContentResolver();
+		long now = System.currentTimeMillis();
+		
+		// Removes all alarms from the database whoose time has passed.
+		cr.delete(Alarm.AlarmColumns.CONTENT_URI, "TIME_IN_MS <= ?", new String[]{now + ""});
 	}
 	
 	/** Enable an alarm in the AlarmManager. Only one alarm should be activated at a time */
 	private void enableAlarmManager(Context c, Alarm a) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
 		
-		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 0, new Intent(c, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
-	
-		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
+		// Append the alarm ID to the intent, then the receiving class can fetch the alarm.
+		Intent intent = new Intent(c, AlarmReceiver.class);
+		intent.putExtra(Alarm.AlarmColumns._ID, a.getId());
 		
-		// TODO: Fix a parcel of the alarm and add it to the PendingIntent. That way the receiver can make use of it.
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
 	}
 	
 	/** Disable/cancel the pending intent in the AlarmManager */

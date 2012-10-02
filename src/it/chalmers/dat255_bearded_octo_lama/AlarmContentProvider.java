@@ -110,7 +110,7 @@ public final class AlarmContentProvider extends ContentProvider{
         
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         c.setNotificationUri(getContext().getContentResolver(), uri);
-        // TODO: Handle failure from the query...
+        // TODO: Handle failure from the query. (c == null)
 
         return c;
 	}
