@@ -44,13 +44,14 @@ public final class AlarmContentProvider extends ContentProvider{
     private static final String TABLE_NAME       = "Alarms";
     private static final String TAG              = "AlarmContentProvider";
     
-    private static final int CODE_ALARMS = 1;
-    private static final int CODE_ALARMS_ID = 2;
+    // For use in matching uri.
+    private static final int ALARMS = 1;
+    private static final int ALARMS_ID = 2;
     private static final UriMatcher alarmUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm", CODE_ALARMS);
-    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm/#", CODE_ALARMS_ID);
+    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm", ALARMS);
+    	alarmUriMatcher.addURI("it.chalmers.dat255-bearded-octo-lama", "alarm/#", ALARMS_ID);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -93,16 +94,18 @@ public final class AlarmContentProvider extends ContentProvider{
 		
         // Decide whether or not to query all alarms or a single id.
         int matchID = alarmUriMatcher.match(uri);
-        if(matchID == CODE_ALARMS_ID) {
-        	qb.setTables(TABLE_NAME);
-            qb.appendWhere("_id=");
-            qb.appendWhere(uri.getPathSegments().get(1)); // Get id from end of uri and add to query builder.
-        }else if(matchID == CODE_ALARMS) {
-        	qb.setTables(TABLE_NAME);
-        } else {
-        	throw new IllegalArgumentException("Unrecognizable uri: " + uri);
+        switch(matchID){
+        	case ALARMS:
+        		qb.setTables(TABLE_NAME);
+        		break;
+        	case ALARMS_ID:
+        		qb.setTables(TABLE_NAME);
+                qb.appendWhere("_id=");
+                qb.appendWhere(uri.getPathSegments().get(1)); // Get id from end of uri and add to query builder.
+                break;
+            default:
+            	throw new IllegalArgumentException("Unrecognizable uri: " + uri);
         }
-
         
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -113,7 +116,7 @@ public final class AlarmContentProvider extends ContentProvider{
 	
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		if (alarmUriMatcher.match(uri) != CODE_ALARMS) {
+		if (alarmUriMatcher.match(uri) != ALARMS) {
             throw new IllegalArgumentException("Cannot insert into URI: " + uri);
         }
 		
