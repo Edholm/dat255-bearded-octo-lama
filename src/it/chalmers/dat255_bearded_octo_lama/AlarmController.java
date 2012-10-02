@@ -158,7 +158,7 @@ public enum AlarmController {
 		// Returns all enabled alarms sorted by nearest alarm at the beginning.
 		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
 								Alarm.AlarmColumns.ALL_COLUMNS, 
-									"ENABLED=1", null, "TIME_IN_MS DESC");
+									"ENABLED=1", null, "TIME_IN_MS ASC");
 		
 		Alarm alarm = null;
 		if(c != null && c.moveToFirst()) {
