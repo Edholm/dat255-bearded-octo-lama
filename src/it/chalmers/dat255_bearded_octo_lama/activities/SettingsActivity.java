@@ -1,4 +1,6 @@
 /**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ *
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -15,8 +17,9 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama;
+package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;

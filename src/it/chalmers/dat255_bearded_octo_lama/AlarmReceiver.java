@@ -1,4 +1,6 @@
 /**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ *
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -17,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +31,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 		try {
 			Intent notificationIntent = new Intent(context, NotificationActivity.class);
 			notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			notificationIntent.putExtras(intent); // Forward all extras.
+			
 			context.startActivity(notificationIntent);
 		}
 		catch (Exception e) {
