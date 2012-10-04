@@ -19,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

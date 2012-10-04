@@ -17,28 +17,37 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama;
+package it.chalmers.dat255_bearded_octo_lama.activities;
+
+import it.chalmers.dat255_bearded_octo_lama.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class NotificationActivity extends AbstractActivity {
+public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
+	Button settingsBtn, notificationBtn, newAlaramBtn;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.activity_notification);
-		
-		currentTimeView = (TextView) findViewById(R.id.currentTime);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        setContentView(R.layout.activity_main);
+        
+        currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
-	}
-	
+        
+        initButtons();
+    }
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -53,5 +62,34 @@ public class NotificationActivity extends AbstractActivity {
 		
 		currentTimeView.setText(currentTimeString);
 		currentDateView.setText(currentDateString);
+	}
+	
+	private void initButtons() {
+		settingsBtn = (Button) findViewById(R.id.settingsBtn);
+		notificationBtn = (Button) findViewById(R.id.notificationBtn);
+		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
+		
+		settingsBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(), SettingsActivity.class));
+			}
+		});
+		
+		notificationBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(), NotificationActivity.class));
+			}
+		});
+		
+		newAlaramBtn.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Intent i = new Intent(v.getContext(), AddAlarmActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
+			}
+		});
 	}
 }
