@@ -43,7 +43,7 @@
 	    
 	    <LinearLayout
 	        android:id="@+id/btnHolder"
-	        android:layout_width="0dip"
+	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        android:layout_weight="30"
 	        android:orientation="vertical"

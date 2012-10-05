@@ -12,8 +12,8 @@ public class GameTestClass extends AbstractGameView {
 	private int var1, var2;
 	private float x, y;
 	
-	public GameTestClass(Context context, LinearLayout parentView) {
-		super(context, parentView);
+	public GameTestClass(Context context, LinearLayout parentView, LinearLayout btnHolder) {
+		super(context, parentView, btnHolder);
 		
 		initGame();
 	}

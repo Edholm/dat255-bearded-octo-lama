@@ -50,7 +50,7 @@ public class NotificationActivity extends AbstractActivity {
         btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
         
         //TestCODE
-        gameView = new GameTestClass(this, contentHolder);
+        gameView = new GameTestClass(this, contentHolder, btnHolder);
         gameIsActive = true;
         initGame();
 	}
