@@ -20,6 +20,8 @@
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
+import it.chalmers.dat255_bearded_octo_lama.games.GameTestClass;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,8 +33,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
-	TextView currentTimeView, currentDateView;
-	LinearLayout contentHolder, btnHolder;
+	private TextView currentTimeView, currentDateView;
+	private LinearLayout contentHolder, btnHolder;
+	private boolean gameIsActive;
+	private AbstractGameView gameView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,11 @@ public class NotificationActivity extends AbstractActivity {
         currentDateView = (TextView) findViewById(R.id.currentDate);
         contentHolder = (LinearLayout) findViewById(R.id.contentHolder);
         btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
+        
+        //TestCODE
+        gameView = new GameTestClass(this, contentHolder);
+        gameIsActive = true;
+        initGame();
 	}
 	
 	@Override
@@ -51,11 +60,27 @@ public class NotificationActivity extends AbstractActivity {
 		super.onResume();
 		
 		setClock();
+		
+		if(gameIsActive) {
+			gameView.resume();
+		}
 	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		if(gameIsActive) {
+			gameView.pause();
+		}
+	}
+
 	private void initGame() {
 		//TODO: Add a call for a new puzzle/game
-		btnHolder.setVisibility(View.GONE);
+		//btnHolder.setVisibility(View.GONE);
+		
+		contentHolder.addView(gameView);
+		gameView.resume();
 	}
 	
 	private void endGame() {
