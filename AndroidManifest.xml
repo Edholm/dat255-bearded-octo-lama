@@ -56,7 +56,7 @@
             android:authorities="it.chalmers.dat255-bearded-octo-lama" />
 
         <activity
-            android:name=".ListAlarmsActivity"
+            android:name=".activities.ListAlarmsActivity"
             android:label="@string/title_activity_list_alarms" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
