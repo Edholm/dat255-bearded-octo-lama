@@ -131,10 +131,10 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 			
 			// Time now + value selected equals sometime in the future.
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.HOUR, hour);
+			cal.add(Calendar.HOUR_OF_DAY, hour);
 			cal.add(Calendar.MINUTE, minute);
 			
-			hour   = cal.get(Calendar.HOUR);
+			hour   = cal.get(Calendar.HOUR_OF_DAY);
 			minute = cal.get(Calendar.MINUTE);
 		}
 			
