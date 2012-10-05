@@ -19,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.ListAlarmsActivity;
 import it.chalmers.dat255_bearded_octo_lama.R;
 
 import java.text.DateFormat;
@@ -34,7 +35,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
-	Button settingsBtn, notificationBtn, newAlaramBtn;
+	Button settingsBtn, listAlarmsBtn, newAlaramBtn;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
 	
 	private void initButtons() {
 		settingsBtn = (Button) findViewById(R.id.settingsBtn);
-		notificationBtn = (Button) findViewById(R.id.notificationBtn);
+		listAlarmsBtn = (Button) findViewById(R.id.notificationBtn);
 		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
 		
 		settingsBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,10 +77,10 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		notificationBtn.setOnClickListener(new View.OnClickListener() {
+		listAlarmsBtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), NotificationActivity.class));
+				startActivity(new Intent(v.getContext(), ListAlarmsActivity.class));
 			}
 		});
 		
