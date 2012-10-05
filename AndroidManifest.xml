@@ -20,7 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
@@ -31,7 +30,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".activities.NotificationActivity"
             android:exported="false"
@@ -42,13 +40,30 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-    
-        <receiver  android:process=":remote" android:name="AlarmReceiver"></receiver>
-        <activity 
-            android:name=".activities.AddAlarmActivity" 
-            android:label="@string/title_activity_add_alarm">
+
+        <receiver
+            android:name="AlarmReceiver"
+            android:process=":remote" >
+        </receiver>
+
+        <activity
+            android:name=".activities.AddAlarmActivity"
+            android:label="@string/title_activity_add_alarm" >
         </activity>
-        <provider android:name="AlarmContentProvider" android:authorities="it.chalmers.dat255-bearded-octo-lama" />
+
+        <provider
+            android:name="AlarmContentProvider"
+            android:authorities="it.chalmers.dat255-bearded-octo-lama" />
+
+        <activity
+            android:name=".ListAlarmsActivity"
+            android:label="@string/title_activity_list_alarms" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
