@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="70" >
+        android:layout_weight="70">
         
         <TextView
 	        android:id="@id/currentTime"
@@ -31,15 +31,15 @@
     
     </RelativeLayout>
     
-    <LinearLayout 
+    <RelativeLayout 
         android:id="@+id/contentHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey"
-        android:layout_marginBottom="15dp"
+        android:layout_weight="30"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:orientation="vertical">
+        android:layout_marginBottom="15dp">
 	    
 	    <LinearLayout
 	        android:id="@+id/btnHolder"
@@ -65,7 +65,7 @@
 	        
 	    </LinearLayout>
 	    
-    </LinearLayout>
+    </RelativeLayout>
     
 
 </LinearLayout>

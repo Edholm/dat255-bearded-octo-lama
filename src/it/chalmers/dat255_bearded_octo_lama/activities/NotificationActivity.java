@@ -21,20 +21,23 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.GameTestClass;
+import it.chalmers.dat255_bearded_octo_lama.games.CalculusGame;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 	private TextView currentTimeView, currentDateView;
-	private LinearLayout contentHolder, btnHolder;
+	private RelativeLayout contentHolder;
+	private LinearLayout btnHolder;
 	private boolean gameIsActive;
 	private AbstractGameView gameView;
 	
@@ -46,11 +49,11 @@ public class NotificationActivity extends AbstractActivity {
 		
 		currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
-        contentHolder = (LinearLayout) findViewById(R.id.contentHolder);
+        contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
         btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
         
         //TestCODE
-        gameView = new GameTestClass(this, contentHolder, btnHolder);
+        gameView = new CalculusGame(this, contentHolder, btnHolder);
         gameIsActive = true;
         initGame();
 	}
@@ -77,15 +80,15 @@ public class NotificationActivity extends AbstractActivity {
 
 	private void initGame() {
 		//TODO: Add a call for a new puzzle/game
-		//btnHolder.setVisibility(View.GONE);
-		
+		btnHolder.setVisibility(View.GONE);
 		contentHolder.addView(gameView);
+		ArrayList<View> uiList = gameView.getUIComponents();
+		if(uiList != null) {
+			for(View v : uiList) {
+				contentHolder.addView(v);
+			}
+		}
 		gameView.resume();
-	}
-	
-	private void endGame() {
-		//TODO: Add a remover of the puzzle/game
-		btnHolder.setVisibility(View.VISIBLE);
 	}
 
 	private void setClock() {
