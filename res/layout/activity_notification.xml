@@ -35,12 +35,27 @@
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/grey"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_weight="30">
+        android:layout_weight="30"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
         
+        <Button
+            android:id="@+id/snoozeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="@string/snooze"/>
+        
+        <Button
+            android:id="@+id/disAlarmBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="@string/dismiss_alarm"/>
         
     </LinearLayout>
     

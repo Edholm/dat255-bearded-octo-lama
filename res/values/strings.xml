@@ -17,5 +17,7 @@
     <string name="h1">H1</string>
     <string name="m0">M0</string>
     <string name="m1">M1</string>
+    <string name="snooze">Snooze</string>
+    <string name="dismiss_alarm">Dismiss alarm</string>
 
 </resources>
