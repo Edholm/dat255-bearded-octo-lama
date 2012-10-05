@@ -26,10 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 	TextView currentTimeView, currentDateView;
+	LinearLayout contentHolder, btnHolder;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class NotificationActivity extends AbstractActivity {
 		
 		currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
+        contentHolder = (LinearLayout) findViewById(R.id.contentHolder);
+        btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
 	}
 	
 	@Override
@@ -48,6 +53,16 @@ public class NotificationActivity extends AbstractActivity {
 		setClock();
 	}
 	
+	private void initGame() {
+		//TODO: Add a call for a new puzzle/game
+		btnHolder.setVisibility(View.GONE);
+	}
+	
+	private void endGame() {
+		//TODO: Add a remover of the puzzle/game
+		btnHolder.setVisibility(View.VISIBLE);
+	}
+
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.
 		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
