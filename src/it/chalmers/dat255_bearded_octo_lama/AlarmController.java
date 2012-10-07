@@ -217,34 +217,6 @@ public enum AlarmController {
 		return theAlarm;
 	} 
 	
-//	/** Get the next alarm that is enabled and nearest in time to now */
-//	private Alarm getNextInQueue(Context context) {
-//		ContentResolver cr = context.getContentResolver();
-//		// Returns all enabled alarms sorted by nearest alarm at the beginning
-//		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
-//								Alarm.AlarmColumns.ALL_COLUMNS, 
-//									"ENABLED=1", null, "TIME_IN_MS ASC");
-//		
-//		Alarm alarm = null;
-//		if(c != null && c.moveToFirst()) {
-//			long now = System.currentTimeMillis();
-//			do {
-//				// Fetch the first enabled alarm that hasn't expired.
-//				alarm = new Alarm(c);
-//				if(alarm.getTimeInMS() < now) {
-//					// Always disables an alarm since we only have enabled alarms.
-//					toggleAlarm(context, alarm.getId());
-//				}
-//				else {
-//					// No need to loop anymore; we have our match.
-//					break;
-//				}
-//			} while(c.moveToNext());
-//			c.close();
-//		}
-//		return alarm;
-//	}
-	
 	/** Remove all alarms that have expired (time for their alert has passed) from the database */ 
 	public void clearExpired(Context c) {
 		ContentResolver cr = c.getContentResolver();
