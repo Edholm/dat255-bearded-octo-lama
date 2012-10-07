@@ -17,8 +17,11 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama;
+package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
+import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
@@ -128,10 +131,10 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 			
 			// Time now + value selected equals sometime in the future.
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.HOUR, hour);
+			cal.add(Calendar.HOUR_OF_DAY, hour);
 			cal.add(Calendar.MINUTE, minute);
 			
-			hour   = cal.get(Calendar.HOUR);
+			hour   = cal.get(Calendar.HOUR_OF_DAY);
 			minute = cal.get(Calendar.MINUTE);
 		}
 			
@@ -259,5 +262,13 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 			selectedTimeButtonId = id;
 		}
 		
+	}
+
+	public void addTestAlarm(View v) {
+		AlarmController ac = AlarmController.INSTANCE;
+		ac.addTestAlarm(this);
+
+		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
+		finish();
 	}
 }

@@ -17,7 +17,10 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama;
+package it.chalmers.dat255_bearded_octo_lama.activities;
+
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
+import it.chalmers.dat255_bearded_octo_lama.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,11 +35,15 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	TextView currentTimeView, currentDateView;
-	Button settingsBtn, notificationBtn, newAlaramBtn;
+	Button settingsBtn, listAlarmsBtn, newAlaramBtn;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Clear expired alarms
+        AlarmController.INSTANCE.clearExpired(this);
+        
         
         setContentView(R.layout.activity_main);
         
@@ -64,7 +71,7 @@ public class MainActivity extends Activity {
 	
 	private void initButtons() {
 		settingsBtn = (Button) findViewById(R.id.settingsBtn);
-		notificationBtn = (Button) findViewById(R.id.notificationBtn);
+		listAlarmsBtn = (Button) findViewById(R.id.notificationBtn);
 		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
 		
 		settingsBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,10 +81,10 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		notificationBtn.setOnClickListener(new View.OnClickListener() {
+		listAlarmsBtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), NotificationActivity.class));
+				startActivity(new Intent(v.getContext(), ListAlarmsActivity.class));
 			}
 		});
 		

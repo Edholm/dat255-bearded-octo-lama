@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,9 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:exported="false"
             android:label="Settings" >
             <intent-filter>
@@ -31,9 +30,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name=".NotificationActivity"
+            android:name=".activities.NotificationActivity"
             android:exported="false"
             android:label="Notification" >
             <intent-filter>
@@ -42,10 +40,30 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-    
-        <receiver  android:process=":remote" android:name="AlarmReceiver"></receiver>
-        <activity android:name="AddAlarmActivity" android:label="@string/title_activity_add_alarm"></activity>
-        <provider android:name="AlarmContentProvider" android:authorities="it.chalmers.dat255-bearded-octo-lama" />
+
+        <receiver
+            android:name="AlarmReceiver"
+            android:process=":remote" >
+        </receiver>
+
+        <activity
+            android:name=".activities.AddAlarmActivity"
+            android:label="@string/title_activity_add_alarm" >
+        </activity>
+
+        <provider
+            android:name="AlarmContentProvider"
+            android:authorities="it.chalmers.dat255-bearded-octo-lama" />
+
+        <activity
+            android:name=".activities.ListAlarmsActivity"
+            android:label="@string/title_activity_list_alarms" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

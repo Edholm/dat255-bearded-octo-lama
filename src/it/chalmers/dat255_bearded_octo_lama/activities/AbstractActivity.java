@@ -17,7 +17,7 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama;
+package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
