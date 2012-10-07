@@ -92,7 +92,7 @@ public class Alarm {
 	/**
 	 * @return whether or not the alarm has text notification
 	 */
-	public boolean hasTextNofiication() {
+	public boolean hasTextNotification() {
 		return textNotification;
 	}
 	

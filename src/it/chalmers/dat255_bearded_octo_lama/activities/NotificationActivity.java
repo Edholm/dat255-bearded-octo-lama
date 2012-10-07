@@ -19,31 +19,39 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
+import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import android.os.Bundle;
+import android.util.Log;
 
 public class NotificationActivity extends AbstractActivity implements Notification {
 
+	Notification n;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		
+		Alarm alarm = AlarmController.INSTANCE.getAlarm(getApplicationContext(), savedInstanceState.getInt(Alarm.AlarmColumns._ID));
+		n = NotificationFactory.create(alarm, this);
+		Log.d("horvtest", "reachedbal");
 		setContentView(R.layout.activity_notification);
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		start();
+		n.start();
 		
-	}
+	} 
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		stop();
+		n.stop();
 	}
 
 	public void start() {

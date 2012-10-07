@@ -23,6 +23,7 @@ import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -30,14 +31,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		try {
 			
-			Alarm alarm = AlarmController.INSTANCE.getAlarm(context,intent.getExtras().getInt(Alarm.AlarmColumns._ID));
-			NotificationActivity na = NotificationActivityFactory.create(alarm);
+			//Alarm alarm = AlarmController.INSTANCE.getAlarm(context, intent.getExtras().getInt(Alarm.AlarmColumns._ID));
+			//NotificationActivity na = NotificationActivityFactory.create(alarm);
 
-			Intent notificationIntent = new Intent(context, na.getClass());
-			
+			Intent notificationIntent = new Intent(context, NotificationActivity.class);
 			notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			notificationIntent.putExtras(intent); // Forward all extras.
-			
+			Log.d("horvtest", "reachedbal " + intent.getExtras().getInt(Alarm.AlarmColumns._ID));
 			context.startActivity(notificationIntent);
 		}
 		catch (Exception e) {

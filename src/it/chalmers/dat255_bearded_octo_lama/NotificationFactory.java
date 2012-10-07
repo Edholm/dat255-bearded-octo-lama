@@ -20,29 +20,27 @@
 package it.chalmers.dat255_bearded_octo_lama;
 
 import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
+import android.app.Activity;
 
-
-public class NotificationActivityFactory {
+public class NotificationFactory {
 
 
 	
-	public static NotificationActivity create(Alarm alarm){
+	public static Notification create(Alarm alarm, Activity act){
 		
-		NotificationActivity na = new NotificationActivity();
+		Notification n = new NotificationActivity();
 		
-		if(alarm.hasTextNofiication()){
-			na = new TextNotification(na);
+		if(alarm.hasTextNotification()){
+			n = new TextNotification(n, act);
 		}
-		
+		// TODO fix ringtones
 		if(alarm.hasSoundNotification()){
-			na = new SoundNotification(na, null);
+			n = new SoundNotification(n, null, act);
 		}
-		
-		
-		
-		return na;
+		return n;
 	}
 
 }

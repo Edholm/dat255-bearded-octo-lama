@@ -25,34 +25,24 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.os.Bundle;
+import android.app.Activity;
 import android.widget.TextView;
 
 
 public class TextNotification extends NotificationDecorator {
 	
 	TextView currentTimeView, currentDateView;
-
-	public TextNotification(Notification decoratedNotification) {
+	Activity act;
+	public TextNotification(Notification decoratedNotification, Activity act) {
 		super(decoratedNotification);
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		currentTimeView = (TextView) findViewById(R.id.currentTime);
-        currentDateView = (TextView) findViewById(R.id.currentDate);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		start();
+		this.act = act;
 	}
 	
 	@Override
 	public void start() {
 		super.start();
+		currentTimeView = (TextView) act.findViewById(R.id.currentTime);
+        currentDateView = (TextView) act.findViewById(R.id.currentDate);
 		setClock();
 		
 	}

@@ -24,28 +24,22 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.provider.MediaStore.Audio.Media;
 import android.provider.Settings;
 
 public class SoundNotification extends NotificationDecorator {
 	
 	List<Ringtone> notificationSounds = null;
 	Ringtone playing = null;
-	
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones) {
+	Activity act;
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
+		this.act = act;
 		notificationSounds = ringtones;
 	}
-	
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		start();
-	}
-	
+		
 	@Override
 	public void start() {
 		super.start();

@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         currentDateView = (TextView) findViewById(R.id.currentDate);
         
       //TODO, remove line, used for debugging without changing version.
-       Log.d("Horv-test:", deleteDatabase("alarms.db")+""); 
+       Log.d("Horv-test:", deleteDatabase("alarms.db")+" "); 
         initButtons();
     }
 
