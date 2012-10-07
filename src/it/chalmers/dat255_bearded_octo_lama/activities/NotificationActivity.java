@@ -20,40 +20,37 @@
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import android.os.Bundle;
-import android.widget.TextView;
 
-public class NotificationActivity extends AbstractActivity {
-	TextView currentTimeView, currentDateView;
+public class NotificationActivity extends AbstractActivity implements Notification {
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_notification);
-		
-		currentTimeView = (TextView) findViewById(R.id.currentTime);
-        currentDateView = (TextView) findViewById(R.id.currentDate);
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		start();
 		
-		setClock();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stop();
+	}
+
+	public void start() {
+
+	}
+
+	public void stop() {
 	}
 	
-	private void setClock() {
-		//TODO: Do a cleaner and better version of this.
-		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
-		String currentDateString = DateFormat.getDateInstance().format(new Date());
-		
-		currentTimeView.setText(currentTimeString);
-		currentDateView.setText(currentDateString);
-	}
 }
