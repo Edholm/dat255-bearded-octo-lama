@@ -29,7 +29,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		try {
-			Intent notificationIntent = new Intent(context, NotificationActivity.class);
+			
+			Alarm alarm = AlarmController.INSTANCE.getAlarm(context,intent.getExtras().getInt(Alarm.AlarmColumns._ID));
+			NotificationActivity na = NotificationActivityFactory.create(alarm);
+
+			Intent notificationIntent = new Intent(context, na.getClass());
+			
 			notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			notificationIntent.putExtras(intent); // Forward all extras.
 			

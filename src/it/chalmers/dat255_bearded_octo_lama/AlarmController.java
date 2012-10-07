@@ -68,6 +68,10 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
 		values.put(Alarm.AlarmColumns.TIME, time);
 		
+		//TODO: Remove hardcoded values
+		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, 1);
+		
+		
 		renewAlarmQueue(c);
 		return cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 	}

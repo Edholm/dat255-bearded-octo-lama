@@ -35,6 +35,8 @@ public class Alarm {
 	private final int hour, minute;
 	private final long timeInMS;
 	private final boolean enabled;
+	private final boolean textNotification;
+	private final boolean soundNotification;
 	// More options goes here later...
 	
 	/**
@@ -47,6 +49,8 @@ public class Alarm {
 		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
 		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
 		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
+		this.textNotification = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
+		this.soundNotification = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
 	}
 	
 	/**
@@ -85,6 +89,21 @@ public class Alarm {
 		return enabled;
 	}
 	
+	/**
+	 * @return whether or not the alarm has text notification
+	 */
+	public boolean hasTextNofiication() {
+		return textNotification;
+	}
+	
+	/**
+	 * @return whether or not the alarm has sound notification
+	 */
+	public boolean hasSoundNotification() {
+		return soundNotification;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Alarm " + id + " {\n" +
@@ -92,6 +111,7 @@ public class Alarm {
 				"\n\tMInute: " + minute +
 				"\n\tTime (millisec): " + timeInMS +
 				"\n\tIs enabled: " + enabled + "\n}";
+		//TODO update
 	}
 	
 	/** 
@@ -107,14 +127,19 @@ public class Alarm {
 		public static final String MINUTE = "MINUTE";
 		public static final String TIME = "TIME_IN_MS";
 		public static final String ENABLED = "ENABLED";
+		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
+		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
 		
 		// Some convenience fields. Makes a lot of stuff easier.
-		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED};
+		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, TEXT_NOTIFICATION, SOUND_NOTIFICATION};
 		
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
 		public static final int MINUTE_ID  = 2;
 		public static final int TIME_ID    = 3;
 		public static final int ENABLED_ID = 4;
+		public static final int TEXT_NOTIFICATION_ID = 5;
+		public static final int SOUND_NOTIFICATION_ID = 6;
+		
 	}
 }
