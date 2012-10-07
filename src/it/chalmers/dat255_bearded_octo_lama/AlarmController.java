@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Manages all the alarms.
@@ -69,8 +70,10 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
 		values.put(Alarm.AlarmColumns.TIME, time);
 		
+		
+		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
-		return cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		return uri;
 	}
 	
 	public Uri addTestAlarm(Context c) {
@@ -88,8 +91,9 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.ENABLED, 1);
 		values.put(Alarm.AlarmColumns.TIME, time);
 		
+		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
-		return cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		return uri;
 	}
 	
 	/**
@@ -189,34 +193,57 @@ public enum AlarmController {
 		
 		disableAlarmManager(c);
 	}
-	
 	/** Get the next alarm that is enabled and nearest in time to now */
 	private Alarm getNextInQueue(Context context) {
-		ContentResolver cr = context.getContentResolver();
-		// Returns all enabled alarms sorted by nearest alarm at the beginning
-		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
-								Alarm.AlarmColumns.ALL_COLUMNS, 
-									"ENABLED=1", null, "TIME_IN_MS ASC");
+		// Get all enabled alarms in descending order.
+		List<Alarm> alarms = getAlarms(context, "Enabled=?", new String[] {"1"}, "TIME_IN_MS DESC");
 		
-		Alarm alarm = null;
-		if(c != null && c.moveToFirst()) {
-			long now = System.currentTimeMillis();
-			do {
-				// Fetch the first enabled alarm that hasn't expired.
-				alarm = new Alarm(c);
-				if(alarm.getTimeInMS() < now) {
-					// Always disables an alarm since we only have enabled alarms.
-					toggleAlarm(context, alarm.getId());
-				}
-				else {
-					// No need to loop anymore; we have our match.
-					break;
-				}
-			} while(c.moveToNext());
-			c.close();
+		long minTime = Long.MAX_VALUE, now = System.currentTimeMillis();
+		Alarm theAlarm = null;
+		for(Alarm a : alarms) {
+			
+			// If alarm time has passed, disable alarm.
+			if(a.getTimeInMS() < now) {
+				toggleAlarm(context, a.getId());
+				continue;
+			}
+			
+			if(a.getTimeInMS() < minTime) {
+				minTime = a.getTimeInMS();
+				theAlarm = a;
+			}
 		}
-		return alarm;
-	}
+		Log.d("queue", "Next in queue: " + theAlarm.toString());
+		return theAlarm;
+	} 
+	
+//	/** Get the next alarm that is enabled and nearest in time to now */
+//	private Alarm getNextInQueue(Context context) {
+//		ContentResolver cr = context.getContentResolver();
+//		// Returns all enabled alarms sorted by nearest alarm at the beginning
+//		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
+//								Alarm.AlarmColumns.ALL_COLUMNS, 
+//									"ENABLED=1", null, "TIME_IN_MS ASC");
+//		
+//		Alarm alarm = null;
+//		if(c != null && c.moveToFirst()) {
+//			long now = System.currentTimeMillis();
+//			do {
+//				// Fetch the first enabled alarm that hasn't expired.
+//				alarm = new Alarm(c);
+//				if(alarm.getTimeInMS() < now) {
+//					// Always disables an alarm since we only have enabled alarms.
+//					toggleAlarm(context, alarm.getId());
+//				}
+//				else {
+//					// No need to loop anymore; we have our match.
+//					break;
+//				}
+//			} while(c.moveToNext());
+//			c.close();
+//		}
+//		return alarm;
+//	}
 	
 	/** Remove all alarms that have expired (time for their alert has passed) from the database */ 
 	public void clearExpired(Context c) {
