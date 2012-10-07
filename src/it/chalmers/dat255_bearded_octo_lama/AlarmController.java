@@ -140,15 +140,19 @@ public enum AlarmController {
 	}
 	
 	/**
-	 * Returns all alarms in the database.
+	 * Returns all alarms in the database sorted by hour and minute in ascending order.
 	 * @param c the context
 	 * @return a list of all alarms in the database.
 	 */
 	public List<Alarm> getAllAlarms(Context c) {
+		return getAlarms(c, null, null, "HOUR, MINUTE ASC");
+	}
+	
+	private List<Alarm> getAlarms(Context c, String where, String[] args, String sortOrder) {
 		ContentResolver cr = c.getContentResolver();
 		
 		Uri uri = Alarm.AlarmColumns.CONTENT_URI;
-		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS,null, null, "HOUR, MINUTE ASC");
+		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS, where, args, sortOrder);
 		
 		
 		if(cur != null && cur.moveToFirst()) {
@@ -189,7 +193,7 @@ public enum AlarmController {
 	/** Get the next alarm that is enabled and nearest in time to now */
 	private Alarm getNextInQueue(Context context) {
 		ContentResolver cr = context.getContentResolver();
-		// Returns all enabled alarms sorted by nearest alarm at the beginning.
+		// Returns all enabled alarms sorted by nearest alarm at the beginning
 		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
 								Alarm.AlarmColumns.ALL_COLUMNS, 
 									"ENABLED=1", null, "TIME_IN_MS ASC");
