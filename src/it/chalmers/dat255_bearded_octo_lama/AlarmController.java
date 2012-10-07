@@ -57,6 +57,7 @@ public enum AlarmController {
 		Calendar then = Calendar.getInstance();
 		then.set(Calendar.HOUR_OF_DAY, hour);
 		then.set(Calendar.MINUTE, minute);
+		then.set(Calendar.SECOND, 0); // This makes the alarm go of at the right time
 		
 		if(then.before(Calendar.getInstance())) // Before "now" means we have to add a day
 			then.add(Calendar.DAY_OF_YEAR, 1);
