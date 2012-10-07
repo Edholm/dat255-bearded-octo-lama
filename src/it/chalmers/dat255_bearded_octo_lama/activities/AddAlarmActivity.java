@@ -263,4 +263,12 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 		
 	}
+
+	public void addTestAlarm(View v) {
+		AlarmController ac = AlarmController.INSTANCE;
+		ac.addTestAlarm(this);
+
+		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
+		finish();
+	}
 }
