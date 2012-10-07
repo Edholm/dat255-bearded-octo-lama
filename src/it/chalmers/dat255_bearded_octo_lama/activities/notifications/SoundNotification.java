@@ -31,18 +31,26 @@ import android.provider.Settings;
 
 public class SoundNotification extends NotificationDecorator {
 	
-	List<Ringtone> notificationSounds;
+	List<Ringtone> notificationSounds = null;
 	Ringtone playing = null;
 	
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones) {
 		super(decoratedNotification);
+		notificationSounds = ringtones;
+	}
+	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		start();
 	}
 	
 	@Override
 	public void start() {
 		super.start();
 		Collections.shuffle(notificationSounds);
-		if(notificationSounds.size() > 0){
+		if(notificationSounds == null || notificationSounds.size() > 0){
 			playing = notificationSounds.get(0);
 		} else {
 			//TODO: Fix context here.

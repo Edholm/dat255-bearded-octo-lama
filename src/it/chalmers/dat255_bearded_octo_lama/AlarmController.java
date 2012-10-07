@@ -70,6 +70,7 @@ public enum AlarmController {
 		
 		//TODO: Remove hardcoded values
 		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, 1);
+		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, 1);
 		
 		
 		renewAlarmQueue(c);

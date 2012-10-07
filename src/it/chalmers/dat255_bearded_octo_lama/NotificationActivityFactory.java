@@ -20,6 +20,7 @@
 package it.chalmers.dat255_bearded_octo_lama;
 
 import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
 
 
@@ -33,6 +34,10 @@ public class NotificationActivityFactory {
 		
 		if(alarm.hasTextNofiication()){
 			na = new TextNotification(na);
+		}
+		
+		if(alarm.hasSoundNotification()){
+			na = new SoundNotification(na, null);
 		}
 		
 		

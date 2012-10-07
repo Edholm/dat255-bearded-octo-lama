@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 
@@ -34,12 +35,21 @@ public class TextNotification extends NotificationDecorator {
 
 	public TextNotification(Notification decoratedNotification) {
 		super(decoratedNotification);
+	}
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		start();
+	}
 	
-
 	@Override
 	public void start() {
 		super.start();
@@ -48,7 +58,6 @@ public class TextNotification extends NotificationDecorator {
 	}
 	
 	public void stop() {
-		
 
 	}
 	

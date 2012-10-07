@@ -28,6 +28,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -45,6 +46,8 @@ public class MainActivity extends Activity {
         currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
         
+      //TODO, remove line, used for debugging without changing version.
+       Log.d("Horv-test:", deleteDatabase("alarms.db")+""); 
         initButtons();
     }
 
