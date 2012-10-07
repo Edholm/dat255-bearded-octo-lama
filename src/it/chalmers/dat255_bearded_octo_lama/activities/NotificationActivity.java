@@ -21,7 +21,6 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.CalculusGame;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,10 +51,6 @@ public class NotificationActivity extends AbstractActivity {
         contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
         btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
         
-        //TestCODE
-        gameView = new CalculusGame(this, contentHolder, btnHolder);
-        gameIsActive = true;
-        initGame();
 	}
 	
 	@Override
@@ -79,9 +74,12 @@ public class NotificationActivity extends AbstractActivity {
 	}
 
 	private void initGame() {
-		//TODO: Add a call for a new puzzle/game
+		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
 		btnHolder.setVisibility(View.GONE);
 		contentHolder.addView(gameView);
+		
+		//Adding all views that build the games UI after the surfaceView has been added.
+		//Otherwise the ui views would all get stuck under the surfaceview.
 		ArrayList<View> uiList = gameView.getUIComponents();
 		if(uiList != null) {
 			for(View v : uiList) {

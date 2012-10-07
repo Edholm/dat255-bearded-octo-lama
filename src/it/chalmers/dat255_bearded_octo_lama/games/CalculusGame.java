@@ -1,8 +1,9 @@
 package it.chalmers.dat255_bearded_octo_lama.games;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
+
 import java.util.Random;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
@@ -86,4 +87,5 @@ public class CalculusGame extends AbstractGameView {
 		painter.setTextAlign(Align.CENTER);
 		c.drawText(exerciseText, getWidth()/2, textSize*2, painter);
 	}
+
 }
