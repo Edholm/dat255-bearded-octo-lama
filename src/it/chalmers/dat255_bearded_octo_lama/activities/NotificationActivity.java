@@ -24,12 +24,23 @@ import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
+import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
+
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-public class NotificationActivity extends AbstractActivity implements Notification {
+public class NotificationActivity extends AbstractActivity {
 
-	Notification n;
+	private Notification n;
+	private RelativeLayout contentHolder;
+	private LinearLayout btnHolder;
+	private boolean gameIsActive;
+	private AbstractGameView gameView; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -39,6 +50,9 @@ public class NotificationActivity extends AbstractActivity implements Notificati
 		n = NotificationFactory.create(alarm, this);
 		Log.d("horvtest", "reachedbal");
 		setContentView(R.layout.activity_notification);
+        contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
+        btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
+        
 	}
 	
 	@Override
@@ -46,19 +60,34 @@ public class NotificationActivity extends AbstractActivity implements Notificati
 		super.onResume();
 		n.start();
 		
-	} 
-
+		
+		if(gameIsActive) {
+			gameView.resume();
+		}
+	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		n.stop();
+		
+		if(gameIsActive) {
+			gameView.pause();
+		}
 	}
 
-	public void start() {
-
-	}
-
-	public void stop() {
-	}
-	
+	private void initGame() {
+		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
+		btnHolder.setVisibility(View.GONE);
+		contentHolder.addView(gameView);
+		
+		//Adding all views that build the games UI after the surfaceView has been added.
+		//Otherwise the ui views would all get stuck under the surfaceview.
+		ArrayList<View> uiList = gameView.getUIComponents();
+		if(uiList != null) {
+			for(View v : uiList) {
+				contentHolder.addView(v);
+			}
+		}
+		gameView.resume();
+	} 
 }

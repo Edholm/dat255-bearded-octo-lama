@@ -19,7 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
-import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.BaseNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
@@ -31,7 +31,7 @@ public class NotificationFactory {
 	
 	public static Notification create(Alarm alarm, Activity act){
 		
-		Notification n = new NotificationActivity();
+		Notification n = new BaseNotification();
 		
 		if(alarm.hasTextNotification()){
 			n = new TextNotification(n, act);
