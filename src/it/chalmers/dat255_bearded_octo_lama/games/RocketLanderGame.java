@@ -2,10 +2,11 @@ package it.chalmers.dat255_bearded_octo_lama.games;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-public class LunarLanderGame extends AbstractGameView {
+public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
 	private final int GRAV_ACCEL = 1;
@@ -22,7 +23,7 @@ public class LunarLanderGame extends AbstractGameView {
 	private boolean engineIsRunning;
 	private int groundYLevel;
 	
-	public LunarLanderGame(Context context, RelativeLayout parentView,
+	public RocketLanderGame(Context context, RelativeLayout parentView,
 			LinearLayout dismissAlarmLayout) {
 		super(context, parentView, dismissAlarmLayout);
 		// TODO Auto-generated constructor stub
@@ -62,12 +63,27 @@ public class LunarLanderGame extends AbstractGameView {
 			ddy += ENGINE_ACCEL * timeSinceLast;
 		}
 		
+		currentSpeed += ddy * timeSinceLast;
+		
+		if(currentSpeed > MAX_SPD) {
+			currentSpeed = MAX_SPD;
+		}
+		
 		rocketX += (0);
-		rocketY += (ddy * timeSinceLast);
+		rocketY += (currentSpeed * timeSinceLast);
 		
 		//Check if aircraft has landed or crashed.
-		if(currentSpeed > MAX_LANDING_SPEED) {
-			//TODO: Crash
+		if(rocketY <= groundYLevel) {
+			
+			//Check if it's a crash.
+			if(currentSpeed > MAX_LANDING_SPEED) {
+				//TODO: Crash and restart game.
+			}
+			else {
+				//If it's not a crash, end the game.
+				endGame();
+			}
+			
 		}
 		
 		lastTime = now;
@@ -84,7 +100,31 @@ public class LunarLanderGame extends AbstractGameView {
 		painter.setARGB(100, 102, 0, 0);
 		c.drawRect(0, groundYLevel, canvasWidth, canvasHeight, painter);
 		
+		//Draw the rocket
+		painter.setARGB(100, 102, 0, 255);
+		c.drawCircle((float)rocketX, (float)rocketY, 5, painter);
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {		
+		//Sleep a bit to not overload the system with unnecessary amount of data.
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
+		//Check for input.
+		switch(event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			engineIsRunning = true;
+			break;
+		case MotionEvent.ACTION_UP:
+			engineIsRunning = false;
+			break;
+		}
+		
+		return true;
 	}
 
 }
