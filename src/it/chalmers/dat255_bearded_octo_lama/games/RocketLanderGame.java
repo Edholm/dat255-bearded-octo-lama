@@ -1,6 +1,9 @@
 package it.chalmers.dat255_bearded_octo_lama.games;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -9,13 +12,13 @@ import android.widget.RelativeLayout;
 public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
-	private final int GRAV_ACCEL = 1;
-	private final int ENGINE_ACCEL = 1;
-	private final int MAX_SPD = 1;
-	private final int INIT_SPD = 1;
+	private final int GRAV_ACCEL = 100;
+	private final int ENGINE_ACCEL = -200;
+	private final int MAX_SPD = 500;
+	private final int INIT_SPD = 25;
 	
 	//Set goal constants
-	private final int MAX_LANDING_SPEED = 1;
+	private final int MAX_LANDING_SPEED = 20;
 	
 	private long lastTime;
 	private int currentSpeed;
@@ -23,47 +26,56 @@ public class RocketLanderGame extends AbstractGameView {
 	private boolean engineIsRunning;
 	private int groundYLevel;
 	
+	private Bitmap rocketBitmap;
+	
 	public RocketLanderGame(Context context, RelativeLayout parentView,
 			LinearLayout dismissAlarmLayout) {
 		super(context, parentView, dismissAlarmLayout);
-		// TODO Auto-generated constructor stub
 		
-		initUI();
 		initGame();
 	}
 
-
-	private void initUI() {
-		// TODO Auto-generated method stub
+	private void initGame() {
+		lastTime = System.currentTimeMillis() + 100;
+		rocketBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rocket);
 		
+		resetGame();
 	}
 	
-	private void initGame() {
-		rocketX = parentView.getWidth()/2;
-		rocketY = parentView.getHeight()/2;
+	private void resetGame() {
+		rocketX = parentView.getWidth();
+		rocketY = 0;
 		
-		lastTime = System.currentTimeMillis();
+		engineIsRunning = false;
+		currentSpeed = INIT_SPD;
 	}
 
 	
 	@Override
 	protected void updateGame() {
-		
 		long now = System.currentTimeMillis();
 		
-		double timeSinceLast = (now - lastTime)/1000;
+		if(lastTime > now) {
+			return;
+		}
+		
+		//TODO: Remove this
+		rocketX = parentView.getWidth()/2;
+		groundYLevel = parentView.getWidth()/4 * 3;
+		
+		double timeSinceLast = (now - lastTime)/1000.0;
 		
 		//Set and calculate acceleration.
-		double ddx = 0;
-		double ddy = -GRAV_ACCEL * timeSinceLast;
+		double xAcceleration = 0;
+		double yAcceleration = GRAV_ACCEL * timeSinceLast;
 		
 		//Calculate new speed of the aircraft.
 		if(engineIsRunning) {
 			//Add engine acceleration.
-			ddy += ENGINE_ACCEL * timeSinceLast;
+			yAcceleration += ENGINE_ACCEL * timeSinceLast;
 		}
 		
-		currentSpeed += ddy * timeSinceLast;
+		currentSpeed += yAcceleration * timeSinceLast;
 		
 		if(currentSpeed > MAX_SPD) {
 			currentSpeed = MAX_SPD;
@@ -73,11 +85,11 @@ public class RocketLanderGame extends AbstractGameView {
 		rocketY += (currentSpeed * timeSinceLast);
 		
 		//Check if aircraft has landed or crashed.
-		if(rocketY <= groundYLevel) {
+		if(rocketY >= groundYLevel) {
 			
 			//Check if it's a crash.
 			if(currentSpeed > MAX_LANDING_SPEED) {
-				//TODO: Crash and restart game.
+				resetGame();
 			}
 			else {
 				//If it's not a crash, end the game.
@@ -96,13 +108,17 @@ public class RocketLanderGame extends AbstractGameView {
 		
 		// Paint heaven then ground.
 		painter.setARGB(100, 51, 204, 255);
-		c.drawRect(0, 0, canvasWidth, groundYLevel, painter);
+		c.drawRect(0, 0, canvasWidth, canvasHeight, painter);
 		painter.setARGB(100, 102, 0, 0);
 		c.drawRect(0, groundYLevel, canvasWidth, canvasHeight, painter);
 		
 		//Draw the rocket
-		painter.setARGB(100, 102, 0, 255);
-		c.drawCircle((float)rocketX, (float)rocketY, 5, painter);
+		c.drawBitmap(rocketBitmap, (float)(rocketX - rocketBitmap.getWidth()/2), 
+				(float)(rocketY - rocketBitmap.getHeight()), painter);
+		if(engineIsRunning) {
+			painter.setARGB(100, 255, 100, 0);
+			c.drawCircle((float)rocketX, (float)rocketY-10, 10, painter);
+		}
 	}
 	
 	@Override
