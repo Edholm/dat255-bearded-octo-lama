@@ -1,4 +1,3 @@
-package it.chalmers.dat255_bearded_octo_lama.games;
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -18,8 +17,10 @@ package it.chalmers.dat255_bearded_octo_lama.games;
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package it.chalmers.dat255_bearded_octo_lama.games;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -35,24 +36,24 @@ import android.widget.RelativeLayout;
 
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	protected RelativeLayout parentView;
-	protected LinearLayout btnHolder;
+	protected LinearLayout dismissAlarmLayout;
 	protected Thread t;
 	protected Paint painter;
-	protected ArrayList<View> uiList;
+	protected List<View> uiList;
 	protected Context context;
-	private SurfaceHolder holder;
+	private SurfaceHolder surfaceHolder;
 	private boolean gameIsActive;
 	private AbstractGameView myself;
 	private Handler uiHandler;
 	
-	public AbstractGameView(Context context, RelativeLayout parentView, LinearLayout btnHolder) {
+	public AbstractGameView(Context context, RelativeLayout parentView, LinearLayout dismissAlarmLayout) {
 		super(context);
 		
 		myself = this;
-		this.btnHolder = btnHolder;
+		this.dismissAlarmLayout = dismissAlarmLayout;
 		this.parentView = parentView;
 		this.context = context;
-		holder = getHolder();
+		surfaceHolder = getHolder();
 		gameIsActive = false;
 		painter = new Paint();
 		uiList = new ArrayList<View>();
@@ -79,7 +80,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 					break;
 				}
 				//This will set the dismiss controls to visible again while removing the views used by the game.
-				btnHolder.setVisibility(View.VISIBLE);
+				dismissAlarmLayout.setVisibility(View.VISIBLE);
 				parentView.removeView(myself);
 				if(getUIComponents() != null) {
 					for(View v : getUIComponents()) {
@@ -89,40 +90,55 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
             }
 		};
 	}
-
+	
+	
+	/**
+	 * Set the size of the surface view to match the parent.
+	 */
 	private void setSurfaceSize() {
-		//Set size of the SurfaceView to fill the parent
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	    setLayoutParams(params);
 	}
 	
+	/**
+	 * This method will initiate termination of the game and the view.
+	 * Since the UI needs to be reconfigured a Handler will be used relay the message to the UI thread.
+	 */
 	protected void endGame() {
 		uiHandler.sendMessage(new Message());
 	}
 	
+	/**
+	 * The run method of the active game which contains the logic updates and graphical drawing.
+	 * This will be continuously called while the game thread is running.
+	 */
 	public void run() {
 		while(gameIsActive) {
 			//Check that the surface is valid before trying to draw anything
-			if(!holder.getSurface().isValid()) {
+			if(!surfaceHolder.getSurface().isValid()) {
 				continue;
 			}
 			
 			Canvas c = null;
 			try {
 				updateGame();
-				c = holder.lockCanvas(null);
+				c = surfaceHolder.lockCanvas(null);
 				updateGraphics(c);
 			} 
 			//Have this code in the finally brackets in case an exception is thrown.
 			//We don't want to leave the surface in an inconsistent state.
 			finally {
 				if(c != null) {
-					holder.unlockCanvasAndPost(c);
+					surfaceHolder.unlockCanvasAndPost(c);
 				}
 			}
 		}
 	}
 	
+	
+	/**
+	 * This method will stop the game thread.
+	 */
 	public void pause() {
 		gameIsActive = false;
 		while(true) {
@@ -137,21 +153,38 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 		t = null;
 	}
 	
+	/**
+	 * This will start the thread of the game if it's not currently running.
+	 */
 	public void resume() {
-		gameIsActive = true;
-		t = new Thread(this);
-		t.start();
+		if(!gameIsActive) { 
+			gameIsActive = true;
+			t = new Thread(this);
+			t.start();
+		}
 	}
 	
-	public ArrayList<View> getUIComponents() {
+	/**
+	 * Calling this method will return all the UI views that needs to be added above the surface view.
+	 * @return List of View's if the list is populated or <code>null</code> if there are no UI elements in the game.
+	 */
+	public List<View> getUIComponents() {
 		if(uiList != null) {
 			return uiList;
 		}
 		return null;
 	}
-
+	
+	/**
+	 * All logic that needs to be continuously updated are placed in this method and
+	 * will be called every loop of the game thread.
+	 */
 	protected abstract void updateGame();
 	
+	/**
+	 * All graphics are placed in this method and
+	 * will be drawn every loop of the game thread.
+	 */
 	protected abstract void updateGraphics(Canvas c);
 
 }

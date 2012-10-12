@@ -1,4 +1,3 @@
-package it.chalmers.dat255_bearded_octo_lama.games;
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -18,6 +17,7 @@ package it.chalmers.dat255_bearded_octo_lama.games;
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package it.chalmers.dat255_bearded_octo_lama.games;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
 
@@ -40,8 +40,8 @@ public class CalculusGame extends AbstractGameView {
 	private int var1, var2;
 	
 	public CalculusGame(Context context, RelativeLayout parentView,
-			LinearLayout btnHolder) {
-		super(context, parentView, btnHolder);
+			LinearLayout dismissAlarmLayout) {
+		super(context, parentView, dismissAlarmLayout);
 		
 		initUI();
 		initGame();
@@ -68,6 +68,8 @@ public class CalculusGame extends AbstractGameView {
 		answerTextField.setWidth(260);
 		answerTextField.setHeight(60);
 		answerTextField.setInputType(InputType.TYPE_CLASS_NUMBER);
+		
+		//Adding a custom TextWatcher to handle the input as we want it to.
 		answerTextField.addTextChangedListener(new TextWatcher() {
 			
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -78,15 +80,9 @@ public class CalculusGame extends AbstractGameView {
 			}
 			
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
+					int after) {}
 			
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void afterTextChanged(Editable s) {}
 		});
 		
 		uiHolder.addView(answerTextField);

@@ -1,4 +1,3 @@
-package it.chalmers.dat255_bearded_octo_lama.games;
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -18,6 +17,7 @@ package it.chalmers.dat255_bearded_octo_lama.games;
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package it.chalmers.dat255_bearded_octo_lama.games;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -30,8 +30,8 @@ public class GameTestClass extends AbstractGameView {
 	private int var1, var2;
 	private float x, y;
 	
-	public GameTestClass(Context context, RelativeLayout parentView, LinearLayout btnHolder) {
-		super(context, parentView, btnHolder);
+	public GameTestClass(Context context, RelativeLayout parentView, LinearLayout dismissAlarmLayout) {
+		super(context, parentView, dismissAlarmLayout);
 		
 		x = y = 0;
 	}

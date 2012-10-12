@@ -24,8 +24,8 @@ import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.os.Bundle;
 import android.view.View;
@@ -35,8 +35,8 @@ import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 	private TextView currentTimeView, currentDateView;
-	private RelativeLayout contentHolder;
-	private LinearLayout btnHolder;
+	private RelativeLayout mainContentLayout;
+	private LinearLayout dismissAlarmLayout;
 	private boolean gameIsActive;
 	private AbstractGameView gameView;
 	
@@ -48,8 +48,8 @@ public class NotificationActivity extends AbstractActivity {
 		
 		currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
-        contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
-        btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
+        mainContentLayout = (RelativeLayout) findViewById(R.id.mainContentLayout);
+        dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
         
 	}
 	
@@ -75,15 +75,15 @@ public class NotificationActivity extends AbstractActivity {
 
 	private void initGame() {
 		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
-		btnHolder.setVisibility(View.GONE);
-		contentHolder.addView(gameView);
+		dismissAlarmLayout.setVisibility(View.GONE);
+		mainContentLayout.addView(gameView);
 		
 		//Adding all views that build the games UI after the surfaceView has been added.
-		//Otherwise the ui views would all get stuck under the surfaceview.
-		ArrayList<View> uiList = gameView.getUIComponents();
+		//Otherwise the UI views would all get stuck under the surface view.
+		List<View> uiList = gameView.getUIComponents();
 		if(uiList != null) {
 			for(View v : uiList) {
-				contentHolder.addView(v);
+				mainContentLayout.addView(v);
 			}
 		}
 		gameView.resume();
