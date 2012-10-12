@@ -52,8 +52,6 @@ public class NotificationActivity extends AbstractActivity {
         mainContentLayout = (RelativeLayout) findViewById(R.id.mainContentLayout);
         dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
         
-        gameView = new RocketLanderGame(this, mainContentLayout, dismissAlarmLayout);
-        initGame();
 	}
 	
 	@Override
