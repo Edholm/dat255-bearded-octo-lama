@@ -17,7 +17,6 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 
@@ -29,11 +28,17 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.provider.Settings;
 
+/**
+ * Used to describe a sound notification.
+ * @author Johan Andersson
+ * @modified Emil Edholm
+ */
 public class SoundNotification extends NotificationDecorator {
 	
-	List<Ringtone> notificationSounds = null;
-	Ringtone playing = null;
-	Activity act;
+	private List<Ringtone> notificationSounds = Collections.emptyList();
+	private Ringtone playing = null;
+	private final Activity act;
+	
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
 		this.act = act;
@@ -44,20 +49,23 @@ public class SoundNotification extends NotificationDecorator {
 	public void start() {
 		super.start();
 		Collections.shuffle(notificationSounds);
-		if(notificationSounds == null || notificationSounds.size() > 0){
+		
+		if(!notificationSounds.isEmpty()){
 			playing = notificationSounds.get(0);
 		} else {
-			//TODO: Fix context here.
-			playing = RingtoneManager.getRingtone(null, Settings.System.DEFAULT_ALARM_ALERT_URI);
+			// Use default sound if no sounds listed previously.
+			playing = RingtoneManager.getRingtone(act.getApplicationContext(), 
+													Settings.System.DEFAULT_ALARM_ALERT_URI);
 		}
 		playing.play();
 	}
 
+	@Override
 	public void stop() {
 		super.stop();
+		
 		if(playing != null && playing.isPlaying()){
 			playing.stop();
 		}
 	}
-
 }
