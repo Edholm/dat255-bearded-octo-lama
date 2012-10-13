@@ -19,6 +19,8 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.games;
 
+import java.util.Random;
+
 import it.chalmers.dat255_bearded_octo_lama.R;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -68,7 +70,10 @@ public class RocketLanderGame extends AbstractGameView {
 		
 		engineIsRunning = false;
 		currentYSpd = INIT_SPD;
-		currentXSpd = 0;
+		//Make so the initial x speed is a bit random.
+		Random random = new Random();
+		double randomValue = (random.nextInt(101)-50)/10.0;
+		currentXSpd = INIT_SPD*randomValue;
 	}
 	
 	@Override
