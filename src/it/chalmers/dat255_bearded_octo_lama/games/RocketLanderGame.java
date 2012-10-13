@@ -30,18 +30,17 @@ import android.widget.LinearLayout;
 public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
-	private final int GRAV_ACCEL = 100;
-	private final int ENGINE_ACCEL = 200;
-	private final int ENGINE_SIDE_ACCEL = 100;
-	private final int MAX_SPD = 500;
-	private final int INIT_SPD = 25;
+	private static final int GRAV_ACCEL = 90;
+	private static final int ENGINE_ACCEL = 140;
+	private static final int ENGINE_SIDE_ACCEL = 50;
+	private static final int INIT_SPD = 50;
 	
 	//Set goal constants
-	private final int MAX_VERT_SPD = 20;
-	private final int MAX_HORI_SPD = 15;
+	private static final int MAX_VERT_SPD = 100;
+	private static final int MAX_HORI_SPD = 50;
 	
 	private long lastTime;
-	private int currentYSpd, currentXSpd;
+	private double currentYSpd, currentXSpd;
 	private double rocketX, rocketY;
 	private boolean engineIsRunning;
 	private int groundYLevel;
@@ -98,7 +97,7 @@ public class RocketLanderGame extends AbstractGameView {
 		//Calculate new speed of the aircraft.
 		if(engineIsRunning) {
 			//Add engine acceleration.
-			yAcceleration -= ENGINE_ACCEL * timeSinceLast;
+			yAcceleration -= (ENGINE_ACCEL * timeSinceLast);
 			
 			//Check if the player touches the screen on the left or right side of the rocket.
 			if(pressX > rocketX) {
@@ -109,17 +108,16 @@ public class RocketLanderGame extends AbstractGameView {
 			}
 		}
 		
-		currentXSpd += xAcceleration * timeSinceLast;
-		currentYSpd += yAcceleration * timeSinceLast;
+		double oldYAcc = currentYSpd;
+		double oldXAcc = currentXSpd;
 		
-		if(currentYSpd > MAX_SPD) {
-			currentYSpd = MAX_SPD;
-		}
+		currentXSpd += xAcceleration;
+		currentYSpd += yAcceleration;
 		
-		rocketX += (currentXSpd * timeSinceLast);
+		rocketX += timeSinceLast * (currentXSpd + oldXAcc)/2.0;
 		//If the rocket goes outside the view we make it appear on the other side
 		rocketX = (rocketX < 0) ? getWidth() : rocketX % getWidth();
-		rocketY += (currentYSpd * timeSinceLast);
+		rocketY += timeSinceLast * (currentYSpd + oldYAcc)/2.0;
 		
 		//Check if aircraft has landed or crashed.
 		if(rocketY >= groundYLevel) {
@@ -162,11 +160,11 @@ public class RocketLanderGame extends AbstractGameView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {		
 		//Sleep a bit to not overload the system with unnecessary amount of data.
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(50);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		
 		//Check for input.
 		switch(event.getAction()) {
