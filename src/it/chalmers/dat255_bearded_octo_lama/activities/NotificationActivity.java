@@ -29,6 +29,7 @@ import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -46,7 +47,9 @@ public class NotificationActivity extends AbstractActivity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		
-		Alarm alarm = AlarmController.INSTANCE.getAlarm(getApplicationContext(), savedInstanceState.getInt(Alarm.AlarmColumns._ID));
+		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
+		Alarm alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
+		
 		n = NotificationFactory.create(alarm, this);
 		Log.d("horvtest", "reachedbal");
 		setContentView(R.layout.activity_notification);
