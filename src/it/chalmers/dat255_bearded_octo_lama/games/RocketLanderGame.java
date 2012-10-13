@@ -125,7 +125,8 @@ public class RocketLanderGame extends AbstractGameView {
 		if(rocketY >= groundYLevel) {
 			
 			//Check if it's a crash.
-			if(currentYSpd > MAX_VERT_SPD || currentXSpd > MAX_HORI_SPD) {
+			if(currentYSpd > MAX_VERT_SPD || currentXSpd > MAX_HORI_SPD
+					|| currentXSpd < -MAX_HORI_SPD) {
 				resetGame();
 			}
 			else {
