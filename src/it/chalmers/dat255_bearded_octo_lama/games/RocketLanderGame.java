@@ -144,16 +144,16 @@ public class RocketLanderGame extends AbstractGameView {
 		float canvasHeight = getHeight();
 		
 		// Paint heaven then ground.
-		painter.setARGB(100, 51, 204, 255);
+		painter.setARGB(255, 51, 204, 255);
 		c.drawRect(0, 0, canvasWidth, canvasHeight, painter);
-		painter.setARGB(100, 102, 0, 0);
+		painter.setARGB(255, 102, 0, 0);
 		c.drawRect(0, groundYLevel, canvasWidth, canvasHeight, painter);
 		
 		//Draw the rocket
 		c.drawBitmap(rocketBitmap, (float)(rocketX - rocketBitmap.getWidth()/2), 
 				(float)(rocketY - rocketBitmap.getHeight()), painter);
 		if(engineIsRunning) {
-			painter.setARGB(100, 255, 100, 0);
+			painter.setARGB(255, 255, 100, 0);
 			c.drawCircle((float)rocketX, (float)rocketY-10, 10, painter);
 		}
 	}
