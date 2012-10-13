@@ -98,13 +98,15 @@ public class RocketLanderGame extends AbstractGameView {
 		}
 		
 		rocketX += (currentXSpd * timeSinceLast);
+		//If the rocket goes outside the view we make it appear on the other side
+		rocketX = (rocketX < 0) ? getWidth() : rocketX % getWidth();
 		rocketY += (currentYSpd * timeSinceLast);
 		
 		//Check if aircraft has landed or crashed.
 		if(rocketY >= groundYLevel) {
 			
 			//Check if it's a crash.
-			if(currentYSpd > MAX_VERT_SPD) {
+			if(currentYSpd > MAX_VERT_SPD || currentXSpd > MAX_HORI_SPD) {
 				resetGame();
 			}
 			else {
