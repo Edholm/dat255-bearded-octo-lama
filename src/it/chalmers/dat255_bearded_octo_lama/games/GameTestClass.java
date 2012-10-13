@@ -22,7 +22,6 @@ package it.chalmers.dat255_bearded_octo_lama.games;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 
 public class GameTestClass extends AbstractGameView {
@@ -30,8 +29,8 @@ public class GameTestClass extends AbstractGameView {
 	private int var1, var2;
 	private float x, y;
 	
-	public GameTestClass(Context context, RelativeLayout parentView, LinearLayout dismissAlarmLayout) {
-		super(context, parentView, dismissAlarmLayout);
+	public GameTestClass(Context context, LinearLayout dismissAlarmLayout) {
+		super(context, dismissAlarmLayout);
 		
 		x = y = 0;
 	}

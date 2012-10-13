@@ -12,7 +12,7 @@ public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
 	private final int GRAV_ACCEL = 100;
-	private final int ENGINE_ACCEL = -200;
+	private final int ENGINE_ACCEL = 200;
 	private final int ENGINE_SIDE_ACCEL = 100;
 	private final int MAX_SPD = 500;
 	private final int INIT_SPD = 25;
@@ -26,6 +26,7 @@ public class RocketLanderGame extends AbstractGameView {
 	private double rocketX, rocketY;
 	private boolean engineIsRunning;
 	private int groundYLevel;
+	private float pressX;
 	
 	private Bitmap rocketBitmap;
 	
@@ -53,6 +54,8 @@ public class RocketLanderGame extends AbstractGameView {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
+		//When the size of the view is changed we are going to reset the position of the
+		//rocket and reset the ground level to avoid any issues with bad positioning.
 		rocketX = w/2;
 		rocketY = 0;
 		
@@ -76,16 +79,25 @@ public class RocketLanderGame extends AbstractGameView {
 		//Calculate new speed of the aircraft.
 		if(engineIsRunning) {
 			//Add engine acceleration.
-			yAcceleration += ENGINE_ACCEL * timeSinceLast;
+			yAcceleration -= ENGINE_ACCEL * timeSinceLast;
+			
+			//Check if the player touches the screen on the left or right side of the rocket.
+			if(pressX > rocketX) {
+				xAcceleration -= ENGINE_SIDE_ACCEL * timeSinceLast;
+			}
+			else {
+				xAcceleration += ENGINE_SIDE_ACCEL * timeSinceLast;
+			}
 		}
 		
+		currentXSpd += xAcceleration * timeSinceLast;
 		currentYSpd += yAcceleration * timeSinceLast;
 		
 		if(currentYSpd > MAX_SPD) {
 			currentYSpd = MAX_SPD;
 		}
 		
-		rocketX += (0);
+		rocketX += (currentXSpd * timeSinceLast);
 		rocketY += (currentYSpd * timeSinceLast);
 		
 		//Check if aircraft has landed or crashed.
@@ -138,6 +150,10 @@ public class RocketLanderGame extends AbstractGameView {
 		switch(event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			engineIsRunning = true;
+			pressX = event.getX();
+			break;
+		case MotionEvent.ACTION_MOVE:
+			pressX = event.getX();
 			break;
 		case MotionEvent.ACTION_UP:
 			engineIsRunning = false;
