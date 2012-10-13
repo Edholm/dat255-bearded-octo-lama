@@ -38,7 +38,7 @@ public class GameTestClass extends AbstractGameView {
 
 
 	@Override
-	protected void updateGraphics(Canvas c) {
+	protected void updateGraphics(Canvas c) {		
 		//Test the canvas by drawing some text, a circle and a nice background.
 		String text = var1 + " + " + var2;
 		

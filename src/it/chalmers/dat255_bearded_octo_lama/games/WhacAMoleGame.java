@@ -139,7 +139,7 @@ public class WhacAMoleGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {
+	protected void updateGraphics(Canvas c) {		
 		//Draw graphics for the game.
 		int currentWidth = getWidth()/3;
 		int currentHeight = getHeight()/3;

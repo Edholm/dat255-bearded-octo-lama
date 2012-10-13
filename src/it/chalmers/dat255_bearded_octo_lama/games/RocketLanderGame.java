@@ -120,7 +120,7 @@ public class RocketLanderGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {
+	protected void updateGraphics(Canvas c) {	
 		float canvasWidth = getWidth();
 		float canvasHeight = getHeight();
 		

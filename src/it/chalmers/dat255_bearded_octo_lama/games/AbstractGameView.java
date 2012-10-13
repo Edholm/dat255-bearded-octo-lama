@@ -40,8 +40,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	protected Paint painter;
 	protected List<View> uiList;
 	protected Context context;
+	protected boolean gameIsActive;
 	private SurfaceHolder surfaceHolder;
-	private boolean gameIsActive;
 	private AbstractGameView myself;
 	private Handler uiHandler;
 	
@@ -68,7 +68,6 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 			@Override
             public void handleMessage(Message m) {
 				RelativeLayout parentView = (RelativeLayout) getParent();
-				gameIsActive = false;
 				while(true) {
 					try {
 						t.join();
@@ -104,6 +103,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	 * Since the UI needs to be reconfigured a Handler will be used relay the message to the UI thread.
 	 */
 	protected void endGame() {
+		gameIsActive = false;
 		uiHandler.sendMessage(new Message());
 	}
 	
@@ -122,7 +122,9 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 			try {
 				updateGame();
 				c = surfaceHolder.lockCanvas(null);
-				updateGraphics(c);
+				if(c != null) {
+					updateGraphics(c);
+				}
 			} 
 			//Have this code in the finally brackets in case an exception is thrown.
 			//We don't want to leave the surface in an inconsistent state.
@@ -181,9 +183,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	protected abstract void updateGame();
 	
 	/**
-	 * All graphics are placed in this method and
+	 * All graphics updates should be placed in this method and
 	 * will be drawn every loop of the game thread.
 	 */
 	protected abstract void updateGraphics(Canvas c);
-
 }

@@ -95,6 +95,7 @@ public class CalculusGame extends AbstractGameView {
 
 	@Override
 	protected void updateGraphics(Canvas c) {
+		
 		int textSize = 40;
 		c.drawARGB(100, 51, 204, 255);
 		painter.setTextSize(textSize);
