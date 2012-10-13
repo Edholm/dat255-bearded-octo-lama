@@ -14,14 +14,16 @@ public class RocketLanderGame extends AbstractGameView {
 	//Set all physics constants
 	private final int GRAV_ACCEL = 100;
 	private final int ENGINE_ACCEL = -200;
+	private final int ENGINE_SIDE_ACCEL = 100;
 	private final int MAX_SPD = 500;
 	private final int INIT_SPD = 25;
 	
 	//Set goal constants
-	private final int MAX_LANDING_SPEED = 20;
+	private final int MAX_VERT_SPD = 20;
+	private final int MAX_HORI_SPD = 15;
 	
 	private long lastTime;
-	private int currentSpeed;
+	private int currentYSpd, currentXSpd;
 	private double rocketX, rocketY;
 	private boolean engineIsRunning;
 	private int groundYLevel;
@@ -43,14 +45,22 @@ public class RocketLanderGame extends AbstractGameView {
 	}
 	
 	private void resetGame() {
-		rocketX = parentView.getWidth();
+		rocketX = getWidth()/2;
 		rocketY = 0;
 		
 		engineIsRunning = false;
-		currentSpeed = INIT_SPD;
+		currentYSpd = INIT_SPD;
+	}
+	
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		rocketX = w/2;
+		rocketY = 0;
+		
+		groundYLevel = h/4 * 3;
 	}
 
-	
 	@Override
 	protected void updateGame() {
 		long now = System.currentTimeMillis();
@@ -58,10 +68,6 @@ public class RocketLanderGame extends AbstractGameView {
 		if(lastTime > now) {
 			return;
 		}
-		
-		//TODO: Remove this
-		rocketX = parentView.getWidth()/2;
-		groundYLevel = parentView.getWidth()/4 * 3;
 		
 		double timeSinceLast = (now - lastTime)/1000.0;
 		
@@ -75,20 +81,20 @@ public class RocketLanderGame extends AbstractGameView {
 			yAcceleration += ENGINE_ACCEL * timeSinceLast;
 		}
 		
-		currentSpeed += yAcceleration * timeSinceLast;
+		currentYSpd += yAcceleration * timeSinceLast;
 		
-		if(currentSpeed > MAX_SPD) {
-			currentSpeed = MAX_SPD;
+		if(currentYSpd > MAX_SPD) {
+			currentYSpd = MAX_SPD;
 		}
 		
 		rocketX += (0);
-		rocketY += (currentSpeed * timeSinceLast);
+		rocketY += (currentYSpd * timeSinceLast);
 		
 		//Check if aircraft has landed or crashed.
 		if(rocketY >= groundYLevel) {
 			
 			//Check if it's a crash.
-			if(currentSpeed > MAX_LANDING_SPEED) {
+			if(currentYSpd > MAX_VERT_SPD) {
 				resetGame();
 			}
 			else {
@@ -103,8 +109,8 @@ public class RocketLanderGame extends AbstractGameView {
 
 	@Override
 	protected void updateGraphics(Canvas c) {
-		float canvasWidth = parentView.getWidth();
-		float canvasHeight = parentView.getHeight();
+		float canvasWidth = getWidth();
+		float canvasHeight = getHeight();
 		
 		// Paint heaven then ground.
 		painter.setARGB(100, 51, 204, 255);

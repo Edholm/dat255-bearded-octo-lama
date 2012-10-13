@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 		listAlarmsBtn.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), ListAlarmsActivity.class));
+				startActivity(new Intent(v.getContext(), NotificationActivity.class));
 			}
 		});
 		
