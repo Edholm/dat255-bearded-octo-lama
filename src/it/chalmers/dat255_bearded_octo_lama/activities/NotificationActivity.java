@@ -21,6 +21,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
+import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,6 +52,8 @@ public class NotificationActivity extends AbstractActivity {
         mainContentLayout = (RelativeLayout) findViewById(R.id.mainContentLayout);
         dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
         
+        gameView = new RocketLanderGame(this, dismissAlarmLayout);
+        initGame();
 	}
 	
 	@Override

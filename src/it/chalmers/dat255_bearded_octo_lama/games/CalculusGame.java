@@ -39,9 +39,8 @@ public class CalculusGame extends AbstractGameView {
 	private String exerciseText;
 	private int var1, var2;
 	
-	public CalculusGame(Context context, RelativeLayout parentView,
-			LinearLayout dismissAlarmLayout) {
-		super(context, parentView, dismissAlarmLayout);
+	public CalculusGame(Context context, LinearLayout dismissAlarmLayout) {
+		super(context, dismissAlarmLayout);
 		
 		initUI();
 		initGame();
@@ -96,6 +95,7 @@ public class CalculusGame extends AbstractGameView {
 
 	@Override
 	protected void updateGraphics(Canvas c) {
+		
 		int textSize = 40;
 		c.drawARGB(100, 51, 204, 255);
 		painter.setTextSize(textSize);

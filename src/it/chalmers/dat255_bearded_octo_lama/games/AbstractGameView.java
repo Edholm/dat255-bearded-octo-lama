@@ -35,23 +35,21 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
-	protected RelativeLayout parentView;
 	protected LinearLayout dismissAlarmLayout;
 	protected Thread t;
 	protected Paint painter;
 	protected List<View> uiList;
 	protected Context context;
+	protected boolean gameIsActive;
 	private SurfaceHolder surfaceHolder;
-	private boolean gameIsActive;
 	private AbstractGameView myself;
 	private Handler uiHandler;
 	
-	public AbstractGameView(Context context, RelativeLayout parentView, LinearLayout dismissAlarmLayout) {
+	public AbstractGameView(Context context, LinearLayout dismissAlarmLayout) {
 		super(context);
 		
 		myself = this;
 		this.dismissAlarmLayout = dismissAlarmLayout;
-		this.parentView = parentView;
 		this.context = context;
 		surfaceHolder = getHolder();
 		gameIsActive = false;
@@ -69,7 +67,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 		uiHandler = new Handler() {
 			@Override
             public void handleMessage(Message m) {
-				gameIsActive = false;
+				RelativeLayout parentView = (RelativeLayout) getParent();
 				while(true) {
 					try {
 						t.join();
@@ -105,6 +103,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	 * Since the UI needs to be reconfigured a Handler will be used relay the message to the UI thread.
 	 */
 	protected void endGame() {
+		gameIsActive = false;
 		uiHandler.sendMessage(new Message());
 	}
 	
@@ -123,7 +122,9 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 			try {
 				updateGame();
 				c = surfaceHolder.lockCanvas(null);
-				updateGraphics(c);
+				if(c != null) {
+					updateGraphics(c);
+				}
 			} 
 			//Have this code in the finally brackets in case an exception is thrown.
 			//We don't want to leave the surface in an inconsistent state.
@@ -182,9 +183,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	protected abstract void updateGame();
 	
 	/**
-	 * All graphics are placed in this method and
+	 * All graphics updates should be placed in this method and
 	 * will be drawn every loop of the game thread.
 	 */
 	protected abstract void updateGraphics(Canvas c);
-
 }

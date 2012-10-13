@@ -31,15 +31,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class WhacAMoleGame extends AbstractGameView {
 	private List<Integer>  btnsToHit;
 	
-	public WhacAMoleGame(Context context, RelativeLayout parentView,
-			LinearLayout dismissAlarmLayout) {
-		super(context, parentView, dismissAlarmLayout);
+	public WhacAMoleGame(Context context, LinearLayout dismissAlarmLayout) {
+		super(context, dismissAlarmLayout);
 		
 		initUI();
 		initGame();
@@ -141,10 +139,10 @@ public class WhacAMoleGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {
+	protected void updateGraphics(Canvas c) {		
 		//Draw graphics for the game.
-		int currentWidth = parentView.getWidth()/3;
-		int currentHeight = parentView.getHeight()/3;
+		int currentWidth = getWidth()/3;
+		int currentHeight = getHeight()/3;
 		
 		c.drawARGB(100, 61, 245, 0);
 		
