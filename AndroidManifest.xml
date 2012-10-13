@@ -57,11 +57,12 @@
 
         <activity
             android:name=".activities.ListAlarmsActivity"
+            android:exported="false"
             android:label="@string/title_activity_list_alarms" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.LISTALARMS" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
