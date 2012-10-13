@@ -67,6 +67,7 @@ public class RocketLanderGame extends AbstractGameView {
 		
 		engineIsRunning = false;
 		currentYSpd = INIT_SPD;
+		currentXSpd = 0;
 	}
 	
 	@Override
@@ -158,14 +159,7 @@ public class RocketLanderGame extends AbstractGameView {
 	}
 	
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {		
-		//Sleep a bit to not overload the system with unnecessary amount of data.
-//		try {
-//			Thread.sleep(50);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
+	public boolean onTouchEvent(MotionEvent event) {
 		//Check for input.
 		switch(event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
