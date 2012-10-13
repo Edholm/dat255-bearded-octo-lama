@@ -34,6 +34,7 @@ public class TestAlarm extends AndroidTestCase {
 	public final void testAlarm() {
 		Alarm a = new Alarm(cursor);
 		
+		assertEquals(0, a.getId());
 		assertEquals(hour, a.getHour());
 		assertEquals(minute, a.getMinute());
 		assertEquals(timeInMS, a.getTimeInMS());
