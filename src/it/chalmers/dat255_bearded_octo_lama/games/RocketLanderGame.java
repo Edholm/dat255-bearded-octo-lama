@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 public class RocketLanderGame extends AbstractGameView {
 	
@@ -30,9 +29,8 @@ public class RocketLanderGame extends AbstractGameView {
 	
 	private Bitmap rocketBitmap;
 	
-	public RocketLanderGame(Context context, RelativeLayout parentView,
-			LinearLayout dismissAlarmLayout) {
-		super(context, parentView, dismissAlarmLayout);
+	public RocketLanderGame(Context context, LinearLayout dismissAlarmLayout) {
+		super(context, dismissAlarmLayout);
 		
 		initGame();
 	}

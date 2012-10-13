@@ -35,7 +35,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
-	protected RelativeLayout parentView;
 	protected LinearLayout dismissAlarmLayout;
 	protected Thread t;
 	protected Paint painter;
@@ -46,12 +45,11 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	private AbstractGameView myself;
 	private Handler uiHandler;
 	
-	public AbstractGameView(Context context, RelativeLayout parentView, LinearLayout dismissAlarmLayout) {
+	public AbstractGameView(Context context, LinearLayout dismissAlarmLayout) {
 		super(context);
 		
 		myself = this;
 		this.dismissAlarmLayout = dismissAlarmLayout;
-		this.parentView = parentView;
 		this.context = context;
 		surfaceHolder = getHolder();
 		gameIsActive = false;
@@ -69,6 +67,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 		uiHandler = new Handler() {
 			@Override
             public void handleMessage(Message m) {
+				RelativeLayout parentView = (RelativeLayout) getParent();
 				gameIsActive = false;
 				while(true) {
 					try {

@@ -31,15 +31,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class WhacAMoleGame extends AbstractGameView {
 	private List<Integer>  btnsToHit;
 	
-	public WhacAMoleGame(Context context, RelativeLayout parentView,
-			LinearLayout dismissAlarmLayout) {
-		super(context, parentView, dismissAlarmLayout);
+	public WhacAMoleGame(Context context, LinearLayout dismissAlarmLayout) {
+		super(context, dismissAlarmLayout);
 		
 		initUI();
 		initGame();
