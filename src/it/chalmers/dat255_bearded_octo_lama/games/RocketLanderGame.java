@@ -46,7 +46,7 @@ public class RocketLanderGame extends AbstractGameView {
 	private int groundYLevel;
 	private float pressX;
 	
-	private Bitmap rocketBitmap;
+	private Bitmap rocketBitmap, backgroundBitmap;
 	
 	public RocketLanderGame(Context context, LinearLayout dismissAlarmLayout) {
 		super(context, dismissAlarmLayout);
@@ -57,6 +57,7 @@ public class RocketLanderGame extends AbstractGameView {
 	private void initGame() {
 		lastTime = System.currentTimeMillis() + 100;
 		rocketBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rocket);
+		backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rocket_background);
 		
 		resetGame();
 	}
@@ -79,6 +80,8 @@ public class RocketLanderGame extends AbstractGameView {
 		rocketY = 0;
 		
 		groundYLevel = h/4 * 3;
+		//Rezise the background
+		backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, w, h, true);
 	}
 
 	@Override
@@ -140,14 +143,8 @@ public class RocketLanderGame extends AbstractGameView {
 
 	@Override
 	protected void updateGraphics(Canvas c) {	
-		float canvasWidth = getWidth();
-		float canvasHeight = getHeight();
-		
-		// Paint heaven then ground.
-		painter.setARGB(255, 51, 204, 255);
-		c.drawRect(0, 0, canvasWidth, canvasHeight, painter);
-		painter.setARGB(255, 102, 0, 0);
-		c.drawRect(0, groundYLevel, canvasWidth, canvasHeight, painter);
+		//Paint the background
+		c.drawBitmap(backgroundBitmap, 0, 0, painter);
 		
 		//Draw the rocket
 		c.drawBitmap(rocketBitmap, (float)(rocketX - rocketBitmap.getWidth()/2), 
