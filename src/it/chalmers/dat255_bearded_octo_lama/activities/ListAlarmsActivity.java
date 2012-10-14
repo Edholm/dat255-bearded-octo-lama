@@ -3,6 +3,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 import it.chalmers.dat255_bearded_octo_lama.Alarm;
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ListAlarmsActivity extends AbstractActivity {
 
@@ -37,11 +38,17 @@ public class ListAlarmsActivity extends AbstractActivity {
         lv.setAdapter(adapter);
     }
     
-    private final static OnCheckedChangeListener checkedChangedListener = new OnCheckedChangeListener() {
-		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			Alarm alarm = (Alarm)buttonView.getTag();
+    private final static OnClickListener checkboxClickListener = new OnClickListener() {
+		public void onClick(View v) {
+			Alarm alarm = (Alarm)v.getTag();
 			
-			AlarmController.INSTANCE.toggleAlarm(buttonView.getContext(), alarm.getId());
+			AlarmController.INSTANCE.toggleAlarm(v.getContext(), alarm.getId());
+			
+			// Get the updated alarm and display time left if re-enabled
+			alarm = AlarmController.INSTANCE.getAlarm(v.getContext(), alarm.getId());
+			if(alarm.isEnabled()) {
+				Toast.makeText(v.getContext(), "Time left " + Time.getTimeLeft(alarm.getTimeInMS()), Toast.LENGTH_SHORT).show();
+			}
 		}
 	};
 	
@@ -98,7 +105,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 	
 	        // Make the checkbox change listenable.
 	        holder.enabled.setTag(alarm);
-	        holder.enabled.setOnCheckedChangeListener(checkedChangedListener);
+	        holder.enabled.setOnClickListener(checkboxClickListener);
 	        
 	        return row;
 		}
