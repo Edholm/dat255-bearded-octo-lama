@@ -119,7 +119,6 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.ENABLED, alarm.isEnabled() ? 0 : 1);
 		
 		cr.update(uri, values, null, null);
-		renewAlarmQueue(c);
 	}
 	
 	/**
@@ -217,19 +216,25 @@ public enum AlarmController {
 		return theAlarm;
 	} 
 	
-	/** Remove all alarms that have expired (time for their alert has passed) from the database */ 
-	public void clearExpired(Context c) {
+	/** Disable all alarms that have expired (time for their alert has passed) */ 
+	public void disableExpired(Context c) {
 		ContentResolver cr = c.getContentResolver();
 		long now = System.currentTimeMillis();
+		List<Alarm> alarms = getAlarms(c, "TIME_IN_MS <= ?", new String[]{now + ""}, null);
 		
-		// Removes all alarms from the database whoose time has passed.
-		cr.delete(Alarm.AlarmColumns.CONTENT_URI, "TIME_IN_MS <= ?", new String[]{now + ""});
+		Uri uri = null;
+		ContentValues value = new ContentValues();
+		value.put(Alarm.AlarmColumns.ENABLED, 0); // == Disable alarm.
+		for(Alarm a : alarms) {
+			uri = Alarm.AlarmColumns.CONTENT_URI.buildUpon().appendPath(a.getId() + "").build();
+			cr.update(uri, value, null, null);
+		}
 	}
 	
 	/** Enable an alarm in the AlarmManager. Only one alarm should be activated at a time */
 	private void enableAlarmManager(Context c, Alarm a) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
-		
+
 		// Append the alarm ID to the intent, then the receiving class can fetch the alarm.
 		Intent intent = new Intent(c, AlarmReceiver.class);
 		intent.putExtra(Alarm.AlarmColumns._ID, a.getId());
