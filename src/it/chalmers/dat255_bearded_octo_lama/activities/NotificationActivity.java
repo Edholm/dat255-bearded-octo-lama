@@ -30,8 +30,8 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -51,12 +51,24 @@ public class NotificationActivity extends AbstractActivity {
 		Alarm alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
 		
 		n = NotificationFactory.create(alarm, this);
-		Log.d("horvtest", "reachedbal");
 		setContentView(R.layout.activity_notification);
         contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
         btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
         
-	}
+        Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
+        disAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				n.stop();
+				finish();
+			}
+        });
+        Button snoozeAlarm = (Button) findViewById(R.id.snoozeBtn);
+        snoozeAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				//TODO fix snooze
+			}
+        });   
+	} 
 	
 	@Override
 	protected void onResume() {
