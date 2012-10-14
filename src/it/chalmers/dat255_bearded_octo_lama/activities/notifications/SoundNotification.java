@@ -65,10 +65,14 @@ public class SoundNotification extends NotificationDecorator {
 			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
 					Settings.System.DEFAULT_ALARM_ALERT_URI);
 		}
-		Uri uri = RingtoneFinder.findRingtoneUri(act, playing);
-		if(uri == null){
-			uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
-			Log.d("SoundNotification", "Uri is null replaced with "+uri);
+		//If clause if you use the emulator or device without sound
+		Uri uri = null;
+		if(playing != null){
+			uri = RingtoneFinder.findRingtoneUri(act, playing);
+			if(uri == null){
+				uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
+				Log.d("SoundNotification", "Uri is null replaced with "+uri);
+			}
 		}
 
 		//If clause if you use the emulator or device without sound
