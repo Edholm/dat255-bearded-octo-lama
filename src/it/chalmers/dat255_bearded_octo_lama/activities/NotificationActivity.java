@@ -19,45 +19,64 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import java.util.List;
+
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
+import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
+import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
-	private TextView currentTimeView, currentDateView;
-	private RelativeLayout contentHolder;
-	private LinearLayout btnHolder;
+
+	private Notification n;
+	private LinearLayout dismissAlarmLayout;
+	private RelativeLayout mainContentHolder;
 	private boolean gameIsActive;
-	private AbstractGameView gameView;
+	private AbstractGameView gameView; 
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_notification);
+		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
+		Alarm alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
 		
-		currentTimeView = (TextView) findViewById(R.id.currentTime);
-        currentDateView = (TextView) findViewById(R.id.currentDate);
-        contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
-        btnHolder = (LinearLayout) findViewById(R.id.btnHolder);
+		n = NotificationFactory.create(alarm, this);
+		setContentView(R.layout.activity_notification);
         
-	}
+		mainContentHolder = (RelativeLayout) findViewById(R.id.mainContentLayout);
+		dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
+		
+        Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
+        disAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				n.stop();
+				finish();
+			}
+        });
+        Button snoozeAlarm = (Button) findViewById(R.id.snoozeBtn);
+        snoozeAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				//TODO fix snooze
+			}
+        });
+        
+	} 
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		n.start();
 		
-		setClock();
 		
 		if(gameIsActive) {
 			gameView.resume();
@@ -72,29 +91,17 @@ public class NotificationActivity extends AbstractActivity {
 			gameView.pause();
 		}
 	}
-
-	private void initGame() {
-		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
-		btnHolder.setVisibility(View.GONE);
-		contentHolder.addView(gameView);
-		
-		//Adding all views that build the games UI after the surfaceView has been added.
-		//Otherwise the ui views would all get stuck under the surfaceview.
-		ArrayList<View> uiList = gameView.getUIComponents();
-		if(uiList != null) {
-			for(View v : uiList) {
-				contentHolder.addView(v);
+	
+	public void endGame(AbstractGameView gameView) {
+		//This will set the dismiss controls to visible again while removing the views used by the game.
+		dismissAlarmLayout.setVisibility(View.VISIBLE);
+		mainContentHolder.removeView(gameView);
+		if(gameView.getUIComponents() != null) {
+			for(View v : gameView.getUIComponents()) {
+				mainContentHolder.removeView(v);
 			}
 		}
-		gameView.resume();
 	}
 
-	private void setClock() {
-		//TODO: Do a cleaner and better version of this.
-		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
-		String currentDateString = DateFormat.getDateInstance().format(new Date());
-		
-		currentTimeView.setText(currentTimeString);
-		currentDateView.setText(currentDateString);
-	}
+
 }

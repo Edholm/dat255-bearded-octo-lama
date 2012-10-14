@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!-- 
+/**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
- *
+ * 
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -17,18 +15,22 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
--->
+ *
+ */
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <ListView 
-        android:id="@+id/settingsListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-    </ListView>
+package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
-</LinearLayout>
+
+
+public interface Notification {
+	/**
+	 * Action to be performed upon notification activation.
+	 */
+	public void start();
+	
+	/**
+	 * Action to be performed upon notification deactivation.
+	 */
+	public void stop();
+
+}

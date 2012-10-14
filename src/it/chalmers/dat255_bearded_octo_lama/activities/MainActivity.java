@@ -19,7 +19,6 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
-import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
 
 import java.text.DateFormat;
@@ -41,15 +40,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Clear expired alarms
-        AlarmController.INSTANCE.clearExpired(this);
-        
-        
         setContentView(R.layout.activity_main);
         
         currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
-        
+       
         initButtons();
     }
 

@@ -23,17 +23,30 @@ import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.BaseColumns;
+import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		try {
-			Intent notificationIntent = new Intent(context, NotificationActivity.class);
-			notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			notificationIntent.putExtras(intent); // Forward all extras.
+			AlarmController ac = AlarmController.INSTANCE;
 			
-			context.startActivity(notificationIntent);
+			int alarmID = intent.getExtras().getInt(BaseColumns._ID);
+			Alarm alarm = ac.getAlarm(context, alarmID);
+			
+			if(alarm.isEnabled()) {
+				Intent notificationIntent = new Intent(context, NotificationActivity.class);
+				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				notificationIntent.putExtras(intent); // Forward all extras.
+				
+				context.startActivity(notificationIntent);
+			} else {
+				Log.d("AlarmReceiver", "Received disabled alarm. Alarm ID: " + alarmID);
+			}
+			
+			ac.disableExpired(context);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

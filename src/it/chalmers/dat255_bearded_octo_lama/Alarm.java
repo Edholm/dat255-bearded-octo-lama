@@ -19,9 +19,13 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 
 /**
@@ -30,13 +34,19 @@ import android.provider.BaseColumns;
  * @date 28 sep 2012
  */
 public class Alarm {
-	
+
 	private final int id;
 	private final int hour, minute;
 	private final long timeInMS;
 	private final boolean enabled;
+	private final boolean textNotification;
+	private final boolean soundNotification;
+	private final boolean vibrationNotification;
+	private final ArrayList<Integer> ringtoneIDs = new ArrayList<Integer>();
+	private final boolean gameNotification;
+	private final String gameName;
 	// More options goes here later...
-	
+
 	/**
 	 * Create a new Alarm from a content provider.
 	 * @param c the cursor object tied to the content provider.
@@ -47,11 +57,30 @@ public class Alarm {
 		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
 		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
 		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
+		this.textNotification      = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
+		this.soundNotification     = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
+		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
+		this.gameNotification      = c.getInt(AlarmColumns.GAME_NOTIFICATION_ID) == 1;
+		this.gameName              = c.getString(AlarmColumns.GAME_NAME_ID);
+		
+		String[] toneID = c.getString(AlarmColumns.RINGTONE_ID).split(",");
+		for(String s:toneID){
+			//Put try-catch inside of loop if an ID in the middle would fail
+			//I would still like rest of IDs to be parsed.
+			try {
+				int i = Integer.parseInt(s);
+				ringtoneIDs.add(i);
+			} catch (NumberFormatException e) {
+				Log.e("Alarm-constructor-exception", "Tried to parse something different then int");
+			}
+		}
+
 	}
-	
+
 	/**
 	 * @return the alarm id
 	 */
+
 	public int getId() {
 		return id;
 	}
@@ -83,16 +112,60 @@ public class Alarm {
 	public boolean isEnabled() {
 		return enabled;
 	}
+
+	/**
+	 * @return whether or not the alarm has text notification
+	 */
+	public boolean hasTextNotification() {
+		return textNotification;
+	}
+
+	/**
+	 * @return whether or not the alarm has sound notification
+	 */
+	public boolean hasSoundNotification() {
+		return soundNotification;
+	}
+	/**
+	 * @return whether or not the alarm has vibration notification
+	 */
+	public boolean hasVibrationNotification() {
+		return vibrationNotification;
+	}
+	/**
+	 * @return whether or not the alarm has game notification
+	 */
+	public boolean hasGameNotification() {
+		return gameNotification;
+	}
 	
+	/**
+	 * @return the name of the selected game.
+	 */
+	public String getGameName() {
+		return gameName;
+	}
+	
+	public List<Integer> getRingtoneIDs(){
+		return ringtoneIDs;
+	}
+
 	@Override
 	public String toString() {
 		return "Alarm " + id + " {\n" +
 				"\tHour: " + hour +
-				"\n\tMInute: " + minute +
+				"\n\tMinute: " + minute +
 				"\n\tTime (millisec): " + timeInMS +
-				"\n\tIs enabled: " + enabled + "\n}";
+				"\n\tIs enabled: " + enabled + 
+				"\n\tText notification: " + textNotification +
+				"\n\tSound notification: " + soundNotification +
+				"\n\tVibration notification: " + vibrationNotification +
+				"\n\tGame notification: " + gameNotification +
+				"\n\tGame name: " + gameName +
+				"\n}";
+		//TODO update
 	}
-	
+
 	/** 
 	 * This class describes the columns for use with a ContentProvider 
 	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
@@ -100,20 +173,34 @@ public class Alarm {
 	public static class AlarmColumns implements BaseColumns {
 		/** The uri that represents an alarm */
 		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
-		
+
 		// The rest is pretty self explanatory
 		public static final String HOUR = "HOUR";
 		public static final String MINUTE = "MINUTE";
 		public static final String TIME = "TIME_IN_MS";
 		public static final String ENABLED = "ENABLED";
+		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
+		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
+		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
+		public static final String RINGTONE = "RINGTONE";
+		public static final String GAME_NOTIFICATION = "GAME_NOTIFICATION";
+		public static final String GAME_NAME = "GAME_NAME";
 		
 		// Some convenience fields. Makes a lot of stuff easier.
-		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED};
-		
+		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
+			TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
+			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
+
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
 		public static final int MINUTE_ID  = 2;
 		public static final int TIME_ID    = 3;
 		public static final int ENABLED_ID = 4;
+		public static final int TEXT_NOTIFICATION_ID = 5;
+		public static final int SOUND_NOTIFICATION_ID = 6;
+		public static final int VIBRATION_NOTIFICATION_ID = 7;
+		public static final int RINGTONE_ID = 8;
+		public static final int GAME_NOTIFICATION_ID = 9;
+		public static final int GAME_NAME_ID = 10;
 	}
 }

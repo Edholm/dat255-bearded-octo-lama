@@ -1,4 +1,3 @@
-package it.chalmers.dat255_bearded_octo_lama.games;
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -18,8 +17,10 @@ package it.chalmers.dat255_bearded_octo_lama.games;
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package it.chalmers.dat255_bearded_octo_lama.games;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 
 import java.util.Random;
 
@@ -33,15 +34,14 @@ import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
 
+@Game(name = "Calculus")
 public class CalculusGame extends AbstractGameView {
 	private String exerciseText;
 	private int var1, var2;
 	
-	public CalculusGame(Context context, RelativeLayout parentView,
-			LinearLayout btnHolder) {
-		super(context, parentView, btnHolder);
+	public CalculusGame(Context context) {
+		super(context);
 		
 		initUI();
 		initGame();
@@ -68,6 +68,8 @@ public class CalculusGame extends AbstractGameView {
 		answerTextField.setWidth(260);
 		answerTextField.setHeight(60);
 		answerTextField.setInputType(InputType.TYPE_CLASS_NUMBER);
+		
+		//Adding a custom TextWatcher to handle the input as we want it to.
 		answerTextField.addTextChangedListener(new TextWatcher() {
 			
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -78,15 +80,9 @@ public class CalculusGame extends AbstractGameView {
 			}
 			
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
+					int after) {}
 			
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void afterTextChanged(Editable s) {}
 		});
 		
 		uiHolder.addView(answerTextField);
@@ -100,6 +96,7 @@ public class CalculusGame extends AbstractGameView {
 
 	@Override
 	protected void updateGraphics(Canvas c) {
+		
 		int textSize = 40;
 		c.drawARGB(100, 51, 204, 255);
 		painter.setTextSize(textSize);

@@ -1,4 +1,3 @@
-package it.chalmers.dat255_bearded_octo_lama.games;
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -18,11 +17,15 @@ package it.chalmers.dat255_bearded_octo_lama.games;
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import java.util.ArrayList;
-import java.util.Random;
+package it.chalmers.dat255_bearded_octo_lama.games;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -30,16 +33,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+@Game(name = "WhacAMole")
 public class WhacAMoleGame extends AbstractGameView {
-	private ArrayList<Integer>  btnsToHit;
+	private List<Integer>  btnsToHit;
 	
-	public WhacAMoleGame(Context context, RelativeLayout parentView,
-			LinearLayout btnHolder) {
-		super(context, parentView, btnHolder);
-		// TODO Auto-generated constructor stub
+	public WhacAMoleGame(Context context) {
+		super(context);
 		
 		initUI();
 		initGame();
@@ -54,17 +55,23 @@ public class WhacAMoleGame extends AbstractGameView {
 		}
 		painter.setColor(getResources().getColor(R.color.red));
 	}
-
+	
+	
+	/**
+	 * Since the method setBackground for buttons is API Level 16 we are using
+	 * the older deprecated setBackgroundDrawable to make the buttons transparent.
+	 */
 	@SuppressWarnings("deprecation")
 	private void initUI() {
+		
 		//Initiate ui components and add them to the view.
 		LinearLayout uiLayout = new LinearLayout(context);
-		//View.inflate(context, R.layout.game_whacamole, uiLayout);
 		
 		uiLayout.setOrientation(LinearLayout.VERTICAL);
 		uiLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		uiLayout.setWeightSum(3);
 		
+		//Using nested LinearLayout's instead of a GridLayout to make it work properly on low API Levels.
 		LinearLayout horizontalLayout1 = new LinearLayout(context);
 		horizontalLayout1.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
 				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
@@ -89,6 +96,7 @@ public class WhacAMoleGame extends AbstractGameView {
 			}
 		};
 		
+		//Here we add all the buttons that represent each colored square on the gameboard.
 		int count = 1;
 		for(int y = 1; y <= 3; y++) {
 			for(int x = 1; x <= 3; x++) {
@@ -117,6 +125,10 @@ public class WhacAMoleGame extends AbstractGameView {
 		uiList.add(uiLayout);
 	}
 	
+	/**
+	 * Method for handling all button clicks in this game.
+	 * @param v The button which called the method.
+	 */
 	public void onItemClick(View v) {
 		Toast.makeText(context, v.getId() + "", Toast.LENGTH_SHORT).show();
 		btnsToHit.remove((Object)v.getId());
@@ -130,10 +142,10 @@ public class WhacAMoleGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {
+	protected void updateGraphics(Canvas c) {		
 		//Draw graphics for the game.
-		int currentWidth = parentView.getWidth()/3;
-		int currentHeight = parentView.getHeight()/3;
+		int currentWidth = getWidth()/3;
+		int currentHeight = getHeight()/3;
 		
 		c.drawARGB(100, 61, 245, 0);
 		

@@ -19,6 +19,10 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -32,6 +36,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Manages all the alarms.
@@ -51,45 +56,62 @@ public enum AlarmController {
 	 */
 	public Uri addAlarm(Context c, boolean enabled, int hour, int minute) {
 		ContentResolver cr = c.getContentResolver();
-		ContentValues values = new ContentValues();
+		long time = Time.timeInMsAt(hour, minute);
 		
+		//TODO Remove hardcoded list
+		List<Integer> ringtoneIDs = new ArrayList<Integer>();
+		ringtoneIDs.add(0);
 		
+		//TODO: Remove hardcoded values
+		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
+		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		renewAlarmQueue(c);
+		return uri;
+	}
+	
+	/** Only used for testing. Remove in production code */
+	public Uri addTestAlarm(Context c) {
+		ContentResolver cr = c.getContentResolver();
 		Calendar then = Calendar.getInstance();
-		then.set(Calendar.HOUR_OF_DAY, hour);
-		then.set(Calendar.MINUTE, minute);
-		then.set(Calendar.SECOND, 0); // This makes the alarm go of at the right time
+		then.add(Calendar.SECOND, 5);
 		
-		if(then.before(Calendar.getInstance())) // Before "now" means we have to add a day
-			then.add(Calendar.DAY_OF_YEAR, 1);
+		List<Integer> ringtoneIDs = new ArrayList<Integer>();
+		ringtoneIDs.add(0);
 		
 		long time = then.getTimeInMillis();
+		ContentValues values = constructContentValues(
+				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
+				true, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
+
+		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		renewAlarmQueue(c);
+		return uri;
+	}
+
+	private ContentValues constructContentValues(int hour, int minute,
+			boolean enabled, long time, int textNot, int soundNot, int vibrationNot, List<Integer> RingtoneIDs, 
+			int gameNot, String gameName) {
+		ContentValues values = new ContentValues();
 		
 		values.put(Alarm.AlarmColumns.HOUR, hour);
 		values.put(Alarm.AlarmColumns.MINUTE, minute);
 		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
 		values.put(Alarm.AlarmColumns.TIME, time);
+		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
+		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
+		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
+		values.put(Alarm.AlarmColumns.GAME_NOTIFICATION, gameNot);
+		values.put(Alarm.AlarmColumns.GAME_NAME, gameName);
+
+		String s = "";
+		for(Integer i:RingtoneIDs){
+			s += i + ",";
+		}
+		//Used to remove last ","
+		s = s.substring(0, s.length()-1);
+		values.put(Alarm.AlarmColumns.RINGTONE, s);
 		
-		renewAlarmQueue(c);
-		return cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
-	}
-	
-	public Uri addTestAlarm(Context c) {
-		ContentResolver cr = c.getContentResolver();
-		ContentValues values = new ContentValues();
-		
-		
-		Calendar then = Calendar.getInstance();
-		then.add(Calendar.SECOND, 5);
-		
-		long time = then.getTimeInMillis();
-		
-		values.put(Alarm.AlarmColumns.HOUR, then.get(Calendar.HOUR_OF_DAY));
-		values.put(Alarm.AlarmColumns.MINUTE, then.get(Calendar.MINUTE));
-		values.put(Alarm.AlarmColumns.ENABLED, 1);
-		values.put(Alarm.AlarmColumns.TIME, time);
-		
-		renewAlarmQueue(c);
-		return cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		return values;
 	}
 	
 	/**
@@ -114,8 +136,14 @@ public enum AlarmController {
 		// Reverse enabled
 		values.put(Alarm.AlarmColumns.ENABLED, alarm.isEnabled() ? 0 : 1);
 		
+		// If we are re-enabling the alarm again, and its time has passed/expired, we need to update it first.
+		long now = System.currentTimeMillis();
+		if(!alarm.isEnabled() && alarm.getTimeInMS() < now) { // Since we are reversing the boolean...
+			long time = Time.timeInMsAt(alarm.getHour(), alarm.getMinute());
+			values.put(Alarm.AlarmColumns.TIME, time);
+		}
+		
 		cr.update(uri, values, null, null);
-		renewAlarmQueue(c);
 	}
 	
 	/**
@@ -140,15 +168,19 @@ public enum AlarmController {
 	}
 	
 	/**
-	 * Returns all alarms in the database.
+	 * Returns all alarms in the database sorted by hour and minute in ascending order.
 	 * @param c the context
 	 * @return a list of all alarms in the database.
 	 */
 	public List<Alarm> getAllAlarms(Context c) {
+		return getAlarms(c, null, null, "HOUR, MINUTE ASC");
+	}
+	
+	private List<Alarm> getAlarms(Context c, String where, String[] args, String sortOrder) {
 		ContentResolver cr = c.getContentResolver();
 		
 		Uri uri = Alarm.AlarmColumns.CONTENT_URI;
-		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS,null, null, "HOUR, MINUTE ASC");
+		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS, where, args, sortOrder);
 		
 		
 		if(cur != null && cur.moveToFirst()) {
@@ -185,53 +217,54 @@ public enum AlarmController {
 		
 		disableAlarmManager(c);
 	}
-	
 	/** Get the next alarm that is enabled and nearest in time to now */
 	private Alarm getNextInQueue(Context context) {
-		ContentResolver cr = context.getContentResolver();
-		// Returns all enabled alarms sorted by nearest alarm at the beginning.
-		Cursor c = cr.query(Alarm.AlarmColumns.CONTENT_URI, 
-								Alarm.AlarmColumns.ALL_COLUMNS, 
-									"ENABLED=1", null, "TIME_IN_MS ASC");
+		// Get all enabled alarms in descending order.
+		List<Alarm> alarms = getAlarms(context, "Enabled=?", new String[] {"1"}, "TIME_IN_MS DESC");
 		
-		Alarm alarm = null;
-		if(c != null && c.moveToFirst()) {
-			long now = System.currentTimeMillis();
-			do {
-				// Fetch the first enabled alarm that hasn't expired.
-				alarm = new Alarm(c);
-				if(alarm.getTimeInMS() < now) {
-					// Always disables an alarm since we only have enabled alarms.
-					toggleAlarm(context, alarm.getId());
-				}
-				else {
-					// No need to loop anymore; we have our match.
-					break;
-				}
-			} while(c.moveToNext());
-			c.close();
+		long minTime = Long.MAX_VALUE, now = System.currentTimeMillis();
+		Alarm theAlarm = null;
+		for(Alarm a : alarms) {
+			
+			// If alarm time has passed, disable alarm.
+			if(a.getTimeInMS() < now) {
+				toggleAlarm(context, a.getId());
+				continue;
+			}
+			
+			if(a.getTimeInMS() < minTime) {
+				minTime = a.getTimeInMS();
+				theAlarm = a;
+			}
 		}
-		return alarm;
-	}
+		Log.d("queue", "Next in queue: " + theAlarm.toString());
+		return theAlarm;
+	} 
 	
-	/** Remove all alarms that have expired (time for their alert has passed) from the database */ 
-	public void clearExpired(Context c) {
+	/** Disable all alarms that have expired (time for their alert has passed) */ 
+	public void disableExpired(Context c) {
 		ContentResolver cr = c.getContentResolver();
 		long now = System.currentTimeMillis();
+		List<Alarm> alarms = getAlarms(c, "TIME_IN_MS <= ?", new String[]{now + ""}, null);
 		
-		// Removes all alarms from the database whoose time has passed.
-		cr.delete(Alarm.AlarmColumns.CONTENT_URI, "TIME_IN_MS <= ?", new String[]{now + ""});
+		Uri uri = null;
+		ContentValues value = new ContentValues();
+		value.put(Alarm.AlarmColumns.ENABLED, 0); // == Disable alarm.
+		for(Alarm a : alarms) {
+			uri = Alarm.AlarmColumns.CONTENT_URI.buildUpon().appendPath(a.getId() + "").build();
+			cr.update(uri, value, null, null);
+		}
 	}
 	
 	/** Enable an alarm in the AlarmManager. Only one alarm should be activated at a time */
 	private void enableAlarmManager(Context c, Alarm a) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
-		
+
 		// Append the alarm ID to the intent, then the receiving class can fetch the alarm.
 		Intent intent = new Intent(c, AlarmReceiver.class);
 		intent.putExtra(Alarm.AlarmColumns._ID, a.getId());
 		
-		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 12, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
 	}
