@@ -21,7 +21,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+import it.chalmers.dat255_bearded_octo_lama.games.GameManager;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class GameNotification extends NotificationDecorator {
 	public void start() {
 		super.start();
 		
-		AbstractGameView gameView = new RocketLanderGame(act);
+		AbstractGameView gameView = GameManager.createGame(gameName, act);
 		
 		mainContentHolder = (RelativeLayout) act.findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) act.findViewById(R.id.dismissAlarmLayout);

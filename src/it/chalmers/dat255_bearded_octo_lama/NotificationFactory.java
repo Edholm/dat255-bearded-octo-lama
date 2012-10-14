@@ -50,7 +50,7 @@ public class NotificationFactory {
 			n = new VibrationNotification(n, act);
 		}
 		if(alarm.hasGameNotification()) {
-			n = new GameNotification(n, act);
+			n = new GameNotification(n, act, alarm.getGameName());
 		}
 		return n;
 	}

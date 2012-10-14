@@ -97,10 +97,10 @@ public final class GameManager {
 	 * @param c - the context
 	 * @return an instance of the game or null if something fails
 	 */
-	public static AbstractGameView createGame(Class<? extends AbstractGameView> type, Context c) {
+	public static AbstractGameView createGame(Class<?> type, Context c) {
 		AbstractGameView game = null;
 		try {
-			game = type.getConstructor(Context.class).newInstance(c);
+			game = (AbstractGameView)type.getConstructor(Context.class).newInstance(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -108,4 +108,9 @@ public final class GameManager {
 		
 		return game;
 	}
+	
+	public static AbstractGameView createGame(String gameName, Context c) {
+		return createGame(lookupGame(gameName), c);
+	}
+	
 }
