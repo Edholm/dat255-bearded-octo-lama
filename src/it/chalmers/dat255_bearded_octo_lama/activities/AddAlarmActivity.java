@@ -26,9 +26,9 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import android.content.res.TypedArray;
 import android.net.Uri;
@@ -142,23 +142,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Uri uri = ac.addAlarm(this, true, hour, minute);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 		
-		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
 		finish();
-	}
-	
-	/** Returns the time left until a specified time (in ms) */
-	private String getTimeLeft(long then) {
-		Calendar now = Calendar.getInstance();
-		
-		long millis = then - now.getTimeInMillis();
-		
-		long hours   = TimeUnit.MILLISECONDS.toHours(millis);
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - 
-			    		TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - 
-			    		TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
-		
-		return String.format("%d hour %d min, %d sec", hours , minutes, seconds);
 	}
 	
 	/**
