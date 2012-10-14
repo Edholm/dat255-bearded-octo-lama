@@ -19,8 +19,13 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.games;
 
-import java.util.Collections;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import org.reflections.Reflections;
 
 import android.content.Context;
 
@@ -38,8 +43,28 @@ public final class GameManager {
 	 * Searches for available games defined by their annotation.
 	 * @return returns a list of all types annotated with the {@code Game} annotation.
 	 */
-	public static Map<String, Class<? extends AbstractGameView>> getAvailableGames() {
-		return Collections.emptyMap();
+	public static Map<String, Class<?>> getAvailableGames() {
+		Reflections reflections = new Reflections("it.chalmers.dat255_bearded_octo_lama.games");
+		
+		Set<Class<?>> availableGames = reflections.getTypesAnnotatedWith(Game.class);
+		Map<String, Class<?>> games = new HashMap<String, Class<?>>();
+		
+		for(Class<?> game : availableGames) {
+			Game anno = game.getAnnotation(Game.class);
+			games.put(anno.name(), game);
+		}
+		
+		return games;
+	}
+	
+	/**
+	 * Retrieves the names of all available games.
+	 * @return a string array with the name of all available games.
+	 */
+	public static String[] getAvailableGamesStrings() {
+		Map<String, Class<?>> games = getAvailableGames();
+		
+		return games.keySet().toArray(new String[games.size()]);
 	}
 	
 	/**
