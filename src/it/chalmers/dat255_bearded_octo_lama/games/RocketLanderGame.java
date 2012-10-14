@@ -19,9 +19,11 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.games;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
+
 import java.util.Random;
 
-import it.chalmers.dat255_bearded_octo_lama.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +31,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
+@Game(name = "Rocket Lander")
 public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
