@@ -42,7 +42,9 @@ public class Alarm {
 	private final boolean textNotification;
 	private final boolean soundNotification;
 	private final boolean vibrationNotification;
-	private ArrayList<Integer> ringtoneIDs = new ArrayList<Integer>();
+	private final ArrayList<Integer> ringtoneIDs = new ArrayList<Integer>();
+	private final boolean gameNotification;
+	private final String gameName;
 	// More options goes here later...
 
 	/**
@@ -55,11 +57,12 @@ public class Alarm {
 		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
 		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
 		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
-		this.textNotification = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
-		this.soundNotification = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
+		this.textNotification      = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
+		this.soundNotification     = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
 		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
-
-
+		this.gameNotification      = c.getInt(AlarmColumns.GAME_NOTIFICATION_ID) == 1;
+		this.gameName              = c.getString(AlarmColumns.GAME_NAME_ID);
+		
 		String[] toneID = c.getString(AlarmColumns.RINGTONE_ID).split(",");
 		for(String s:toneID){
 			//Put try-catch inside of loop if an ID in the middle would fail
@@ -129,6 +132,19 @@ public class Alarm {
 	public boolean hasVibrationNotification() {
 		return vibrationNotification;
 	}
+	/**
+	 * @return whether or not the alarm has game notification
+	 */
+	public boolean hasGameNotification() {
+		return gameNotification;
+	}
+	
+	/**
+	 * @return the name of the selected game.
+	 */
+	public String getGameName() {
+		return gameName;
+	}
 	
 	public List<Integer> getRingtoneIDs(){
 		return ringtoneIDs;
@@ -144,6 +160,8 @@ public class Alarm {
 				"\n\tText notification: " + textNotification +
 				"\n\tSound notification: " + soundNotification +
 				"\n\tVibration notification: " + vibrationNotification +
+				"\n\tGame notification: " + gameNotification +
+				"\n\tGame name: " + gameName +
 				"\n}";
 		//TODO update
 	}
@@ -165,10 +183,13 @@ public class Alarm {
 		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
 		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
 		public static final String RINGTONE = "RINGTONE";
+		public static final String GAME_NOTIFICATION = "GAME_NOTIFICATION";
+		public static final String GAME_NAME = "GAME_NAME";
+		
 		// Some convenience fields. Makes a lot of stuff easier.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
 			TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
-			RINGTONE};
+			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
 
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
@@ -179,5 +200,7 @@ public class Alarm {
 		public static final int SOUND_NOTIFICATION_ID = 6;
 		public static final int VIBRATION_NOTIFICATION_ID = 7;
 		public static final int RINGTONE_ID = 8;
+		public static final int GAME_NOTIFICATION_ID = 9;
+		public static final int GAME_NAME_ID = 10;
 	}
 }

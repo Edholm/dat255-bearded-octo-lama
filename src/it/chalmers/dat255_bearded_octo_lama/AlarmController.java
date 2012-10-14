@@ -19,6 +19,8 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public enum AlarmController {
 		ringtoneIDs.add(0);
 		
 		//TODO: Remove hardcoded values
-		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs);
+		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
@@ -79,7 +81,7 @@ public enum AlarmController {
 		long time = then.getTimeInMillis();
 		ContentValues values = constructContentValues(
 				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
-				true, time, 1, 1, 1, ringtoneIDs);
+				true, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
 
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
@@ -87,7 +89,8 @@ public enum AlarmController {
 	}
 
 	private ContentValues constructContentValues(int hour, int minute,
-			boolean enabled, long time, int textNot, int soundNot, int vibrationNot, List<Integer> RingtoneIDs) {
+			boolean enabled, long time, int textNot, int soundNot, int vibrationNot, List<Integer> RingtoneIDs, 
+			int gameNot, String gameName) {
 		ContentValues values = new ContentValues();
 		
 		values.put(Alarm.AlarmColumns.HOUR, hour);
@@ -97,7 +100,9 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
 		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
 		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
-	
+		values.put(Alarm.AlarmColumns.GAME_NOTIFICATION, gameNot);
+		values.put(Alarm.AlarmColumns.GAME_NAME, gameName);
+
 		String s = "";
 		for(Integer i:RingtoneIDs){
 			s += i + ",";
@@ -106,7 +111,6 @@ public enum AlarmController {
 		s = s.substring(0, s.length()-1);
 		values.put(Alarm.AlarmColumns.RINGTONE, s);
 		
-
 		return values;
 	}
 	

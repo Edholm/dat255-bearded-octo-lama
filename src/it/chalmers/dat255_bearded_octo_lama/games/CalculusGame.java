@@ -20,6 +20,7 @@
 package it.chalmers.dat255_bearded_octo_lama.games;
 
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 
 import java.util.Random;
 
@@ -33,14 +34,14 @@ import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
 
+@Game(name = "Calculus")
 public class CalculusGame extends AbstractGameView {
 	private String exerciseText;
 	private int var1, var2;
 	
-	public CalculusGame(Context context, LinearLayout dismissAlarmLayout) {
-		super(context, dismissAlarmLayout);
+	public CalculusGame(Context context) {
+		super(context);
 		
 		initUI();
 		initGame();
