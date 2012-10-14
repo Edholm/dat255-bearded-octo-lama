@@ -85,31 +85,17 @@ public final class GameManager {
 	 * Creates an instance of the supplied game type with the specified layout and context.
 	 * @param type - the game type to instantiate.
 	 * @param c - the context
-	 * @return an instance of the game
+	 * @return an instance of the game or null if something fails
 	 */
 	public static AbstractGameView createGame(Class<? extends AbstractGameView> type, Context c) {
-		AbstractGameView game = createInstance(type);
-		// Forward parameters to the game instance.
-		return game;
-	}
-	
-	
-	/**
-	 * Creates a instance of the specified class 
-	 * @param class the class/type to create a instance of.
-	 * @return A instance of type {@code T} or null error occurred
-	 */
-	private static <T> T createInstance(Class<T> classToInstantiate) {
-		T tmpInstance = null;
+		AbstractGameView game = null;
 		try {
-			tmpInstance = classToInstantiate.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-			return null;
-		} catch(IllegalAccessException e) {
+			game = type.getConstructor(Context.class).newInstance(c);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		return tmpInstance;
+		
+		return game;
 	}
 }

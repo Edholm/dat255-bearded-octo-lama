@@ -32,7 +32,6 @@ import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
@@ -49,12 +48,16 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	public AbstractGameView(Context context) {
 		super(context);
 		
-		myself = this;
 		this.context = context;
+		initGameView();
+	}
+	
+	private void initGameView() {
+		myself        = this;
 		surfaceHolder = getHolder();
-		gameIsActive = false;
-		painter = new Paint();
-		uiList = new ArrayList<View>();
+		gameIsActive  = false;
+		painter       = new Paint();
+		uiList        = new ArrayList<View>();
 		
 		initHandler();
 		setSurfaceSize();
@@ -93,7 +96,7 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	
 	/**
 	 * This method will initiate termination of the game and the view.
-	 * Since the UI needs to be reconfigured a Handler will be used relay the message to the UI thread.
+	 * Since the UI needs to be reconfigured a {@code Handler} will be used relay the message to the UI thread.
 	 */
 	protected void endGame() {
 		gameIsActive = false;
