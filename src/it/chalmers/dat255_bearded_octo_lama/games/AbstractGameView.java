@@ -19,6 +19,8 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.games;
 
+import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
-	protected LinearLayout dismissAlarmLayout;
 	protected Thread t;
 	protected Paint painter;
 	protected List<View> uiList;
@@ -45,11 +46,10 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	private AbstractGameView myself;
 	private Handler uiHandler;
 	
-	public AbstractGameView(Context context, LinearLayout dismissAlarmLayout) {
+	public AbstractGameView(Context context) {
 		super(context);
 		
 		myself = this;
-		this.dismissAlarmLayout = dismissAlarmLayout;
 		this.context = context;
 		surfaceHolder = getHolder();
 		gameIsActive = false;
@@ -67,7 +67,6 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 		uiHandler = new Handler() {
 			@Override
             public void handleMessage(Message m) {
-				RelativeLayout parentView = (RelativeLayout) getParent();
 				while(true) {
 					try {
 						t.join();
@@ -77,14 +76,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 					}
 					break;
 				}
-				//This will set the dismiss controls to visible again while removing the views used by the game.
-				dismissAlarmLayout.setVisibility(View.VISIBLE);
-				parentView.removeView(myself);
-				if(getUIComponents() != null) {
-					for(View v : getUIComponents()) {
-						parentView.removeView(v);
-					}
-				}
+				NotificationActivity activity = (NotificationActivity) context;
+				activity.endGame(myself);
             }
 		};
 	}

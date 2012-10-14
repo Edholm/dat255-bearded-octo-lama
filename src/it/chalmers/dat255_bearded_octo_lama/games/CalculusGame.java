@@ -33,7 +33,6 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @Game(name = "Calculus")
@@ -41,8 +40,8 @@ public class CalculusGame extends AbstractGameView {
 	private String exerciseText;
 	private int var1, var2;
 	
-	public CalculusGame(Context context, LinearLayout dismissAlarmLayout) {
-		super(context, dismissAlarmLayout);
+	public CalculusGame(Context context) {
+		super(context);
 		
 		initUI();
 		initGame();

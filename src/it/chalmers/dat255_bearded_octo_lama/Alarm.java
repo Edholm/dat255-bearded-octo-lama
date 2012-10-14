@@ -38,6 +38,7 @@ public class Alarm {
 	private final boolean textNotification;
 	private final boolean soundNotification;
 	private final boolean vibrationNotification;
+	private final boolean gameNotification;
 	// More options goes here later...
 	
 	/**
@@ -53,6 +54,7 @@ public class Alarm {
 		this.textNotification = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
 		this.soundNotification = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
 		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
+		this.gameNotification = c.getInt(AlarmColumns.GAME_NOTIFICATION_ID) == 1;
 	}
 	
 	/**
@@ -110,6 +112,12 @@ public class Alarm {
 	public boolean hasVibrationNotification() {
 		return vibrationNotification;
 	}
+	/**
+	 * @return whether or not the alarm has game notification
+	 */
+	public boolean hasGameNotification() {
+		return gameNotification;
+	}
 	
 	@Override
 	public String toString() {
@@ -121,6 +129,7 @@ public class Alarm {
 				"\n\tText notification: " + textNotification +
 				"\n\tSound notification: " + soundNotification +
 				"\n\tVibration notification: " + vibrationNotification +
+				"\n\tGame notification: " + gameNotification +
 				"\n}";
 		//TODO update
 	}
@@ -141,9 +150,11 @@ public class Alarm {
 		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
 		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
 		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
+		public static final String GAME_NOTIFICATION = "GAME_NOTIFICATION";
 		// Some convenience fields. Makes a lot of stuff easier.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
-													TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION};
+													TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
+													GAME_NOTIFICATION};
 		
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
@@ -153,5 +164,6 @@ public class Alarm {
 		public static final int TEXT_NOTIFICATION_ID = 5;
 		public static final int SOUND_NOTIFICATION_ID = 6;
 		public static final int VIBRATION_NOTIFICATION_ID = 7;
+		public static final int GAME_NOTIFICATION_ID = 8;
 	}
 }

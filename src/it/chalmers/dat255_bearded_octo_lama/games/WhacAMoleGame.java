@@ -39,8 +39,8 @@ import android.widget.Toast;
 public class WhacAMoleGame extends AbstractGameView {
 	private List<Integer>  btnsToHit;
 	
-	public WhacAMoleGame(Context context, LinearLayout dismissAlarmLayout) {
-		super(context, dismissAlarmLayout);
+	public WhacAMoleGame(Context context) {
+		super(context);
 		
 		initUI();
 		initGame();

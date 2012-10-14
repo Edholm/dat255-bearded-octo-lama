@@ -29,8 +29,8 @@ public class GameTestClass extends AbstractGameView {
 	private int var1, var2;
 	private float x, y;
 	
-	public GameTestClass(Context context, LinearLayout dismissAlarmLayout) {
-		super(context, dismissAlarmLayout);
+	public GameTestClass(Context context) {
+		super(context);
 		
 		x = y = 0;
 	}

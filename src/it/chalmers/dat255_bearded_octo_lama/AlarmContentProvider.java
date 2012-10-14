@@ -72,7 +72,8 @@ public final class AlarmContentProvider extends ContentProvider{
             		   "ENABLED INTEGER, "+
             		   "TEXT_NOTIFICATION INTEGER,"+
             		   "SOUND_NOTIFICATION INTEGER,"+
-            		   "VIBRATION_NOTIFICATION);");
+            		   "VIBRATION_NOTIFICATION,"+
+            		   "GAME_NOTIFICATION);");
         }
 
         @Override
