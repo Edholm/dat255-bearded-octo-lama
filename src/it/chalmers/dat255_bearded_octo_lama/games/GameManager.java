@@ -36,6 +36,7 @@ import android.content.Context;
  * @date 14 okt 2012
  */ 
 public final class GameManager {
+	private static Map<String, Class<?>> gameCache = null;
 	
 	/**
 	 * Retrieves a list of all possible games. 
@@ -43,21 +44,30 @@ public final class GameManager {
 	 * @return returns a list of all types annotated with the {@code Game} annotation.
 	 */
 	public static Map<String, Class<?>> getAvailableGames() {
+		if(gameCache != null) {
+			return gameCache;
+		}
+		
 		List<Class<?>> availableGames = getTypesAnnotatedWith(Game.class);
-		Map<String, Class<?>> games = new HashMap<String, Class<?>>();
+		gameCache = new HashMap<String, Class<?>>();
 		
 		for(Class<?> game : availableGames) {
 			Game anno = game.getAnnotation(Game.class);
-			games.put(anno.name(), game);
+			gameCache.put(anno.name(), game);
 		}
 		
-		return games;
+		return gameCache;
 	}
 	
 	/**
-	 * @param class1
-	 * @return
+	 * Return a game type from a specified game name.
+	 * @param gameName the name of the game to search for.
+	 * @return the type of the game searched for or null if not found
 	 */
+	public static Class<?> lookupGame(String gameName) {
+		return getAvailableGames().get(gameName);
+	}
+	
 	private static List<Class<?>> getTypesAnnotatedWith(Class<?> anno) {
 		// TODO: Use reflection to search for classes annotated instead.
 		// Couldn't get google reflections to work...
