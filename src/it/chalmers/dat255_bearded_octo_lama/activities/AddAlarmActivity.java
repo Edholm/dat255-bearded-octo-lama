@@ -26,12 +26,16 @@ import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
+import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.res.TypedArray;
+import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,6 +44,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -79,11 +84,19 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	    spec.setContent(R.id.tab2);
 	    spec.setIndicator("Settings");
 	    tabs.addTab(spec);
-
-		
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
 		spinner.setOnItemSelectedListener(this);
+		
+		//TODO refactor
+		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
+		ArrayList<String> songs = new ArrayList<String>();
+		List<Ringtone> tones = RingtoneFinder.getRingtones(this);
+		for(Ringtone r:tones){
+			songs.add(r.getTitle(getBaseContext()));
+		}
+		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
+		soundSpinner.setOnItemSelectedListener(this);
 		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
@@ -277,5 +290,19 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
+	}
+	
+	private class SoundSpinnerListener implements OnItemSelectedListener {
+
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void onNothingSelected(AdapterView<?> parent) {
+			// Do Nothing		
+		}
+		
 	}
 }

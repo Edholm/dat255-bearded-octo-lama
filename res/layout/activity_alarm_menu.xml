@@ -246,11 +246,22 @@
                     android:text="Add test alarm (in 5 sec)" />
             </LinearLayout>
 
-            <Button
+            <LinearLayout
                 android:id="@+id/tab2"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="A semi-random button" />
+                android:layout_height="fill_parent" 
+                android:gravity="left"
+                android:orientation="vertical" >
+                
+          <Spinner
+                    android:id="@+id/sound_list_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp" />
+                
+                
+                </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
