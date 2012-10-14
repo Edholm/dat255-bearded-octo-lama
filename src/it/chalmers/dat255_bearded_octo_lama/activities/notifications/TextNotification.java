@@ -31,25 +31,27 @@ import android.widget.TextView;
 
 public class TextNotification extends NotificationDecorator {
 	
-	TextView currentTimeView, currentDateView;
-	Activity act;
+	private final TextView currentTimeView, currentDateView;
+	
+	/**
+	 * @param decoratedNotification is an Alarm that is decorated with different notifications
+	 * @param act is the activity that launches the notifications and contains the clock
+	 */
 	public TextNotification(Notification decoratedNotification, Activity act) {
 		super(decoratedNotification);
-		this.act = act;
+		
+		currentTimeView = (TextView) act.findViewById(R.id.currentTime);
+	    currentDateView = (TextView) act.findViewById(R.id.currentDate);
 	}
 	
 	@Override
 	public void start() {
 		super.start();
-		currentTimeView = (TextView) act.findViewById(R.id.currentTime);
-        currentDateView = (TextView) act.findViewById(R.id.currentDate);
 		setClock();
-		
 	}
 	
-	public void stop() {
-
-	}
+	@Override
+	public void stop() { /* No need to do anything */ }
 	
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.

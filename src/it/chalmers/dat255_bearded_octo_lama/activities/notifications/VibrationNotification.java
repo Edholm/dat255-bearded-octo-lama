@@ -20,36 +20,37 @@
 
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
 
 
 public class VibrationNotification extends NotificationDecorator {
-	private final Activity act;
+	
 	private final Vibrator vib;
 	long[] standardPattern = {100,100,50,100,50,100,50,100};
 	
-	//TODO why using activity?
-	public VibrationNotification(Notification decoratedNotification, Activity act) {
+	/**
+	 * @param decoratedNotification is an Alarm that is decorated with different notifications
+	 * @param c is the Context
+	 */
+	public VibrationNotification(Notification decoratedNotification, Context c) {
 		super(decoratedNotification);
-		this.act = act;
-		Context c = act.getApplicationContext();
+		
 		vib = (Vibrator) c.getSystemService(c.VIBRATOR_SERVICE);
 		Log.d("VibrationNotificaton","Running constructor, decorating");
-		
 	}
 	@Override
 	public void start() {
+		// Should use a check vib.hasVibrator() to make sure that the used device has a vibrator
+		// but according to the method call we have to use API level 11, and we are using level 10
 		super.start();
 		Log.d("VibrationNotification", "Called start()");
 			vib.vibrate(standardPattern, 0);
-		//}
 	}
 	
+	@Override
 	public void stop() {
 			vib.cancel();
-		//}
 	}
 }

@@ -23,7 +23,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
+import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.provider.Settings;
@@ -37,11 +37,11 @@ public class SoundNotification extends NotificationDecorator {
 	
 	private List<Ringtone> notificationSounds = Collections.emptyList();
 	private Ringtone playing = null;
-	private final Activity act;
+	private final Context context;
 	
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Context c) {
 		super(decoratedNotification);
-		this.act = act;
+		this.context = c;
 		notificationSounds = ringtones;
 	}
 		
@@ -54,7 +54,7 @@ public class SoundNotification extends NotificationDecorator {
 			playing = notificationSounds.get(0);
 		} else {
 			// Use default sound if no sounds listed previously.
-			playing = RingtoneManager.getRingtone(act.getApplicationContext(), 
+			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
 													Settings.System.DEFAULT_ALARM_ALERT_URI);
 		}
 		playing.play();
