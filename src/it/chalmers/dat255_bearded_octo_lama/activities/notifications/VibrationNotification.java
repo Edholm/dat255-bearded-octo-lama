@@ -37,7 +37,7 @@ public class VibrationNotification extends NotificationDecorator {
 	public VibrationNotification(Notification decoratedNotification, Context c) {
 		super(decoratedNotification);
 		
-		vib = (Vibrator) c.getSystemService(c.VIBRATOR_SERVICE);
+		vib = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		Log.d("VibrationNotificaton","Running constructor, decorating");
 	}
 	@Override
@@ -51,6 +51,7 @@ public class VibrationNotification extends NotificationDecorator {
 	
 	@Override
 	public void stop() {
+			super.stop();
 			vib.cancel();
 	}
 }

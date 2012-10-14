@@ -19,9 +19,13 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 
 /**
@@ -30,7 +34,7 @@ import android.provider.BaseColumns;
  * @date 28 sep 2012
  */
 public class Alarm {
-	
+
 	private final int id;
 	private final int hour, minute;
 	private final long timeInMS;
@@ -38,8 +42,9 @@ public class Alarm {
 	private final boolean textNotification;
 	private final boolean soundNotification;
 	private final boolean vibrationNotification;
+	private ArrayList<Integer> ringtoneIDs = new ArrayList<Integer>();
 	// More options goes here later...
-	
+
 	/**
 	 * Create a new Alarm from a content provider.
 	 * @param c the cursor object tied to the content provider.
@@ -53,8 +58,22 @@ public class Alarm {
 		this.textNotification = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
 		this.soundNotification = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
 		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
+
+
+		String[] toneID = c.getString(AlarmColumns.RINGTONE_ID).split(",");
+		for(String s:toneID){
+			//Put try-catch inside of loop if an ID in the middle would fail
+			//I would still like rest of IDs to be parsed.
+			try {
+				int i = Integer.parseInt(s);
+				ringtoneIDs.add(i);
+			} catch (NumberFormatException e) {
+				Log.e("Alarm-constructor-exception", "Tried to parse something different then int");
+			}
+		}
+
 	}
-	
+
 	/**
 	 * @return the alarm id
 	 */
@@ -90,14 +109,14 @@ public class Alarm {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	/**
 	 * @return whether or not the alarm has text notification
 	 */
 	public boolean hasTextNotification() {
 		return textNotification;
 	}
-	
+
 	/**
 	 * @return whether or not the alarm has sound notification
 	 */
@@ -111,6 +130,10 @@ public class Alarm {
 		return vibrationNotification;
 	}
 	
+	public List<Integer> getRingtoneIDs(){
+		return ringtoneIDs;
+	}
+
 	@Override
 	public String toString() {
 		return "Alarm " + id + " {\n" +
@@ -124,7 +147,7 @@ public class Alarm {
 				"\n}";
 		//TODO update
 	}
-	
+
 	/** 
 	 * This class describes the columns for use with a ContentProvider 
 	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
@@ -132,7 +155,7 @@ public class Alarm {
 	public static class AlarmColumns implements BaseColumns {
 		/** The uri that represents an alarm */
 		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
-		
+
 		// The rest is pretty self explanatory
 		public static final String HOUR = "HOUR";
 		public static final String MINUTE = "MINUTE";
@@ -141,10 +164,12 @@ public class Alarm {
 		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
 		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
 		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
+		public static final String RINGTONE = "RINGTONE";
 		// Some convenience fields. Makes a lot of stuff easier.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
-													TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION};
-		
+			TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
+			RINGTONE};
+
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
 		public static final int MINUTE_ID  = 2;
@@ -153,5 +178,6 @@ public class Alarm {
 		public static final int TEXT_NOTIFICATION_ID = 5;
 		public static final int SOUND_NOTIFICATION_ID = 6;
 		public static final int VIBRATION_NOTIFICATION_ID = 7;
+		public static final int RINGTONE_ID = 8;
 	}
 }

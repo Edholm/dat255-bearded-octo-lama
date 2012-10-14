@@ -20,6 +20,12 @@
 
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
+/**
+ * Simple base notification with no implementation meant to be decorated with 
+ * notifications suited. 
+ * @author Johan Andersson
+ *
+ */
 public class BaseNotification implements Notification {
 
 	public void start() {
