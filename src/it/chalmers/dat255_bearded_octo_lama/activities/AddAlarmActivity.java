@@ -30,6 +30,7 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.Calendar;
 
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,14 +42,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 /**
  * Lets the user selects an alarm time and add it.
  * @author Emil Edholm
  * @date 27 sep 2012
+ * @modified by Emil Johansson
+ * @date 14 oct 2012
  */
-public final class AddAlarmActivity extends AbstractActivity implements OnItemSelectedListener {
+public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
 	
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
@@ -58,7 +62,25 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(layout.activity_add_alarm);
+		setContentView(layout.activity_alarm_menu);
+		// Had some problems with getting tabs to work
+		// (even though we had almost written correct code)
+		// Got the tabs-setupcode from git://github.com/commonsguy/cw-android.git
+		// in folder Fancy/Tab
+	    TabHost tabs=(TabHost)findViewById(R.id.tabhost);
+	    tabs.setup();
+	    TabHost.TabSpec spec=tabs.newTabSpec("tag1");
+	    
+	    spec.setContent(R.id.tab1);
+	    spec.setIndicator("Alarms");
+	    tabs.addTab(spec);
+	    
+	    spec=tabs.newTabSpec("tag2");
+	    spec.setContent(R.id.tab2);
+	    spec.setIndicator("Settings");
+	    tabs.addTab(spec);
+
+		
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
 		spinner.setOnItemSelectedListener(this);
