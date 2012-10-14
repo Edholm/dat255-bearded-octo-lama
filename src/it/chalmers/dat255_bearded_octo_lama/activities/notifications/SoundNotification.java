@@ -49,7 +49,7 @@ public class SoundNotification extends NotificationDecorator {
 
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
-		this.context = (Context)act;
+		this.context = act;
 		this.act = act;
 		notificationSounds = ringtones;
 	}
@@ -78,10 +78,12 @@ public class SoundNotification extends NotificationDecorator {
 		//If clause if you use the emulator or device without sound
 		if(uri != null){
 			mp = MediaPlayer.create(context, uri);
-			mp.setLooping(true);
-			//TODO: None-hardcoded-volume
-			mp.setVolume(1f, 1f);
-			mp.start();
+			if(mp != null) {
+				mp.setLooping(true);
+				//TODO: None-hardcoded-volume
+				mp.setVolume(1f, 1f);
+				mp.start();
+			}
 		}
 	}
 
