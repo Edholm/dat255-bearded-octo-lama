@@ -20,13 +20,19 @@
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 
+import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
+
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 
 /**
  * Used to describe a sound notification.
@@ -38,10 +44,13 @@ public class SoundNotification extends NotificationDecorator {
 	private List<Ringtone> notificationSounds = Collections.emptyList();
 	private Ringtone playing = null;
 	private final Context context;
+	private final Activity act;
+	MediaPlayer mp = null;
 	
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Context c) {
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
-		this.context = c;
+		this.context = (Context)act;
+		this.act = act;
 		notificationSounds = ringtones;
 	}
 		
@@ -49,7 +58,6 @@ public class SoundNotification extends NotificationDecorator {
 	public void start() {
 		super.start();
 		Collections.shuffle(notificationSounds);
-		
 		if(!notificationSounds.isEmpty()){
 			playing = notificationSounds.get(0);
 		} else {
@@ -57,15 +65,23 @@ public class SoundNotification extends NotificationDecorator {
 			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
 													Settings.System.DEFAULT_ALARM_ALERT_URI);
 		}
-		playing.play();
+		Uri uri = RingtoneFinder.findRingtoneUri(act, playing);
+		if(uri == null){
+			uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
+			Log.d("SoundNotification", "Uri is null replaced with "+uri);
+		}
+		mp = MediaPlayer.create(context, uri);
+		mp.setLooping(true);
+		//TODO: None-hardcoded-volume
+		mp.setVolume(1f, 1f);
+		mp.start();
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		
-		if(playing != null && playing.isPlaying()){
-			playing.stop();
+		if(mp != null && mp.isPlaying()){
+			mp.stop();
 		}
 	}
 }
