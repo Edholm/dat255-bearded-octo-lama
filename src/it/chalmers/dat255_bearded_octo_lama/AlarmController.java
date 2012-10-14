@@ -19,6 +19,8 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -54,32 +56,22 @@ public enum AlarmController {
 		ContentResolver cr = c.getContentResolver();
 		ContentValues values = new ContentValues();
 		
-		
-		Calendar then = Calendar.getInstance();
-		then.set(Calendar.HOUR_OF_DAY, hour);
-		then.set(Calendar.MINUTE, minute);
-		then.set(Calendar.SECOND, 0); // This makes the alarm go of at the right time
-		
-		if(then.before(Calendar.getInstance())) // Before "now" means we have to add a day
-			then.add(Calendar.DAY_OF_YEAR, 1);
-		
-		long time = then.getTimeInMillis();
+		long time = Time.timeInMsAt(hour, minute);
 		
 		values.put(Alarm.AlarmColumns.HOUR, hour);
 		values.put(Alarm.AlarmColumns.MINUTE, minute);
 		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
 		values.put(Alarm.AlarmColumns.TIME, time);
 		
-		
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
 	}
 	
+	/** Only used for testing. Remove in production code */
 	public Uri addTestAlarm(Context c) {
 		ContentResolver cr = c.getContentResolver();
 		ContentValues values = new ContentValues();
-		
 		
 		Calendar then = Calendar.getInstance();
 		then.add(Calendar.SECOND, 5);
@@ -117,6 +109,13 @@ public enum AlarmController {
 		
 		// Reverse enabled
 		values.put(Alarm.AlarmColumns.ENABLED, alarm.isEnabled() ? 0 : 1);
+		
+		// If we are re-enabling the alarm again, and its time has passed/expired, we need to update it first.
+		long now = System.currentTimeMillis();
+		if(!alarm.isEnabled() && alarm.getTimeInMS() < now) { // Since we are reversing the boolean...
+			long time = Time.timeInMsAt(alarm.getHour(), alarm.getMinute());
+			values.put(Alarm.AlarmColumns.TIME, time);
+		}
 		
 		cr.update(uri, values, null, null);
 	}
