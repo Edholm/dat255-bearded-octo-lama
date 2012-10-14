@@ -52,7 +52,9 @@ public class TextNotification extends NotificationDecorator {
 	}
 	
 	@Override
-	public void stop() { /* No need to do anything */ }
+	public void stop() { 
+	super.stop();	
+	/* No need to do anything */ }
 	
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.
