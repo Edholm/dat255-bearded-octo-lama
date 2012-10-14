@@ -37,6 +37,7 @@ public class Alarm {
 	private final boolean enabled;
 	private final boolean textNotification;
 	private final boolean soundNotification;
+	private final boolean vibrationNotification;
 	// More options goes here later...
 	
 	/**
@@ -51,6 +52,7 @@ public class Alarm {
 		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
 		this.textNotification = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
 		this.soundNotification = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
+		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
 	}
 	
 	/**
@@ -102,15 +104,24 @@ public class Alarm {
 	public boolean hasSoundNotification() {
 		return soundNotification;
 	}
-	
+	/**
+	 * @return whether or not the alarm has vibration notification
+	 */
+	public boolean hasVibrationNotification() {
+		return vibrationNotification;
+	}
 	
 	@Override
 	public String toString() {
 		return "Alarm " + id + " {\n" +
 				"\tHour: " + hour +
-				"\n\tMInute: " + minute +
+				"\n\tMinute: " + minute +
 				"\n\tTime (millisec): " + timeInMS +
-				"\n\tIs enabled: " + enabled + "\n}";
+				"\n\tIs enabled: " + enabled + 
+				"\n\tText notification: " + textNotification +
+				"\n\tSound notification: " + soundNotification +
+				"\n\tVibration notification: " + vibrationNotification +
+				"\n}";
 		//TODO update
 	}
 	
@@ -129,9 +140,10 @@ public class Alarm {
 		public static final String ENABLED = "ENABLED";
 		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
 		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
-		
+		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
 		// Some convenience fields. Makes a lot of stuff easier.
-		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, TEXT_NOTIFICATION, SOUND_NOTIFICATION};
+		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
+													TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION};
 		
 		public static final int ID_ID      = 0;
 		public static final int HOUR_ID    = 1;
@@ -140,6 +152,6 @@ public class Alarm {
 		public static final int ENABLED_ID = 4;
 		public static final int TEXT_NOTIFICATION_ID = 5;
 		public static final int SOUND_NOTIFICATION_ID = 6;
-		
+		public static final int VIBRATION_NOTIFICATION_ID = 7;
 	}
 }

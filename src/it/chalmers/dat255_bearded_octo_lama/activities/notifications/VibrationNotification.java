@@ -21,29 +21,35 @@
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Vibrator;
+import android.util.Log;
 
 
 public class VibrationNotification extends NotificationDecorator {
-	Activity act;
-	Vibrator vib;
+	private final Activity act;
+	private final Vibrator vib;
 	long[] standardPattern = {100,100,50,100,50,100,50,100};
+	
+	//TODO why using activity?
 	public VibrationNotification(Notification decoratedNotification, Activity act) {
 		super(decoratedNotification);
 		this.act = act;
+		Context c = act.getApplicationContext();
+		vib = (Vibrator) c.getSystemService(c.VIBRATOR_SERVICE);
+		Log.d("VibrationNotificaton","Running constructor, decorating");
 		
 	}
 	@Override
 	public void start() {
 		super.start();
-		if(vib.hasVibrator()){
+		Log.d("VibrationNotification", "Called start()");
 			vib.vibrate(standardPattern, 0);
-		}
+		//}
 	}
 	
 	public void stop() {
-		if(vib.hasVibrator()){
 			vib.cancel();
-		}
+		//}
 	}
 }

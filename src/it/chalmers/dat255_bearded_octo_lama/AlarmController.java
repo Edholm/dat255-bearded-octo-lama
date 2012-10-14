@@ -64,7 +64,7 @@ public enum AlarmController {
 		long time = then.getTimeInMillis();
 		
 		//TODO: Remove hardcoded values
-		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1);
+		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1);
 
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
@@ -80,7 +80,7 @@ public enum AlarmController {
 		long time = then.getTimeInMillis();
 		ContentValues values = constructContentValues(
 				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
-				true, time, 1, 1);
+				true, time, 1, 1, 1);
 
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
@@ -88,7 +88,7 @@ public enum AlarmController {
 	}
 
 	private ContentValues constructContentValues(int hour, int minute,
-			boolean enabled, long time, int textNot, int soundNot) {
+			boolean enabled, long time, int textNot, int soundNot, int vibrationNot) {
 		ContentValues values = new ContentValues();
 		
 		values.put(Alarm.AlarmColumns.HOUR, hour);
@@ -97,6 +97,8 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.TIME, time);
 		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
 		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
+		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
+		
 
 		return values;
 	}

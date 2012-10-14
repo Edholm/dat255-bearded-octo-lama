@@ -23,6 +23,7 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.BaseNotific
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,9 @@ public class NotificationFactory {
 		// TODO fix ringtones
 		if(alarm.hasSoundNotification()){
 			n = new SoundNotification(n, new ArrayList<Ringtone>(), act);
+		}
+		if(alarm.hasVibrationNotification()){
+			n = new VibrationNotification(n, act);
 		}
 		return n;
 	}
