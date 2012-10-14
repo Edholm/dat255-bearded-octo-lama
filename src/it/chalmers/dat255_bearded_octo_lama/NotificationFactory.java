@@ -24,11 +24,14 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notificatio
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
+import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.media.Ringtone;
+import android.media.RingtoneManager;
 
 public class NotificationFactory {
 
@@ -43,7 +46,9 @@ public class NotificationFactory {
 		}
 		// TODO fix ringtones
 		if(alarm.hasSoundNotification()){
-			n = new SoundNotification(n, new ArrayList<Ringtone>(), act);
+			List<Integer> toneIDs = alarm.getRingtoneIDs();
+			n = new SoundNotification(n, 
+					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
 		}
 		if(alarm.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);

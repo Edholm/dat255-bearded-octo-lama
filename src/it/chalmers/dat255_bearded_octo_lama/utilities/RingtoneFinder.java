@@ -84,4 +84,49 @@ public class RingtoneFinder {
 		return null;
 	}
 	
+	/**
+	 * Takes a ringtone and returns it's URI.
+	 * @param currentActivity - Activity to carry out the resource gathering.
+	 * @param tone - Ringtone to find ID of.
+	 * @return ID - ID of ringtone if found, otherwise -1.
+	 */
+	public static int findRingtoneID(Activity currentActivity, Ringtone tone){
+		RingtoneManager rm = new RingtoneManager(currentActivity);
+		Cursor c = rm.getCursor();
+		c.moveToFirst();
+		
+		Ringtone current;
+		while(!c.isAfterLast()){
+			current = rm.getRingtone(c.getPosition());
+			if(current.getTitle(currentActivity).equals(
+					(tone).getTitle(currentActivity))){
+				return c.getInt(RingtoneManager.ID_COLUMN_INDEX);
+			}
+			c.moveToNext();
+		}
+		return -1;
+	}
+
+	/**
+	 * 
+	 * @param currentActivity 
+	 * @param IDs - List of IDs to locate songs from.
+	 * @return - List of Ringtones 
+	 */
+	public static List<Ringtone> getRingtonesFromIDs(Activity currentActivity, List<Integer> IDs){
+		RingtoneManager rm = new RingtoneManager(currentActivity);
+		List<Ringtone> tones = new ArrayList<Ringtone>();
+		Cursor c = rm.getCursor();
+		c.moveToFirst();
+		while(!c.isAfterLast()){
+			//If ID matches, add to list
+			if(IDs.contains(c.getInt(RingtoneManager.ID_COLUMN_INDEX))){
+				tones.add(rm.getRingtone(c.getPosition()));
+			}
+			c.moveToNext();
+		}
+		return tones;
+	}
+	
+	
 }
