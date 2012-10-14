@@ -19,48 +19,55 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
+import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
-	private TextView currentTimeView, currentDateView;
-	private RelativeLayout mainContentLayout;
+
+	private Notification n;
 	private LinearLayout dismissAlarmLayout;
 	private boolean gameIsActive;
-	private AbstractGameView gameView;
+	private AbstractGameView gameView; 
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_notification);
+		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
+		Alarm alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
 		
-		currentTimeView = (TextView) findViewById(R.id.currentTime);
-        currentDateView = (TextView) findViewById(R.id.currentDate);
-        mainContentLayout = (RelativeLayout) findViewById(R.id.mainContentLayout);
-        dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
+		n = NotificationFactory.create(alarm, this);
+		setContentView(R.layout.activity_notification);
         
-        gameView = new RocketLanderGame(this, dismissAlarmLayout);
-        initGame();
-	}
+        Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
+        disAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				n.stop();
+				finish();
+			}
+        });
+        Button snoozeAlarm = (Button) findViewById(R.id.snoozeBtn);
+        snoozeAlarm.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				//TODO fix snooze
+			}
+        });   
+	} 
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		n.start();
 		
-		setClock();
 		
 		if(gameIsActive) {
 			gameView.resume();
@@ -76,7 +83,7 @@ public class NotificationActivity extends AbstractActivity {
 		}
 	}
 
-	private void initGame() {
+	private void initGame() { /*
 		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
 		dismissAlarmLayout.setVisibility(View.GONE);
 		mainContentLayout.addView(gameView);
@@ -88,16 +95,7 @@ public class NotificationActivity extends AbstractActivity {
 			for(View v : uiList) {
 				mainContentLayout.addView(v);
 			}
-		}
-		gameView.resume();
-	}
-
-	private void setClock() {
-		//TODO: Do a cleaner and better version of this.
-		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
-		String currentDateString = DateFormat.getDateInstance().format(new Date());
-		
-		currentTimeView.setText(currentTimeString);
-		currentDateView.setText(currentDateString);
-	}
+		} 
+		gameView.resume(); */
+	} 
 }

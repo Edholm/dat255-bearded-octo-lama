@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
         
         currentTimeView = (TextView) findViewById(R.id.currentTime);
         currentDateView = (TextView) findViewById(R.id.currentDate);
-        
+       
         initButtons();
     }
 

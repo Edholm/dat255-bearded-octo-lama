@@ -52,8 +52,6 @@ public enum AlarmController {
 	 */
 	public Uri addAlarm(Context c, boolean enabled, int hour, int minute) {
 		ContentResolver cr = c.getContentResolver();
-		ContentValues values = new ContentValues();
-		
 		
 		Calendar then = Calendar.getInstance();
 		then.set(Calendar.HOUR_OF_DAY, hour);
@@ -65,12 +63,9 @@ public enum AlarmController {
 		
 		long time = then.getTimeInMillis();
 		
-		values.put(Alarm.AlarmColumns.HOUR, hour);
-		values.put(Alarm.AlarmColumns.MINUTE, minute);
-		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
-		values.put(Alarm.AlarmColumns.TIME, time);
-		
-		
+		//TODO: Remove hardcoded values
+		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1);
+
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
@@ -78,22 +73,34 @@ public enum AlarmController {
 	
 	public Uri addTestAlarm(Context c) {
 		ContentResolver cr = c.getContentResolver();
-		ContentValues values = new ContentValues();
-		
 		
 		Calendar then = Calendar.getInstance();
 		then.add(Calendar.SECOND, 5);
 		
 		long time = then.getTimeInMillis();
-		
-		values.put(Alarm.AlarmColumns.HOUR, then.get(Calendar.HOUR_OF_DAY));
-		values.put(Alarm.AlarmColumns.MINUTE, then.get(Calendar.MINUTE));
-		values.put(Alarm.AlarmColumns.ENABLED, 1);
-		values.put(Alarm.AlarmColumns.TIME, time);
-		
+		ContentValues values = constructContentValues(
+				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
+				true, time, 1, 1, 1);
+
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
+	}
+
+	private ContentValues constructContentValues(int hour, int minute,
+			boolean enabled, long time, int textNot, int soundNot, int vibrationNot) {
+		ContentValues values = new ContentValues();
+		
+		values.put(Alarm.AlarmColumns.HOUR, hour);
+		values.put(Alarm.AlarmColumns.MINUTE, minute);
+		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
+		values.put(Alarm.AlarmColumns.TIME, time);
+		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
+		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
+		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
+		
+
+		return values;
 	}
 	
 	/**
