@@ -175,32 +175,43 @@ public class Alarm {
 		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
 
 		// The rest is pretty self explanatory
-		public static final String HOUR = "HOUR";
-		public static final String MINUTE = "MINUTE";
-		public static final String TIME = "TIME_IN_MS";
-		public static final String ENABLED = "ENABLED";
-		public static final String TEXT_NOTIFICATION = "TEXT_NOTIFICATION";
-		public static final String SOUND_NOTIFICATION = "SOUND_NOTIFICATION";
+		public static final String HOUR                   = "HOUR";
+		public static final String MINUTE                 = "MINUTE";
+		public static final String TIME                   = "TIME_IN_MS";
+		public static final String ENABLED                = "ENABLED";
+		public static final String TEXT_NOTIFICATION      = "TEXT_NOTIFICATION";
+		public static final String SOUND_NOTIFICATION     = "SOUND_NOTIFICATION";
 		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
-		public static final String RINGTONE = "RINGTONE";
-		public static final String GAME_NOTIFICATION = "GAME_NOTIFICATION";
-		public static final String GAME_NAME = "GAME_NAME";
+		public static final String RINGTONE               = "RINGTONE";
+		public static final String GAME_NOTIFICATION      = "GAME_NOTIFICATION";
+		public static final String GAME_NAME              = "GAME_NAME";
 		
-		// Some convenience fields. Makes a lot of stuff easier.
+		// Some convenience fields. Makes a lot of stuff easier. 
+		// ALL_COLUMNS must be in the same order as the database schema.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
 			TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
 			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
 
-		public static final int ID_ID      = 0;
-		public static final int HOUR_ID    = 1;
-		public static final int MINUTE_ID  = 2;
-		public static final int TIME_ID    = 3;
-		public static final int ENABLED_ID = 4;
-		public static final int TEXT_NOTIFICATION_ID = 5;
-		public static final int SOUND_NOTIFICATION_ID = 6;
-		public static final int VIBRATION_NOTIFICATION_ID = 7;
-		public static final int RINGTONE_ID = 8;
-		public static final int GAME_NOTIFICATION_ID = 9;
-		public static final int GAME_NAME_ID = 10;
+		public static final int ID_ID                     = indexOf(_ID);
+		public static final int HOUR_ID                   = indexOf(HOUR);
+		public static final int MINUTE_ID                 = indexOf(MINUTE);
+		public static final int TIME_ID                   = indexOf(TIME);
+		public static final int ENABLED_ID                = indexOf(ENABLED);
+		public static final int TEXT_NOTIFICATION_ID      = indexOf(TEXT_NOTIFICATION);
+		public static final int SOUND_NOTIFICATION_ID     = indexOf(SOUND_NOTIFICATION);
+		public static final int VIBRATION_NOTIFICATION_ID = indexOf(VIBRATION_NOTIFICATION);
+		public static final int RINGTONE_ID               = indexOf(RINGTONE);
+		public static final int GAME_NOTIFICATION_ID      = indexOf(GAME_NOTIFICATION);
+		public static final int GAME_NAME_ID              = indexOf(GAME_NAME);
+		
+		/** Retrieves the index of a specified needle (in a haystack) from the {@code ALL_COLUMNS} */
+		private static int indexOf(String needle)
+		{
+			int counter = -1;
+			while(ALL_COLUMNS[++counter] != needle 
+					&& counter < ALL_COLUMNS.length);
+			
+		    return counter;
+		}
 	}
 }
