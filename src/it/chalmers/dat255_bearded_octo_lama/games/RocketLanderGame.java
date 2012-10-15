@@ -34,10 +34,10 @@ import android.view.MotionEvent;
 public class RocketLanderGame extends AbstractGameView {
 	
 	//Set all physics constants
-	private static final int GRAV_ACCEL = 90;
-	private static final int ENGINE_ACCEL = 140;
+	private static final int GRAV_ACCEL        = 90;
+	private static final int ENGINE_ACCEL      = 140;
 	private static final int ENGINE_SIDE_ACCEL = 50;
-	private static final int INIT_SPD = 50;
+	private static final int INIT_SPD          = 50;
 	
 	//Set goal constants
 	private static final int MAX_VERT_SPD = 100;
@@ -59,9 +59,18 @@ public class RocketLanderGame extends AbstractGameView {
 	}
 
 	private void initGame() {
-		lastTime = System.currentTimeMillis() + 100;
-		rocketBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rocket);
-		backgroundBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rocket_background);
+		int firstRunDelay = 100;
+		lastTime = System.currentTimeMillis() + firstRunDelay;
+		
+		rocketBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.rocket);
+		backgroundBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.rocket_background);
+		
+		//Set painter color to orange for when painting the rocket flame.
+		int alpha = 255;
+		int red = 255;
+		int green = 100;
+		int blue = 0;
+		getPainter().setARGB(alpha, red, green, blue);
 		
 		resetGame();
 	}
@@ -72,9 +81,10 @@ public class RocketLanderGame extends AbstractGameView {
 		
 		engineIsRunning = false;
 		currentYSpd = INIT_SPD;
-		//Make so the initial x speed is a bit random.
+		//Make so the initial x-axis speed is a bit random.
 		Random random = new Random();
-		double randomValue = (random.nextInt(101)-50)/10.0;
+		int maxVariation = 10;
+		double randomValue = random.nextInt(maxVariation)-maxVariation/2;
 		currentXSpd = INIT_SPD*randomValue;
 	}
 	
@@ -86,7 +96,7 @@ public class RocketLanderGame extends AbstractGameView {
 		rocketX = w/2;
 		rocketY = 0;
 		
-		groundYLevel = h/4 * 3;
+		groundYLevel = h/4 * 3; //Set groundlevel to three fourth of the view height.
 		//Rezise the background
 		backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, w, h, true);
 	}
@@ -99,7 +109,8 @@ public class RocketLanderGame extends AbstractGameView {
 			return;
 		}
 		
-		double timeSinceLast = (now - lastTime)/1000.0;
+		double msPerSec = 1000.0;
+		double timeSinceLast = (now - lastTime)/msPerSec;
 		
 		//Set and calculate acceleration.
 		double xAcceleration = 0;
@@ -151,15 +162,17 @@ public class RocketLanderGame extends AbstractGameView {
 	@Override
 	protected void updateGraphics(Canvas c) {	
 		//Paint the background
-		c.drawBitmap(backgroundBitmap, 0, 0, painter);
+		c.drawBitmap(backgroundBitmap, 0, 0, getPainter());
+		
+		//Draw flame from rocket if the engine is running.
+		if(engineIsRunning) {
+			int flameRadius = rocketBitmap.getWidth()/3;
+			c.drawCircle((float)rocketX, (float)rocketY-flameRadius, flameRadius, getPainter());
+		}
 		
 		//Draw the rocket
 		c.drawBitmap(rocketBitmap, (float)(rocketX - rocketBitmap.getWidth()/2), 
-				(float)(rocketY - rocketBitmap.getHeight()), painter);
-		if(engineIsRunning) {
-			painter.setARGB(255, 255, 100, 0);
-			c.drawCircle((float)rocketX, (float)rocketY-10, 10, painter);
-		}
+				(float)(rocketY - rocketBitmap.getHeight()), getPainter());
 	}
 	
 	@Override

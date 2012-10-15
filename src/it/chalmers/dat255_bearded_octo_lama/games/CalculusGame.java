@@ -37,8 +37,17 @@ import android.widget.RelativeLayout;
 
 @Game(name = "Calculus")
 public class CalculusGame extends AbstractGameView {
+	
+	//Set all background color attributes.
+	private static final int ALPHA = 255;
+	private static final int RED   = 51;
+	private static final int GREEN = 204;
+	private static final int BLUE  = 255;
+	
 	private String exerciseText;
 	private int var1, var2;
+	private int textSize;
+	private EditText answerTextField;
 	
 	public CalculusGame(Context context) {
 		super(context);
@@ -50,43 +59,69 @@ public class CalculusGame extends AbstractGameView {
 	private void initGame() {
 		Random randomGenerator = new Random();
 		
-		var1 = randomGenerator.nextInt(100) + 1;
-		var2 = randomGenerator.nextInt(100) + 1;
+		//Decide 2 random number between 1 and 100 to be added to each other.
+		int maxNumberValue = 100;
+		var1 = randomGenerator.nextInt(maxNumberValue) + 1;
+		var2 = randomGenerator.nextInt(maxNumberValue) + 1;
 		
 		exerciseText = "What is: " + var1 + " + " + var2;
 	}
 	
 	private void initUI() {
-		RelativeLayout uiHolder = new RelativeLayout(context);
+		//Initiate the UI components.
+		RelativeLayout uiHolder = new RelativeLayout(getContext());
 		uiHolder.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
 		uiHolder.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		
-		EditText answerTextField = new EditText(context);
+		//Add the text field that will take the users answer.
+		answerTextField = new EditText(getContext());
 		answerTextField.setBackgroundColor(getResources().getColor(R.color.black));
 		answerTextField.setTextColor(getResources().getColor(R.color.white));
 		answerTextField.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-		answerTextField.setWidth(260);
-		answerTextField.setHeight(60);
 		answerTextField.setInputType(InputType.TYPE_CLASS_NUMBER);
 		
 		//Adding a custom TextWatcher to handle the input as we want it to.
 		answerTextField.addTextChangedListener(new TextWatcher() {
 			
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				int givenAnswer = Integer.parseInt(s.toString());
-				if(givenAnswer == var1 + var2) {
-					endGame();
+				//Make sure not to try and parse an empty string.
+				if(s.length() > 0) {
+					int givenAnswer = Integer.parseInt(s.toString());
+					
+					//End game if the given answer is correct, else do nothing.
+					if(givenAnswer == var1 + var2) {
+						endGame();
+					}
 				}
 			}
 			
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {}
+					int after) {
+				//Do nothing.
+			}
 			
-			public void afterTextChanged(Editable s) {}
+			public void afterTextChanged(Editable s) {
+				//Do nothing.
+			}
 		});
 		
+		textSize = 40;
+		getPainter().setTextSize(textSize);
+		getPainter().setTextAlign(Align.CENTER);
+		
 		uiHolder.addView(answerTextField);
-		uiList.add(uiHolder);
+		getUiList().add(uiHolder);
+	}
+	
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		
+		//Scale the width and height of the text field if the user view size is changed.
+		int xScaling = 2;
+		int yScaling = 5;
+		answerTextField.setWidth(w/xScaling);
+		answerTextField.setHeight(h/yScaling);
 	}
 
 	@Override
@@ -97,11 +132,11 @@ public class CalculusGame extends AbstractGameView {
 	@Override
 	protected void updateGraphics(Canvas c) {
 		
-		int textSize = 40;
-		c.drawARGB(100, 51, 204, 255);
-		painter.setTextSize(textSize);
-		painter.setTextAlign(Align.CENTER);
-		c.drawText(exerciseText, getWidth()/2, textSize*2, painter);
+		//Paint background color
+		c.drawARGB(ALPHA, RED, GREEN, BLUE);
+		
+		//Draw text.
+		c.drawText(exerciseText, getWidth()/2, textSize*2, getPainter());
 	}
 
 }
