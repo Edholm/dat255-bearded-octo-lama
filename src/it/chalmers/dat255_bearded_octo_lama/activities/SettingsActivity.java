@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class SettingsActivity extends AbstractActivity {
 	
-	ListView settingsList;
+	private ListView settingsList;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
