@@ -31,6 +31,7 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Class giving utilities to handle Ringtones on the device.
@@ -75,6 +76,7 @@ public class RingtoneFinder {
 		Ringtone current;
 		while(!c.isAfterLast()){
 			current = rm.getRingtone(c.getPosition());
+			Log.d("RingtoneFinder", current.getTitle(currentActivity) + " " + tone.getTitle(currentActivity));
 			if(current.getTitle(currentActivity).equals(
 					(tone).getTitle(currentActivity))){
 				return rm.getRingtoneUri(c.getPosition());
@@ -90,21 +92,26 @@ public class RingtoneFinder {
 	 * @param tone - Ringtone to find ID of.
 	 * @return ID - ID of ringtone if found, otherwise -1.
 	 */
-	public static int findRingtoneID(Activity currentActivity, Ringtone tone){
+	public static List<Integer> findRingtoneID(Activity currentActivity, List<Ringtone> tones){
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-		
+		ArrayList<Integer> ids = new ArrayList<Integer>();
 		Ringtone current;
+		
+		List<String> titles = new ArrayList<String>();
+		for(Ringtone r:tones){
+			titles.add(r.getTitle(currentActivity));
+		}
+		
 		while(!c.isAfterLast()){
 			current = rm.getRingtone(c.getPosition());
-			if(current.getTitle(currentActivity).equals(
-					(tone).getTitle(currentActivity))){
-				return c.getInt(RingtoneManager.ID_COLUMN_INDEX);
+			if(titles.contains(current.getTitle(currentActivity))){
+				ids.add(c.getInt(RingtoneManager.ID_COLUMN_INDEX));
 			}
 			c.moveToNext();
 		}
-		return -1;
+		return ids;
 	}
 
 	/**
@@ -127,6 +134,7 @@ public class RingtoneFinder {
 		}
 		return tones;
 	}
+
 	
 	
 }

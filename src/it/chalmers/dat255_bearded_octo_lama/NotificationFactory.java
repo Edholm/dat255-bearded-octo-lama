@@ -26,12 +26,10 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotific
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+import android.util.Log;
 
 public class NotificationFactory {
 
@@ -47,6 +45,7 @@ public class NotificationFactory {
 		// TODO fix ringtones
 		if(alarm.hasSoundNotification()){
 			List<Integer> toneIDs = alarm.getRingtoneIDs();
+			Log.d("NotificationFactory", toneIDs.toString());
 			n = new SoundNotification(n, 
 					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
 		}

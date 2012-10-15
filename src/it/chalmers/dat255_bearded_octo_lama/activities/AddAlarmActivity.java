@@ -38,6 +38,7 @@ import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,7 +63,8 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
-	
+	private List<Ringtone> tones = new ArrayList<Ringtone>();
+	private final List<Ringtone> selectedTones = new ArrayList<Ringtone>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,12 +93,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		//TODO refactor
 		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
 		ArrayList<String> songs = new ArrayList<String>();
-		List<Ringtone> tones = RingtoneFinder.getRingtones(this);
+		tones = RingtoneFinder.getRingtones(this);
 		for(Ringtone r:tones){
 			songs.add(r.getTitle(getBaseContext()));
 		}
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
-		soundSpinner.setOnItemSelectedListener(this);
+		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
 		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
@@ -174,7 +176,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 			
 		AlarmController ac = AlarmController.INSTANCE;
-		Uri uri = ac.addAlarm(this, true, hour, minute);
+		Uri uri = ac.addAlarm(this, true, hour, minute, RingtoneFinder.findRingtoneID(this, selectedTones));
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 		
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
@@ -294,12 +296,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	
 	private class SoundSpinnerListener implements OnItemSelectedListener {
 
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
-			
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			selectedTones.clear();
+			selectedTones.add(tones.get(pos));
+			Log.d("SoundSpinnerListener", tones.get(pos).getTitle(getApplicationContext()));
 		}
-
 		public void onNothingSelected(AdapterView<?> parent) {
 			// Do Nothing		
 		}

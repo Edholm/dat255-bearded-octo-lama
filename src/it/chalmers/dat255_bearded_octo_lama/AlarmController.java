@@ -52,16 +52,22 @@ public enum AlarmController {
 	 * @param minute the minute the alarm is to activate
 	 * @return the uri to the newly added alarm
 	 */
-	public Uri addAlarm(Context c, boolean enabled, int hour, int minute) {
+	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, List<Integer> ringToneID) {
 		ContentResolver cr = c.getContentResolver();
 		long time = Time.timeInMsAt(hour, minute);
 		
-		//TODO Remove hardcoded list
-		List<Integer> ringtoneIDs = new ArrayList<Integer>();
-		ringtoneIDs.add(0);
+		//TODO remove hardcoded values
+		Calendar then = Calendar.getInstance();
+		then.add(Calendar.SECOND, 5);
 		
 		//TODO: Remove hardcoded values
-		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs);
+		Log.d("AlarmController", "ringToneID" + ringToneID.toString());
+		//ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringToneID);
+		ContentValues values = constructContentValues(
+				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
+				true, time, 1, 1, 1, ringToneID);
+
+		
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
@@ -97,11 +103,12 @@ public enum AlarmController {
 		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
 		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
 		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
-	
+		
 		String s = "";
 		for(Integer i:RingtoneIDs){
 			s += i + ",";
 		}
+		Log.d("AlarmController.s", "S = " + s);
 		//Used to remove last ","
 		s = s.substring(0, s.length()-1);
 		values.put(Alarm.AlarmColumns.RINGTONE, s);
