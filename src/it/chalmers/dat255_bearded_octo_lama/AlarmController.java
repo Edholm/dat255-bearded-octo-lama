@@ -264,7 +264,8 @@ public enum AlarmController {
 		Intent intent = new Intent(c, AlarmReceiver.class);
 		intent.putExtra(Alarm.Columns._ID, a.getId());
 		
-		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 12, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		int zeroSeparatedNumber = 1337;
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, zeroSeparatedNumber, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
 	}
