@@ -69,17 +69,13 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		selectTimeButton(id.h0);
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
 	/**
 	 * Retrieves the time from the "time" buttons.
 	 * @return returns an integer array with four values representing the time in hh:mm format where {@code h0 = int[0]; h1 = int[1]} etc.
 	 */
 	private int[] queryTimeValues() {
-		int[] time = new int[4];
+		int numberOfBtns = 4;
+		int[] time = new int[numberOfBtns];
 		
 		time[0] = getButtonNumber(R.id.h0);
 		time[1] = getButtonNumber(R.id.h1);
@@ -91,8 +87,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	
 	/** Select a specific time button based on ID */
 	private void selectTimeButton(int id) {
-		if(currentTimeButton != null)
+		if(currentTimeButton != null) {
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
+		}
 		
 		currentTimeButton = (Button)findViewById(id);
 		filter.setTimeButtonId(id);
@@ -121,15 +118,16 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private void addAlarm() {
 		int[] time = queryTimeValues();
 		
+		int timeBase = 10;
 		int hour, minute;
 		// Combine values from format hh:mm to h:m.
 		if(setAlarmAT) {
-			hour   = time[0] * 10 + time[1];
-			minute = time[2] * 10 + time[3];
+			hour   = time[0] * timeBase + time[1];
+			minute = time[2] * timeBase + time[3];
 		}
 		else {
-			hour   = time[0] * 10 + time[1];
-			minute = time[2] * 10 + time[3];
+			hour   = time[0] * timeBase + time[1];
+			minute = time[2] * timeBase + time[3];
 			
 			// Time now + value selected equals sometime in the future.
 			Calendar cal = Calendar.getInstance();
@@ -160,11 +158,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		if(filter.accept(numClicked)) {
 			currentTimeButton.setText(numClicked + "");
 			
-			if(currentTimeButton.getId() == R.id.h0) {
-				if(numClicked == 2 && h1 > 3) {
-					Button b = (Button) findViewById(R.id.h1);
-					b.setText("0");
-				}
+			if(currentTimeButton.getId() == R.id.h0 && numClicked == 2 && h1 > 3) {
+				Button b = (Button) findViewById(R.id.h1);
+				b.setText("0");
 			}
 			selectNextTimeButton();
 		}
@@ -182,8 +178,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	 */
 	private int getButtonNumber(int id) {
 		View v = findViewById(id);
-		if(v instanceof Button)
+		if(v instanceof Button) {
 			return getButtonNumber((Button)v);
+		}
 		
 		return -1;
 	}
