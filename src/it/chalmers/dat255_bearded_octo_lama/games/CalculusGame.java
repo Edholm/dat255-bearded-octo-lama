@@ -84,11 +84,14 @@ public class CalculusGame extends AbstractGameView {
 		answerTextField.addTextChangedListener(new TextWatcher() {
 			
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				int givenAnswer = Integer.parseInt(s.toString());
-				
-				//End game if the given answer is correct, else do nothing.
-				if(givenAnswer == var1 + var2) {
-					endGame();
+				//Make sure not to try and parse an empty string.
+				if(s.length() > 0) {
+					int givenAnswer = Integer.parseInt(s.toString());
+					
+					//End game if the given answer is correct, else do nothing.
+					if(givenAnswer == var1 + var2) {
+						endGame();
+					}
 				}
 			}
 			
