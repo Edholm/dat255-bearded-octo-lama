@@ -33,8 +33,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	TextView currentTimeView, currentDateView;
-	Button settingsBtn, listAlarmsBtn, newAlaramBtn;
+	private TextView currentTimeView, currentDateView;
+	private Button settingsBtn, listAlarmsBtn, newAlaramBtn;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
