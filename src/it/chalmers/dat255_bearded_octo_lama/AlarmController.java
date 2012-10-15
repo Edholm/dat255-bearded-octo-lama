@@ -64,7 +64,7 @@ public enum AlarmController {
 		
 		//TODO: Remove hardcoded values
 		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
-		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		Uri uri = cr.insert(Alarm.Columns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
 	}
@@ -83,7 +83,7 @@ public enum AlarmController {
 				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
 				true, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
 
-		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);
+		Uri uri = cr.insert(Alarm.Columns.CONTENT_URI, values);
 		renewAlarmQueue(c);
 		return uri;
 	}
@@ -93,15 +93,15 @@ public enum AlarmController {
 			int gameNot, String gameName) {
 		ContentValues values = new ContentValues();
 		
-		values.put(Alarm.AlarmColumns.HOUR, hour);
-		values.put(Alarm.AlarmColumns.MINUTE, minute);
-		values.put(Alarm.AlarmColumns.ENABLED, enabled ? 1 : 0);
-		values.put(Alarm.AlarmColumns.TIME, time);
-		values.put(Alarm.AlarmColumns.TEXT_NOTIFICATION, textNot);
-		values.put(Alarm.AlarmColumns.SOUND_NOTIFICATION, soundNot);
-		values.put(Alarm.AlarmColumns.VIBRATION_NOTIFICATION, vibrationNot);
-		values.put(Alarm.AlarmColumns.GAME_NOTIFICATION, gameNot);
-		values.put(Alarm.AlarmColumns.GAME_NAME, gameName);
+		values.put(Alarm.Columns.HOUR, hour);
+		values.put(Alarm.Columns.MINUTE, minute);
+		values.put(Alarm.Columns.ENABLED, enabled ? 1 : 0);
+		values.put(Alarm.Columns.TIME, time);
+		values.put(Alarm.Columns.TEXT_NOTIFICATION, textNot);
+		values.put(Alarm.Columns.SOUND_NOTIFICATION, soundNot);
+		values.put(Alarm.Columns.VIBRATION_NOTIFICATION, vibrationNot);
+		values.put(Alarm.Columns.GAME_NOTIFICATION, gameNot);
+		values.put(Alarm.Columns.GAME_NAME, gameName);
 
 		String s = "";
 		for(Integer i:RingtoneIDs){
@@ -109,7 +109,7 @@ public enum AlarmController {
 		}
 		//Used to remove last ","
 		s = s.substring(0, s.length()-1);
-		values.put(Alarm.AlarmColumns.RINGTONE, s);
+		values.put(Alarm.Columns.RINGTONE, s);
 		
 		return values;
 	}
@@ -121,7 +121,7 @@ public enum AlarmController {
 	 */
 	public void deleteAlarm(Context c, int alarmID) {
 		ContentResolver cr = c.getContentResolver();
-		cr.delete(Uri.withAppendedPath(Alarm.AlarmColumns.CONTENT_URI, alarmID + ""), "", null);
+		cr.delete(Uri.withAppendedPath(Alarm.Columns.CONTENT_URI, alarmID + ""), "", null);
 		
 		renewAlarmQueue(c);
 	}
@@ -130,17 +130,17 @@ public enum AlarmController {
 		ContentResolver cr = c.getContentResolver();
 		Alarm alarm = getAlarm(c, alarmID);
 		
-		Uri uri = Alarm.AlarmColumns.CONTENT_URI.buildUpon().appendPath(alarmID + "").build();
+		Uri uri = Alarm.Columns.CONTENT_URI.buildUpon().appendPath(alarmID + "").build();
 		ContentValues values = new ContentValues();
 		
 		// Reverse enabled
-		values.put(Alarm.AlarmColumns.ENABLED, alarm.isEnabled() ? 0 : 1);
+		values.put(Alarm.Columns.ENABLED, alarm.isEnabled() ? 0 : 1);
 		
 		// If we are re-enabling the alarm again, and its time has passed/expired, we need to update it first.
 		long now = System.currentTimeMillis();
 		if(!alarm.isEnabled() && alarm.getTimeInMS() < now) { // Since we are reversing the boolean...
 			long time = Time.timeInMsAt(alarm.getHour(), alarm.getMinute());
-			values.put(Alarm.AlarmColumns.TIME, time);
+			values.put(Alarm.Columns.TIME, time);
 		}
 		
 		cr.update(uri, values, null, null);
@@ -155,8 +155,8 @@ public enum AlarmController {
 	public Alarm getAlarm(Context c, int alarmID) {
 		ContentResolver cr = c.getContentResolver();
 		
-		Uri uri = Uri.withAppendedPath(Alarm.AlarmColumns.CONTENT_URI, alarmID + "");
-		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS, null, null, null);
+		Uri uri = Uri.withAppendedPath(Alarm.Columns.CONTENT_URI, alarmID + "");
+		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMNS, null, null, null);
 		
 		Alarm a = null;
 		if(cur != null && cur.moveToFirst()) {
@@ -179,8 +179,8 @@ public enum AlarmController {
 	private List<Alarm> getAlarms(Context c, String where, String[] args, String sortOrder) {
 		ContentResolver cr = c.getContentResolver();
 		
-		Uri uri = Alarm.AlarmColumns.CONTENT_URI;
-		Cursor cur = cr.query(uri, Alarm.AlarmColumns.ALL_COLUMNS, where, args, sortOrder);
+		Uri uri = Alarm.Columns.CONTENT_URI;
+		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMNS, where, args, sortOrder);
 		
 		
 		if(cur != null && cur.moveToFirst()) {
@@ -249,9 +249,9 @@ public enum AlarmController {
 		
 		Uri uri = null;
 		ContentValues value = new ContentValues();
-		value.put(Alarm.AlarmColumns.ENABLED, 0); // == Disable alarm.
+		value.put(Alarm.Columns.ENABLED, 0); // == Disable alarm.
 		for(Alarm a : alarms) {
-			uri = Alarm.AlarmColumns.CONTENT_URI.buildUpon().appendPath(a.getId() + "").build();
+			uri = Alarm.Columns.CONTENT_URI.buildUpon().appendPath(a.getId() + "").build();
 			cr.update(uri, value, null, null);
 		}
 	}
@@ -262,7 +262,7 @@ public enum AlarmController {
 
 		// Append the alarm ID to the intent, then the receiving class can fetch the alarm.
 		Intent intent = new Intent(c, AlarmReceiver.class);
-		intent.putExtra(Alarm.AlarmColumns._ID, a.getId());
+		intent.putExtra(Alarm.Columns._ID, a.getId());
 		
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 12, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		

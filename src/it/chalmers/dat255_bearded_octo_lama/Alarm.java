@@ -52,18 +52,18 @@ public class Alarm {
 	 * @param c the cursor object tied to the content provider.
 	 */
 	public Alarm(Cursor c) {	
-		this.id       = c.getInt(AlarmColumns.ID_ID);
-		this.hour     = c.getInt(AlarmColumns.HOUR_ID);
-		this.minute   = c.getInt(AlarmColumns.MINUTE_ID);
-		this.timeInMS = c.getLong(AlarmColumns.TIME_ID);
-		this.enabled  = c.getInt(AlarmColumns.ENABLED_ID) == 1;
-		this.textNotification      = c.getInt(AlarmColumns.TEXT_NOTIFICATION_ID) == 1;
-		this.soundNotification     = c.getInt(AlarmColumns.SOUND_NOTIFICATION_ID) == 1;
-		this.vibrationNotification = c.getInt(AlarmColumns.VIBRATION_NOTIFICATION_ID) == 1;
-		this.gameNotification      = c.getInt(AlarmColumns.GAME_NOTIFICATION_ID) == 1;
-		this.gameName              = c.getString(AlarmColumns.GAME_NAME_ID);
+		this.id       = c.getInt(Columns.ID_ID);
+		this.hour     = c.getInt(Columns.HOUR_ID);
+		this.minute   = c.getInt(Columns.MINUTE_ID);
+		this.timeInMS = c.getLong(Columns.TIME_ID);
+		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
+		this.textNotification      = c.getInt(Columns.TEXT_NOTIFICATION_ID) == 1;
+		this.soundNotification     = c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1;
+		this.vibrationNotification = c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1;
+		this.gameNotification      = c.getInt(Columns.GAME_NOTIFICATION_ID) == 1;
+		this.gameName              = c.getString(Columns.GAME_NAME_ID);
 		
-		String[] toneID = c.getString(AlarmColumns.RINGTONE_ID).split(",");
+		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
 		for(String s:toneID){
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
@@ -170,7 +170,7 @@ public class Alarm {
 	 * This class describes the columns for use with a ContentProvider 
 	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
 	 */
-	public static class AlarmColumns implements BaseColumns {
+	public static class Columns implements BaseColumns {
 		/** The uri that represents an alarm */
 		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
 
