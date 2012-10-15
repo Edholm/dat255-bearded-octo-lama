@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.Toast;
 
 @Game(name = "WhacAMole")
 public class WhacAMoleGame extends AbstractGameView {
