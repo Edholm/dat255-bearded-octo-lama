@@ -19,21 +19,24 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
-import java.util.List;
-
 import it.chalmers.dat255_bearded_octo_lama.Alarm;
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 
@@ -42,6 +45,7 @@ public class NotificationActivity extends AbstractActivity {
 	private RelativeLayout mainContentHolder;
 	private boolean gameIsActive;
 	private AbstractGameView gameView; 
+	private TextView currentTimeView, currentDateView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -55,6 +59,9 @@ public class NotificationActivity extends AbstractActivity {
         
 		mainContentHolder = (RelativeLayout) findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
+		
+		currentTimeView = (TextView)findViewById(R.id.currentTime);
+	    currentDateView = (TextView)findViewById(R.id.currentDate);
 		
         Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
         disAlarm.setOnClickListener(new View.OnClickListener() {
@@ -72,15 +79,25 @@ public class NotificationActivity extends AbstractActivity {
         
 	} 
 	
+	private void setClock() {
+		//TODO: Do a cleaner and better version of this.
+		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
+		String currentDateString = DateFormat.getDateInstance().format(new Date());
+		
+		currentTimeView.setText(currentTimeString);
+		currentDateView.setText(currentDateString);
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		n.start();
-		
-		
+
 		if(gameIsActive) {
 			gameView.resume();
 		}
+		
+		setClock();
 	}
 	
 	@Override

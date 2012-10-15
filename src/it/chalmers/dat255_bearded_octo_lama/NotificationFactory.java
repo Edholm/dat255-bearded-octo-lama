@@ -23,7 +23,6 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.BaseNotific
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.GameNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
-import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
@@ -36,10 +35,7 @@ public enum NotificationFactory {
 	public static Notification create(Alarm alarm, Activity act){
 		Notification n = new BaseNotification();
 		Alarm.Extras extras = alarm.getExtras();
-		
-		if(extras.hasTextNotification()){
-			n = new TextNotification(n, act);
-		}
+	
 		// TODO fix ringtones
 		if(extras.hasSoundNotification()){
 			List<Integer> toneIDs = extras.getRingtoneIDs();

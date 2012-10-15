@@ -52,7 +52,6 @@ public class Alarm {
 		this.timeInMS = c.getLong(Columns.TIME_ID);
 		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
 		Extras.Builder b = new Extras.Builder()
-							.useTextNot(c.getInt(Columns.TEXT_NOTIFICATION_ID) == 1)
 							.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
 							.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
 							.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
@@ -132,7 +131,6 @@ public class Alarm {
 	 * Defines the extra (optional) values of the alarm and a builder for setting them.
 	 */
 	public static class Extras {
-		private final boolean       useTextNotification;
 		private final boolean       useSound;
 		private final boolean       useVibration;
 		private final List<Integer> ringtoneIDs;
@@ -140,7 +138,6 @@ public class Alarm {
 		private final String        gameName;
 		
 		private Extras(Builder b) {
-			this.useTextNotification = b.useTextNotification;
 			this.useSound            = b.useSound;
 			this.useVibration        = b.useVibration;
 			this.ringtoneIDs         = b.ringtoneIDs;
@@ -151,7 +148,6 @@ public class Alarm {
 		@Override
 		public String toString() {
 			return "Extras {" + 
-					"\n\tText notification: " + useTextNotification +
 					"\n\tSound notification: " + useSound +
 					"\n\tVibration notification: " + useVibration +
 					"\n\tGame notification: " + gameNotification +
@@ -165,7 +161,6 @@ public class Alarm {
 		public ContentValues toContentValues() {
 			ContentValues values = new ContentValues();
 			
-			values.put(Alarm.Columns.TEXT_NOTIFICATION, useTextNotification ? 1 : 0);
 			values.put(Alarm.Columns.SOUND_NOTIFICATION, useSound ? 1 : 0);
 			values.put(Alarm.Columns.VIBRATION_NOTIFICATION, useVibration ? 1 : 0);
 			values.put(Alarm.Columns.GAME_NOTIFICATION, gameNotification ? 1 : 0);
@@ -183,9 +178,6 @@ public class Alarm {
 			
 			return values;
 		}
-		
-		/** @return whether or not the alarm has text notification */ 
-		public boolean hasTextNotification() { return useTextNotification; }
 
 		/** @return whether or not the alarm has sound notification */
 		public boolean hasSoundNotification() { return useSound; }
@@ -208,15 +200,11 @@ public class Alarm {
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
 			// The optional fields set to their default value.
-			private boolean             useTextNotification = false;
 			private boolean             useSound            = true;
 			private boolean             useVibration        = true;
 			private final List<Integer> ringtoneIDs         = new ArrayList<Integer>();
 			private boolean             gameNotification    = false;
 			private String              gameName            = "";
-			
-			public Builder useTextNot(boolean value) 
-				{ useTextNotification = value;	return this; }
 			
 			public Builder useSound(boolean value)
 				{ useSound = value; 	return this; }
@@ -252,7 +240,6 @@ public class Alarm {
 		public static final String MINUTE                 = "MINUTE";
 		public static final String TIME                   = "TIME_IN_MS";
 		public static final String ENABLED                = "ENABLED";
-		public static final String TEXT_NOTIFICATION      = "TEXT_NOTIFICATION";
 		public static final String SOUND_NOTIFICATION     = "SOUND_NOTIFICATION";
 		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
 		public static final String RINGTONE               = "RINGTONE";
@@ -262,7 +249,7 @@ public class Alarm {
 		// Some convenience fields. Makes a lot of stuff easier. 
 		// ALL_COLUMNS must be in the same order as the database schema.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
-			TEXT_NOTIFICATION, SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
+			SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
 			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
 
 		public static final int ID_ID                     = indexOf(_ID);
@@ -270,7 +257,6 @@ public class Alarm {
 		public static final int MINUTE_ID                 = indexOf(MINUTE);
 		public static final int TIME_ID                   = indexOf(TIME);
 		public static final int ENABLED_ID                = indexOf(ENABLED);
-		public static final int TEXT_NOTIFICATION_ID      = indexOf(TEXT_NOTIFICATION);
 		public static final int SOUND_NOTIFICATION_ID     = indexOf(SOUND_NOTIFICATION);
 		public static final int VIBRATION_NOTIFICATION_ID = indexOf(VIBRATION_NOTIFICATION);
 		public static final int RINGTONE_ID               = indexOf(RINGTONE);
