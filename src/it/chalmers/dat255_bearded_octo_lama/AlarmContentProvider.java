@@ -132,7 +132,7 @@ public final class AlarmContentProvider extends ContentProvider{
         
         long rowId = db.insert(TABLE_NAME, "", values);
         if (rowId > 0) {
-            Uri rowUri = ContentUris.withAppendedId(Alarm.AlarmColumns.CONTENT_URI, rowId);
+            Uri rowUri = ContentUris.withAppendedId(Alarm.Columns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(rowUri, null);
             return rowUri;
         }

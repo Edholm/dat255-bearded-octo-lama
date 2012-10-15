@@ -16,7 +16,7 @@ public class TestAlarm extends AndroidTestCase {
 		// We need to test that the cursor adds the correct information to the correct place.
 		// First, some mock-data.
 		
-		cursor = new MatrixCursor(Alarm.AlarmColumns.ALL_COLUMNS);
+		cursor = new MatrixCursor(Alarm.Columns.ALL_COLUMNS);
 		// Note that the order must be the same as Alarm.AlarmColumns.ALL_COLUMNS,
 		cursor.newRow()
 				.add(0)        // _ID
@@ -26,7 +26,7 @@ public class TestAlarm extends AndroidTestCase {
 				.add(enabled); // ENABLED
 	
 		// Ensure nothing wrong with cursor.
-		assertEquals(Alarm.AlarmColumns.ALL_COLUMNS.length, cursor.getColumnCount());
+		assertEquals(Alarm.Columns.ALL_COLUMNS.length, cursor.getColumnCount());
 		assertEquals(1, cursor.getCount());
 		cursor.moveToFirst();
 	}

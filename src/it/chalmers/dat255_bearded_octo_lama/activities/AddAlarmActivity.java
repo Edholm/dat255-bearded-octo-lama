@@ -25,6 +25,8 @@ import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
+import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
@@ -139,7 +141,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 			
 		AlarmController ac = AlarmController.INSTANCE;
-		Uri uri = ac.addAlarm(this, true, hour, minute);
+		Alarm.Extras defaultExtras = new Alarm.Extras.Builder().build();
+		Uri uri = ac.addAlarm(this, true, hour, minute, defaultExtras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 		
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
@@ -251,7 +254,18 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 
 	public void addTestAlarm(View v) {
 		AlarmController ac = AlarmController.INSTANCE;
-		ac.addTestAlarm(this);
+		int countdown = 5;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, countdown);
+		
+		// Defines the options for the test alarm.
+		Alarm.Extras extras = new Alarm.Extras.Builder()
+								.gameNotification(true)
+				                .gameName(RocketLanderGame.class.getAnnotation(Game.class).name())
+				                .build();
+		
+		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
 
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
