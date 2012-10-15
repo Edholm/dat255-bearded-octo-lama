@@ -27,35 +27,30 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotific
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 
-public class NotificationFactory {
-
-
-	
+public enum NotificationFactory {
+	;
 	public static Notification create(Alarm alarm, Activity act){
-		
 		Notification n = new BaseNotification();
+		Alarm.Extras extras = alarm.getExtras();
 		
-		if(alarm.hasTextNotification()){
+		if(extras.hasTextNotification()){
 			n = new TextNotification(n, act);
 		}
 		// TODO fix ringtones
-		if(alarm.hasSoundNotification()){
-			List<Integer> toneIDs = alarm.getRingtoneIDs();
+		if(extras.hasSoundNotification()){
+			List<Integer> toneIDs = extras.getRingtoneIDs();
 			n = new SoundNotification(n, 
 					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
 		}
-		if(alarm.hasVibrationNotification()){
+		if(extras.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);
 		}
-		if(alarm.hasGameNotification()) {
-			n = new GameNotification(n, act, alarm.getGameName());
+		if(extras.hasGameNotification()) {
+			n = new GameNotification(n, act, extras.getGameName());
 		}
 		return n;
 	}

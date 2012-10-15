@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-
 /**
  * Represents a chosen alarm time in the format of hh:mm.
  * @author Emil Edholm
@@ -39,13 +38,7 @@ public class Alarm {
 	private final int hour, minute;
 	private final long timeInMS;
 	private final boolean enabled;
-	private final boolean textNotification;
-	private final boolean soundNotification;
-	private final boolean vibrationNotification;
-	private final ArrayList<Integer> ringtoneIDs = new ArrayList<Integer>();
-	private final boolean gameNotification;
-	private final String gameName;
-	// More options goes here later...
+	private final Extras extras;
 
 	/**
 	 * Create a new Alarm from a content provider.
@@ -57,24 +50,26 @@ public class Alarm {
 		this.minute   = c.getInt(Columns.MINUTE_ID);
 		this.timeInMS = c.getLong(Columns.TIME_ID);
 		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
-		this.textNotification      = c.getInt(Columns.TEXT_NOTIFICATION_ID) == 1;
-		this.soundNotification     = c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1;
-		this.vibrationNotification = c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1;
-		this.gameNotification      = c.getInt(Columns.GAME_NOTIFICATION_ID) == 1;
-		this.gameName              = c.getString(Columns.GAME_NAME_ID);
+		Extras.Builder b = new Extras.Builder()
+							.useTextNot(c.getInt(Columns.TEXT_NOTIFICATION_ID) == 1)
+							.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
+							.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
+							.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
+							.gameName(c.getString(Columns.GAME_NAME_ID));
 		
 		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
-		for(String s:toneID){
+		for(String s : toneID){
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
 			try {
 				int i = Integer.parseInt(s);
-				ringtoneIDs.add(i);
+				b.addRingtoneID(i);
 			} catch (NumberFormatException e) {
 				Log.e("Alarm-constructor-exception", "Tried to parse something different then int");
 			}
 		}
-
+		
+		this.extras = b.build();
 	}
 
 	/**
@@ -113,41 +108,9 @@ public class Alarm {
 		return enabled;
 	}
 
-	/**
-	 * @return whether or not the alarm has text notification
-	 */
-	public boolean hasTextNotification() {
-		return textNotification;
-	}
-
-	/**
-	 * @return whether or not the alarm has sound notification
-	 */
-	public boolean hasSoundNotification() {
-		return soundNotification;
-	}
-	/**
-	 * @return whether or not the alarm has vibration notification
-	 */
-	public boolean hasVibrationNotification() {
-		return vibrationNotification;
-	}
-	/**
-	 * @return whether or not the alarm has game notification
-	 */
-	public boolean hasGameNotification() {
-		return gameNotification;
-	}
-	
-	/**
-	 * @return the name of the selected game.
-	 */
-	public String getGameName() {
-		return gameName;
-	}
-	
-	public List<Integer> getRingtoneIDs(){
-		return ringtoneIDs;
+	/** Retrieve any extra information stored with the alarm */
+	public Extras getExtras() {
+		return extras;
 	}
 
 	@Override
@@ -157,13 +120,95 @@ public class Alarm {
 				"\n\tMinute: " + minute +
 				"\n\tTime (millisec): " + timeInMS +
 				"\n\tIs enabled: " + enabled + 
-				"\n\tText notification: " + textNotification +
-				"\n\tSound notification: " + soundNotification +
-				"\n\tVibration notification: " + vibrationNotification +
-				"\n\tGame notification: " + gameNotification +
-				"\n\tGame name: " + gameName +
+				"\n\t" + extras.toString() + 
 				"\n}";
 		//TODO update
+	}
+	
+	/**
+	 * Defines the extra (optional) values of the alarm and a builder for setting them.
+	 */
+	public static class Extras {
+		private final boolean       useTextNotification;
+		private final boolean       useSound;
+		private final boolean       useVibration;
+		private final List<Integer> ringtoneIDs;
+		private final boolean       gameNotification;  
+		private final String        gameName;
+		
+		private Extras(Builder b) {
+			this.useTextNotification = b.useTextNotification;
+			this.useSound            = b.useSound;
+			this.useVibration        = b.useVibration;
+			this.ringtoneIDs         = b.ringtoneIDs;
+			this.gameNotification    = b.gameNotification;
+			this.gameName            = b.gameName;
+		}
+		
+		@Override
+		public String toString() {
+			return "Extras {" + 
+					"\n\tText notification: " + useTextNotification +
+					"\n\tSound notification: " + useSound +
+					"\n\tVibration notification: " + useVibration +
+					"\n\tGame notification: " + gameNotification +
+					"\n\tGame name: " + gameName +
+					"\n}";
+		}
+		
+		/** @return whether or not the alarm has text notification */ 
+		public boolean hasTextNotification() { return useTextNotification; }
+
+		/** @return whether or not the alarm has sound notification */
+		public boolean hasSoundNotification() { return useSound; }
+		
+		/** @return whether or not the alarm has vibration notification */
+		public boolean hasVibrationNotification() { return useVibration; }
+		
+		/** 
+		 * @return whether or not the alarm has game component that the 
+		 *         user must complete before he is able to disable the alarm 
+		 */
+		public boolean hasGameNotification() { return gameNotification; }
+		
+		/** @return the name of the selected game. */
+		public String getGameName() { return gameName; }
+		
+		/** @return a list of ringtone ids for use when the alarm goes off. */
+		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
+		
+		/** Uses the builder pattern to create Alarm extras. */
+		public static class Builder {
+			// The optional fields set to their default value.
+			private boolean             useTextNotification = false;
+			private boolean             useSound            = true;
+			private boolean             useVibration        = true;
+			private final List<Integer> ringtoneIDs         = new ArrayList<Integer>();
+			private boolean             gameNotification    = false;
+			private String              gameName            = "";
+			
+			public Builder useTextNot(boolean value) 
+				{ useTextNotification = value;	return this; }
+			
+			public Builder useSound(boolean value)
+				{ useSound = value; 	return this; }
+			
+			public Builder useVibration(boolean value)
+				{ useVibration = value; 	return this; }
+			
+			public Builder addRingtoneID(Integer id)
+				{ ringtoneIDs.add(id); 	return this; }
+			
+			public Builder gameNotification(boolean value)
+				{ gameNotification = value; 	return this; }
+			
+			public Builder gameName(String name)
+				{ gameName = name; 	return this; }
+			
+			public Extras build() {
+				return new Extras(this);
+			}
+		}
 	}
 
 	/** 
