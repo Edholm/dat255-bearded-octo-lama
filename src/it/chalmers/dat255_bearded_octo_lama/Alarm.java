@@ -22,6 +22,7 @@ package it.chalmers.dat255_bearded_octo_lama;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -59,6 +60,8 @@ public class Alarm {
 		
 		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
 		for(String s : toneID){
+			if(s.isEmpty()) continue;
+			
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
 			try {
@@ -154,6 +157,31 @@ public class Alarm {
 					"\n\tGame notification: " + gameNotification +
 					"\n\tGame name: " + gameName +
 					"\n}";
+		}
+		
+		/** 
+		 * @return {@code this} converted to a {@code ContentValues}.
+		 */
+		public ContentValues toContentValues() {
+			ContentValues values = new ContentValues();
+			
+			values.put(Alarm.Columns.TEXT_NOTIFICATION, useTextNotification ? 1 : 0);
+			values.put(Alarm.Columns.SOUND_NOTIFICATION, useSound ? 1 : 0);
+			values.put(Alarm.Columns.VIBRATION_NOTIFICATION, useVibration ? 1 : 0);
+			values.put(Alarm.Columns.GAME_NOTIFICATION, gameNotification ? 1 : 0);
+			values.put(Alarm.Columns.GAME_NAME, gameName);
+
+			String s = "";
+			for(Integer i : ringtoneIDs){
+				s += i + ",";
+			}
+			//Used to remove last ","
+			if(ringtoneIDs.size() > 0) {
+				s = s.substring(0, s.length()-1);
+			}
+			values.put(Alarm.Columns.RINGTONE, s);
+			
+			return values;
 		}
 		
 		/** @return whether or not the alarm has text notification */ 

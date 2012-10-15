@@ -19,8 +19,6 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
-import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.ArrayList;
@@ -52,65 +50,43 @@ public enum AlarmController {
 	 * @param enabled whether or not the alarm should be enabled
 	 * @param hour the hour the alarm is to activate
 	 * @param minute the minute the alarm is to activate
+	 * @param extras any optional alarm parameters goes here.
 	 * @return the uri to the newly added alarm
 	 */
-	public Uri addAlarm(Context c, boolean enabled, int hour, int minute) {
-		ContentResolver cr = c.getContentResolver();
+	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, Alarm.Extras extras) {
 		long time = Time.timeInMsAt(hour, minute);
-		
-		//TODO Remove hardcoded list
-		List<Integer> ringtoneIDs = new ArrayList<Integer>();
-		ringtoneIDs.add(0);
-		
-		//TODO: Remove hardcoded values
-		ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
-		Uri uri = cr.insert(Alarm.Columns.CONTENT_URI, values);
-		renewAlarmQueue(c);
-		return uri;
+		return addAlarm(c, enabled, time, extras);
 	}
 	
-	/** Only used for testing. Remove in production code */
-	public Uri addTestAlarm(Context c) {
+	/**
+	 * Adds a new alarm to the database
+	 * @param c - the context
+	 * @param enabled - whether or not the alarm should be enabled
+	 * @param time - the time and date the alarm should go off (in milliseconds)
+	 * @param extras - optional parameters.
+	 * @return the uri to the newly created alarm.
+	 */
+	public Uri addAlarm(Context c, boolean enabled, long time, Alarm.Extras extras) {
 		ContentResolver cr = c.getContentResolver();
-		Calendar then = Calendar.getInstance();
-		then.add(Calendar.SECOND, 5);
-		
-		List<Integer> ringtoneIDs = new ArrayList<Integer>();
-		ringtoneIDs.add(0);
-		
-		long time = then.getTimeInMillis();
-		ContentValues values = constructContentValues(
-				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
-				true, time, 1, 1, 1, ringtoneIDs, 1, RocketLanderGame.class.getAnnotation(Game.class).name());
 
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		
+		ContentValues values = constructContentValues(cal, enabled, extras);
 		Uri uri = cr.insert(Alarm.Columns.CONTENT_URI, values);
+		
 		renewAlarmQueue(c);
 		return uri;
 	}
 
-	private ContentValues constructContentValues(int hour, int minute,
-			boolean enabled, long time, int textNot, int soundNot, int vibrationNot, List<Integer> RingtoneIDs, 
-			int gameNot, String gameName) {
-		ContentValues values = new ContentValues();
+	private ContentValues constructContentValues(Calendar cal, boolean enabled, Alarm.Extras extras) {
+		ContentValues values = new ContentValues(extras.toContentValues());
 		
-		values.put(Alarm.Columns.HOUR, hour);
-		values.put(Alarm.Columns.MINUTE, minute);
+		values.put(Alarm.Columns.HOUR,    cal.get(Calendar.HOUR_OF_DAY));
+		values.put(Alarm.Columns.MINUTE,  cal.get(Calendar.MINUTE));
+		values.put(Alarm.Columns.TIME,    cal.getTimeInMillis());
 		values.put(Alarm.Columns.ENABLED, enabled ? 1 : 0);
-		values.put(Alarm.Columns.TIME, time);
-		values.put(Alarm.Columns.TEXT_NOTIFICATION, textNot);
-		values.put(Alarm.Columns.SOUND_NOTIFICATION, soundNot);
-		values.put(Alarm.Columns.VIBRATION_NOTIFICATION, vibrationNot);
-		values.put(Alarm.Columns.GAME_NOTIFICATION, gameNot);
-		values.put(Alarm.Columns.GAME_NAME, gameName);
 
-		String s = "";
-		for(Integer i:RingtoneIDs){
-			s += i + ",";
-		}
-		//Used to remove last ","
-		s = s.substring(0, s.length()-1);
-		values.put(Alarm.Columns.RINGTONE, s);
-		
 		return values;
 	}
 	
