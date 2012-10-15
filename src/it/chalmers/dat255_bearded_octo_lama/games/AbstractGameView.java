@@ -36,11 +36,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
-	protected Thread t;
-	protected Paint painter;
-	protected List<View> uiList;
-	protected Context context;
-	protected boolean gameIsActive;
+	private Thread t;
+	private Paint painter;
+	private List<View> uiList;
+	private Context context;
+	private boolean gameIsActive;
 	private SurfaceHolder surfaceHolder;
 	private AbstractGameView myself;
 	private Handler uiHandler;
@@ -162,14 +162,25 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	}
 	
 	/**
+	 * Accessor method for subclasses to access the painter.
+	 */
+	protected Paint getPainter() {
+		return painter;
+	}
+	
+	/**
+	 * Accessor method for subclasses to access the UI list.
+	 */
+	protected List<View> getUiList() {
+		return uiList;
+	}
+	
+	/**
 	 * Calling this method will return all the UI views that needs to be added above the surface view.
 	 * @return List of View's if the list is populated or <code>null</code> if there are no UI elements in the game.
 	 */
 	public List<View> getUIComponents() {
-		if(uiList != null) {
-			return uiList;
-		}
-		return null;
+		return new ArrayList<View>(uiList);
 	}
 	
 	/**
