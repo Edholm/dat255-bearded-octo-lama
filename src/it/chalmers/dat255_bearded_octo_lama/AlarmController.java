@@ -52,7 +52,7 @@ public enum AlarmController {
 	 * @param minute the minute the alarm is to activate
 	 * @return the uri to the newly added alarm
 	 */
-	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, List<Integer> ringToneID) {
+	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, int vibration, List<Integer> ringToneID) {
 		ContentResolver cr = c.getContentResolver();
 		long time = Time.timeInMsAt(hour, minute);
 		
@@ -65,7 +65,7 @@ public enum AlarmController {
 		//ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringToneID);
 		ContentValues values = constructContentValues(
 				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
-				true, time, 1, 1, 1, ringToneID);
+				true, time, 1, 1, vibration, ringToneID);
 
 		
 		Uri uri = cr.insert(Alarm.AlarmColumns.CONTENT_URI, values);

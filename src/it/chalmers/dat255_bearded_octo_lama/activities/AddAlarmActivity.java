@@ -47,6 +47,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -59,38 +60,40 @@ import android.widget.Toast;
  * @date 14 oct 2012
  */
 public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
-	
+
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
 	private List<Ringtone> tones = new ArrayList<Ringtone>();
 	private final List<Ringtone> selectedTones = new ArrayList<Ringtone>();
+	private CheckBox vibration;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(layout.activity_alarm_menu);
 		// Had some problems with getting tabs to work
 		// (even though we had almost written correct code)
 		// Got the tabs-setupcode from git://github.com/commonsguy/cw-android.git
 		// in folder Fancy/Tab
-	    TabHost tabs=(TabHost)findViewById(R.id.tabhost);
-	    tabs.setup();
-	    TabHost.TabSpec spec=tabs.newTabSpec("tag1");
-	    
-	    spec.setContent(R.id.tab1);
-	    spec.setIndicator("Alarms");
-	    tabs.addTab(spec);
-	    
-	    spec=tabs.newTabSpec("tag2");
-	    spec.setContent(R.id.tab2);
-	    spec.setIndicator("Settings");
-	    tabs.addTab(spec);
-		
+		TabHost tabs=(TabHost)findViewById(R.id.tabhost);
+		tabs.setup();
+		TabHost.TabSpec spec=tabs.newTabSpec("tag1");
+
+		spec.setContent(R.id.tab1);
+		spec.setIndicator("Alarms");
+		tabs.addTab(spec);
+
+		spec=tabs.newTabSpec("tag2");
+		spec.setContent(R.id.tab2);
+		spec.setIndicator("Settings");
+		tabs.addTab(spec);
+
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
 		spinner.setOnItemSelectedListener(this);
-		
+
 		//TODO refactor
+		// Spinner for choosing which sound should be played
 		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
 		ArrayList<String> songs = new ArrayList<String>();
 		tones = RingtoneFinder.getRingtones(this);
@@ -99,63 +102,65 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
-		
+
+		vibration = (CheckBox)findViewById(id.vibration);
+
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 	}
-	
+
 	/**
 	 * Retrieves the time from the "time" buttons.
 	 * @return returns an integer array with four values representing the time in hh:mm format where {@code h0 = int[0]; h1 = int[1]} etc.
 	 */
 	private int[] queryTimeValues() {
 		int[] time = new int[4];
-		
+
 		time[0] = getButtonNumber(R.id.h0);
 		time[1] = getButtonNumber(R.id.h1);
 		time[2] = getButtonNumber(R.id.m0);
 		time[3] = getButtonNumber(R.id.m1);
-		
+
 		return time;
 	}
-	
+
 	/** Select a specific time button based on ID */
 	private void selectTimeButton(int id) {
 		if(currentTimeButton != null)
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
-		
+
 		currentTimeButton = (Button)findViewById(id);
 		filter.setTimeButtonId(id);
 		currentTimeButton.setBackgroundColor(getResources().getColor(R.color.green));
 	}
-	
+
 	/** Selects the next "time" button */
 	private void selectNextTimeButton() {
 		switch(currentTimeButton.getId()) {
-			case R.id.h0: 
-				selectTimeButton(id.h1);
-				break;
-			case R.id.h1:
-				selectTimeButton(id.m0);
-				break;
-			case R.id.m0:
-				selectTimeButton(id.m1);
-				break;
-			default:
-				selectTimeButton(id.h0);
-				break;
+		case R.id.h0: 
+			selectTimeButton(id.h1);
+			break;
+		case R.id.h1:
+			selectTimeButton(id.m0);
+			break;
+		case R.id.m0:
+			selectTimeButton(id.m1);
+			break;
+		default:
+			selectTimeButton(id.h0);
+			break;
 		}
 	}
-	
+
 	/** When the user clicks the add button (ie. when he is finished) */
 	private void addAlarm() {
 		int[] time = queryTimeValues();
-		
+
 		int hour, minute;
 		// Combine values from format hh:mm to h:m.
 		if(setAlarmAT) {
@@ -165,24 +170,24 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		else {
 			hour   = time[0] * 10 + time[1];
 			minute = time[2] * 10 + time[3];
-			
+
 			// Time now + value selected equals sometime in the future.
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR_OF_DAY, hour);
 			cal.add(Calendar.MINUTE, minute);
-			
+
 			hour   = cal.get(Calendar.HOUR_OF_DAY);
 			minute = cal.get(Calendar.MINUTE);
 		}
-			
+
 		AlarmController ac = AlarmController.INSTANCE;
-		Uri uri = ac.addAlarm(this, true, hour, minute, RingtoneFinder.findRingtoneID(this, selectedTones));
+		Uri uri = ac.addAlarm(this, true, hour, minute, vibrationEnabled(), RingtoneFinder.findRingtoneID(this, selectedTones));
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
-		
+
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
 		finish();
 	}
-	
+
 	/**
 	 * Event handler for when one of the buttons on the numbpad is clicked.
 	 * @param view the button that was clicked.
@@ -193,7 +198,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		int h1 = getButtonNumber(id.h1);
 		if(filter.accept(numClicked)) {
 			currentTimeButton.setText(numClicked + "");
-			
+
 			if(currentTimeButton.getId() == R.id.h0) {
 				if(numClicked == 2 && h1 > 3) {
 					Button b = (Button) findViewById(R.id.h1);
@@ -203,14 +208,14 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			selectNextTimeButton();
 		}
 	}
-	
+
 	/**
 	 * @return number on the button
 	 */
 	private int getButtonNumber(Button button) {
 		return Integer.parseInt(button.getText().toString());
 	}
-	
+
 	/**
 	 * @return the number on the button, -1 if not a button or error occurred.
 	 */
@@ -218,7 +223,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		View v = findViewById(id);
 		if(v instanceof Button)
 			return getButtonNumber((Button)v);
-		
+
 		return -1;
 	}
 
@@ -229,61 +234,61 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	public void onTimeClick(View view) {
 		selectTimeButton(view.getId());
 	}
-	
+
 	/** What happens when an item is selected on the options spinner */
 	public void onItemSelected(AdapterView<?> parent, View view, 
-            int pos, long id) {
+			int pos, long id) {
 		String option = String.valueOf(parent.getItemAtPosition(pos));
 		TypedArray options = getResources().obtainTypedArray(array.time_options_array);
-		
+
 		// Assumes a static position of the options value and "Alarm at" at position 0 and "Alarm in" at pos 1.
 		// There is probably a better way to do this...
-		
+
 		setAlarmAT = option.equals(options.getString(0));
-    }
-	
+	}
+
 	public void onNothingSelected(AdapterView<?> parent) { /* Do nothing  */ }
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case R.id.menu_add:
-	        	addAlarm(); 
-	        	return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case R.id.menu_add:
+			addAlarm(); 
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.activity_add_alarm, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_add_alarm, menu);
+		return true;
 	}
 
 	private static class TimeFilter implements Filter<Integer> {
 		private int selectedTimeButtonId, h0;
-		
+
 		public boolean accept(Integer i) {
 			switch(selectedTimeButtonId) {
-				case id.h0:
-					h0 = i;
-					return i <= 2;
-				case id.h1:
-					return i <= 3 || h0 != 2;
-				case id.m0:
-					return i <= 5;
-				case id.m1:
-					return i <= 9;
+			case id.h0:
+				h0 = i;
+				return i <= 2;
+			case id.h1:
+				return i <= 3 || h0 != 2;
+			case id.m0:
+				return i <= 5;
+			case id.m1:
+				return i <= 9;
 			}
 			return false;
 		}
-		
+
 		public void setTimeButtonId(int id) {
 			selectedTimeButtonId = id;
 		}
-		
+
 	}
 
 	public void addTestAlarm(View v) {
@@ -293,7 +298,19 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
 	}
-	
+	private int vibrationEnabled(){
+		if (vibration.isChecked()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Private class for listening to the Spinner in settings that chooses which sound to play
+	 * @author e
+	 *
+	 */
 	private class SoundSpinnerListener implements OnItemSelectedListener {
 
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
@@ -305,6 +322,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		public void onNothingSelected(AdapterView<?> parent) {
 			// Do Nothing		
 		}
-		
+
 	}
 }

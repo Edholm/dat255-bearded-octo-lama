@@ -16,7 +16,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
- -->
+-->
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabhost"
     android:layout_width="fill_parent"
@@ -249,19 +249,23 @@
             <LinearLayout
                 android:id="@+id/tab2"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
+                android:layout_height="fill_parent"
                 android:gravity="left"
                 android:orientation="vertical" >
-                
-          <Spinner
+
+                <Spinner
                     android:id="@+id/sound_list_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp" />
-                
-                
-                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/vibration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vibration" /> 
+            </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
