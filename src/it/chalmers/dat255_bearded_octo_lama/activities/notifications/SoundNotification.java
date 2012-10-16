@@ -40,20 +40,20 @@ import android.util.Log;
  * @modified Emil Edholm
  */
 public class SoundNotification extends NotificationDecorator {
-	
+
 	private List<Ringtone> notificationSounds = Collections.emptyList();
 	private Ringtone playing = null;
 	private final Context context;
 	private final Activity act;
 	MediaPlayer mp = null;
-	
+
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
 		this.context = act;
 		this.act = act;
 		notificationSounds = ringtones;
 	}
-		
+
 	@Override
 	public void start() {
 		super.start();
@@ -64,18 +64,28 @@ public class SoundNotification extends NotificationDecorator {
 			Log.d("SoundNotification", "notificationSounds is empty");
 			// Use default sound if no sounds listed previously.
 			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
-													Settings.System.DEFAULT_ALARM_ALERT_URI);
+					Settings.System.DEFAULT_ALARM_ALERT_URI);
 		}
-		Uri uri = RingtoneFinder.findRingtoneUri(act, playing);
-		if(uri == null){
-			uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
-			Log.d("SoundNotification", "Uri is null replaced with "+uri);
+		//If clause if you use the emulator or device without sound
+		Uri uri = null;
+		if(playing != null){
+			uri = RingtoneFinder.findRingtoneUri(act, playing);
+			if(uri == null){
+				uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
+				Log.d("SoundNotification", "Uri is null replaced with "+uri);
+			}
 		}
-		mp = MediaPlayer.create(context, uri);
-		mp.setLooping(true);
-		//TODO: None-hardcoded-volume
-		mp.setVolume(1f, 1f);
-		mp.start();
+
+		//If clause if you use the emulator or device without sound
+		if(uri != null){
+			mp = MediaPlayer.create(context, uri);
+			if(mp != null) {
+				mp.setLooping(true);
+				//TODO: None-hardcoded-volume
+				mp.setVolume(1f, 1f);
+				mp.start();
+			}
+		}
 	}
 
 	@Override

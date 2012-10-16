@@ -25,18 +25,27 @@ import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 
 	private Notification n;
 	private LinearLayout dismissAlarmLayout;
+	private RelativeLayout mainContentHolder;
 	private boolean gameIsActive;
 	private AbstractGameView gameView; 
+	private TextView currentTimeView, currentDateView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -48,6 +57,12 @@ public class NotificationActivity extends AbstractActivity {
 		n = NotificationFactory.create(alarm, this);
 		setContentView(R.layout.activity_notification);
         
+		mainContentHolder = (RelativeLayout) findViewById(R.id.mainContentLayout);
+		dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
+		
+		currentTimeView = (TextView)findViewById(R.id.currentTime);
+	    currentDateView = (TextView)findViewById(R.id.currentDate);
+		
         Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
         disAlarm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -60,18 +75,29 @@ public class NotificationActivity extends AbstractActivity {
 			public void onClick(View v) {
 				//TODO fix snooze
 			}
-        });   
+        });
+        
 	} 
+	
+	private void setClock() {
+		//TODO: Do a cleaner and better version of this.
+		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
+		String currentDateString = DateFormat.getDateInstance().format(new Date());
+		
+		currentTimeView.setText(currentTimeString);
+		currentDateView.setText(currentDateString);
+	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		n.start();
-		
-		
+
 		if(gameIsActive) {
 			gameView.resume();
 		}
+		
+		setClock();
 	}
 	
 	@Override
@@ -82,20 +108,17 @@ public class NotificationActivity extends AbstractActivity {
 			gameView.pause();
 		}
 	}
-
-	private void initGame() { /*
-		//Make the holder for dismiss/snooze alarm buttons invisible while the game is running.
-		dismissAlarmLayout.setVisibility(View.GONE);
-		mainContentLayout.addView(gameView);
-		
-		//Adding all views that build the games UI after the surfaceView has been added.
-		//Otherwise the UI views would all get stuck under the surface view.
-		List<View> uiList = gameView.getUIComponents();
-		if(uiList != null) {
-			for(View v : uiList) {
-				mainContentLayout.addView(v);
+	
+	public void endGame(AbstractGameView gameView) {
+		//This will set the dismiss controls to visible again while removing the views used by the game.
+		dismissAlarmLayout.setVisibility(View.VISIBLE);
+		mainContentHolder.removeView(gameView);
+		if(gameView.getUIComponents() != null) {
+			for(View v : gameView.getUIComponents()) {
+				mainContentHolder.removeView(v);
 			}
-		} 
-		gameView.resume(); */
-	} 
+		}
+	}
+
+
 }

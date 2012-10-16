@@ -42,7 +42,7 @@ public final class AlarmContentProvider extends ContentProvider{
 
     private DatabaseHelper      dbHelper;
     private static final String DATABASE_NAME    = "alarms.db";
-    private static final int    DATABASE_VERSION = 7;
+    private static final int    DATABASE_VERSION = 8;
     private static final String TABLE_NAME       = "Alarms";
     
     // For use in matching uri.
@@ -70,10 +70,11 @@ public final class AlarmContentProvider extends ContentProvider{
                        "MINUTE INTEGER, " +
                        "TIME_IN_MS INTEGER, " +
             		   "ENABLED INTEGER, "+
-            		   "TEXT_NOTIFICATION INTEGER,"+
             		   "SOUND_NOTIFICATION INTEGER,"+
             		   "VIBRATION_NOTIFICATION INTEGER,"+
-            		   "RINGTONE STRING);");
+            		   "RINGTONE STRING," +
+            		   "GAME_NOTIFICATION INTEGER,"+
+            		   "GAME_NAME STRING);");
         }
 
         @Override
@@ -130,7 +131,7 @@ public final class AlarmContentProvider extends ContentProvider{
         
         long rowId = db.insert(TABLE_NAME, "", values);
         if (rowId > 0) {
-            Uri rowUri = ContentUris.withAppendedId(Alarm.AlarmColumns.CONTENT_URI, rowId);
+            Uri rowUri = ContentUris.withAppendedId(Alarm.Columns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(rowUri, null);
             return rowUri;
         }

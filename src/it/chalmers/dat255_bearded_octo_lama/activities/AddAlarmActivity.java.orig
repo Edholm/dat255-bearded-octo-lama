@@ -110,16 +110,29 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
+<<<<<<< HEAD
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+=======
 	
+>>>>>>> develop
 	/**
 	 * Retrieves the time from the "time" buttons.
 	 * @return returns an integer array with four values representing the time in hh:mm format where {@code h0 = int[0]; h1 = int[1]} etc.
 	 */
 	private int[] queryTimeValues() {
+<<<<<<< HEAD
+		int[] time = new int[4];
+
+=======
 		int numberOfBtns = 4;
 		int[] time = new int[numberOfBtns];
-
+		
+>>>>>>> develop
 		time[0] = getButtonNumber(R.id.h0);
 		time[1] = getButtonNumber(R.id.h1);
 		time[2] = getButtonNumber(R.id.m0);
@@ -132,8 +145,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	private void selectTimeButton(int id) {
 		if(currentTimeButton != null) {
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
-		}
+<<<<<<< HEAD
 
+=======
+		}
+		
+>>>>>>> develop
 		currentTimeButton = (Button)findViewById(id);
 		filter.setTimeButtonId(id);
 		currentTimeButton.setBackgroundColor(getResources().getColor(R.color.green));
@@ -160,8 +177,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	/** When the user clicks the add button (ie. when he is finished) */
 	private void addAlarm() {
 		int[] time = queryTimeValues();
+<<<<<<< HEAD
 
+=======
+		
 		int timeBase = 10;
+>>>>>>> develop
 		int hour, minute;
 		// Combine values from format hh:mm to h:m.
 		if(setAlarmAT) {
@@ -169,9 +190,15 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			minute = time[2] * timeBase + time[3];
 		}
 		else {
+<<<<<<< HEAD
+			hour   = time[0] * 10 + time[1];
+			minute = time[2] * 10 + time[3];
+
+=======
 			hour   = time[0] * timeBase + time[1];
 			minute = time[2] * timeBase + time[3];
-
+			
+>>>>>>> develop
 			// Time now + value selected equals sometime in the future.
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR_OF_DAY, hour);
@@ -182,8 +209,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 
 		AlarmController ac = AlarmController.INSTANCE;
+<<<<<<< HEAD
+		Uri uri = ac.addAlarm(this, true, hour, minute, vibrationEnabled(), RingtoneFinder.findRingtoneID(this, selectedTones));
+=======
 		Alarm.Extras defaultExtras = new Alarm.Extras.Builder().build();
 		Uri uri = ac.addAlarm(this, true, hour, minute, defaultExtras);
+>>>>>>> develop
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
@@ -200,10 +231,19 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		int h1 = getButtonNumber(id.h1);
 		if(filter.accept(numClicked)) {
 			currentTimeButton.setText(numClicked + "");
+<<<<<<< HEAD
 
+			if(currentTimeButton.getId() == R.id.h0) {
+				if(numClicked == 2 && h1 > 3) {
+					Button b = (Button) findViewById(R.id.h1);
+					b.setText("0");
+				}
+=======
+			
 			if(currentTimeButton.getId() == R.id.h0 && numClicked == 2 && h1 > 3) {
 				Button b = (Button) findViewById(R.id.h1);
 				b.setText("0");
+>>>>>>> develop
 			}
 			selectNextTimeButton();
 		}
@@ -223,8 +263,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		View v = findViewById(id);
 		if(v instanceof Button) {
 			return getButtonNumber((Button)v);
-		}
+<<<<<<< HEAD
 
+=======
+		}
+		
+>>>>>>> develop
 		return -1;
 	}
 
