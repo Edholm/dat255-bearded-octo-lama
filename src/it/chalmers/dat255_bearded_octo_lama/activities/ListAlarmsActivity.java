@@ -5,7 +5,6 @@ import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -79,7 +78,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 	
 		  switch(item.getItemId()) {
 		  	case DELETE_CONTEXT_MENU_ID:
-		  		deleteAlarm(affectedAlarm);
+		  		deleteAlarm(affectedAlarm, info.position);
 		  		break;
 		  	case EDIT_CONTEXT_MENU_ID:
 		  		editAlarm(affectedAlarm);
@@ -95,15 +94,10 @@ public class ListAlarmsActivity extends AbstractActivity {
 	}
 
 	/** Removes the specified alarm from the database and from the adapter backed list containing all alarms */
-	private void deleteAlarm(Alarm affectedAlarm) {
-		//AlarmController.INSTANCE.deleteAlarm(this, affectedAlarm.getId());
+	private void deleteAlarm(Alarm affectedAlarm, int rowIndex) {
+		AlarmController.INSTANCE.deleteAlarm(this, affectedAlarm.getId());
 		adapter.remove(affectedAlarm);
-		
-		ListAlarmsActivity.this.runOnUiThread(new Runnable() {
-	        public void run() {
-	            adapter.notifyDataSetChanged();
-	        }
-	    });
+
 		Toast.makeText(this, "Removed " + affectedAlarm.toPrettyString(), Toast.LENGTH_LONG).show();
 	}
 
@@ -129,7 +123,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 			super(context, textViewResourceId, items);
 			
 			this.viewID  = textViewResourceId;
-			this.items   = new ArrayList<Alarm>(items);
+			this.items   = items;
 			
 			this.inflater = LayoutInflater.from(context);
 		}
