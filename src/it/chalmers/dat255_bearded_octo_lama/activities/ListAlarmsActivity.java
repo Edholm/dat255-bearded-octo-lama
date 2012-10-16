@@ -5,17 +5,20 @@ import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -23,19 +26,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ListAlarmsActivity extends AbstractActivity {
+	private AlarmAdapter adapter;
+	
+	private static final int DELETE_CONTEXT_MENU_ID = 0;
+	private static final int EDIT_CONTEXT_MENU_ID   = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_alarms);
         
-        
-        AlarmAdapter adapter = new AlarmAdapter(this, 
-                R.layout.row_alarm, AlarmController.INSTANCE.getAllAlarms(this));
-        
+        List<Alarm> allAlarms = AlarmController.INSTANCE.getAllAlarms(this);
+        adapter = new AlarmAdapter(this, R.layout.row_alarm, allAlarms);
         
         ListView lv = (ListView)findViewById(R.id.listView);
         lv.setAdapter(adapter);
+        registerForContextMenu(lv);
     }
     
     private final static OnClickListener checkboxClickListener = new OnClickListener() {
@@ -52,6 +58,55 @@ public class ListAlarmsActivity extends AbstractActivity {
 		}
 	};
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+										ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		// Create a context for the list alarm ListView
+		if (v.getId() == R.id.listView) {
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+			menu.setHeaderTitle(adapter.getItem(info.position).toPrettyString());
+			
+			menu.add(Menu.NONE, DELETE_CONTEXT_MENU_ID, Menu.NONE, R.string.contextMenuDelete);
+			menu.add(Menu.NONE, EDIT_CONTEXT_MENU_ID, Menu.NONE, R.string.contextMenuEdit);	  
+		  }
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();	
+		  Alarm affectedAlarm = adapter.getItem(info.position);
+	
+		  switch(item.getItemId()) {
+		  	case DELETE_CONTEXT_MENU_ID:
+		  		deleteAlarm(affectedAlarm);
+		  		break;
+		  	case EDIT_CONTEXT_MENU_ID:
+		  		editAlarm(affectedAlarm);
+		  		break;
+		  }
+		  
+		  return true;
+	}
+
+	/** Launches the AddAlarmActivity with the specified alarm used for template/base */
+	private void editAlarm(Alarm affectedAlarm) {
+		//TODO: Launch AddAlarmActivity with this alarm as base so the user can edit it.
+	}
+
+	/** Removes the specified alarm from the database and from the adapter backed list containing all alarms */
+	private void deleteAlarm(Alarm affectedAlarm) {
+		//AlarmController.INSTANCE.deleteAlarm(this, affectedAlarm.getId());
+		adapter.remove(affectedAlarm);
+		
+		ListAlarmsActivity.this.runOnUiThread(new Runnable() {
+	        public void run() {
+	            adapter.notifyDataSetChanged();
+	        }
+	    });
+		Toast.makeText(this, "Removed " + affectedAlarm.toPrettyString(), Toast.LENGTH_LONG).show();
+	}
+
 	/**
 	 * This class adapts an {@code Alarm} for use in a {@code ListView}.
 	 * @author Emil Edholm
@@ -98,9 +153,8 @@ public class ListAlarmsActivity extends AbstractActivity {
 	        }
 	        
 	        Alarm alarm = items.get(position);
-	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 	        
-	        holder.clock.setText(sdf.format(new Date(alarm.getTimeInMS())));
+	        holder.clock.setText(alarm.toPrettyString());
 	        holder.enabled.setChecked(alarm.isEnabled());
 	
 	        // Make the checkbox change listenable.
