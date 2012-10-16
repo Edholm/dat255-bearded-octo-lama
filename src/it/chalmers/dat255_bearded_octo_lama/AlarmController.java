@@ -195,8 +195,9 @@ public enum AlarmController {
 	/** 
 	 * Get the next alarm that is enabled and nearest in time to now 
 	 * @param context - the context
-	 * @return returns the time neareast in time to {@code now} or {@code null} 
-	 *         if no alarms has been added or some error occurred.
+	 * @return returns the alarm enabled and set to neareast in time 
+	 *         to {@code now} or {@code null} if no alarms has been 
+	 *         added or some error occurred.
 	 */
 	public Alarm getNextInQueue(Context context) {
 		// Get all enabled alarms in descending order.
