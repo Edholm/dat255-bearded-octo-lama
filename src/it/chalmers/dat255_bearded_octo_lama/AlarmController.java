@@ -34,7 +34,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * Manages all the alarms.
@@ -193,8 +192,13 @@ public enum AlarmController {
 		
 		disableAlarmManager(c);
 	}
-	/** Get the next alarm that is enabled and nearest in time to now */
-	private Alarm getNextInQueue(Context context) {
+	/** 
+	 * Get the next alarm that is enabled and nearest in time to now 
+	 * @param context - the context
+	 * @return returns the time neareast in time to {@code now} or {@code null} 
+	 *         if no alarms has been added or some error occurred.
+	 */
+	public Alarm getNextInQueue(Context context) {
 		// Get all enabled alarms in descending order.
 		List<Alarm> alarms = getAlarms(context, "Enabled=?", new String[] {"1"}, "TIME_IN_MS DESC");
 		
@@ -213,7 +217,7 @@ public enum AlarmController {
 				theAlarm = a;
 			}
 		}
-		Log.d("queue", "Next in queue: " + theAlarm.toString());
+
 		return theAlarm;
 	} 
 	

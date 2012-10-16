@@ -19,7 +19,10 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,8 +56,19 @@ public class MainActivity extends Activity {
 		super.onResume();
 		
 		setClock();
+		updateNextAlarm();
 	}
 	
+	private void updateNextAlarm() {
+		TextView tv = (TextView)findViewById(R.id.timeTilAlarmTextView);
+		Alarm next = AlarmController.INSTANCE.getNextInQueue(this);
+		
+		tv.setText(next != null 
+					? Time.getTimeLeft(next.getTimeInMS(), false) 
+					: "No alarm has been set");
+		
+	}
+
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.
 		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
