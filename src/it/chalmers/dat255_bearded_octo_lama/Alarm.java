@@ -19,7 +19,9 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -125,6 +127,14 @@ public class Alarm {
 				"\n\t" + extras.toString() + 
 				"\n}";
 		//TODO update
+	}
+	
+	/**
+	 * @return returns a string detailing the time the alarm is set to go off in the format of "HH:mm".
+	 */
+	public String toPrettyString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        return sdf.format(new Date(getTimeInMS()));
 	}
 	
 	/**
