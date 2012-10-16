@@ -64,7 +64,7 @@ public class Alarm {
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
 			try {
-				int i = Integer.parseInt(s);
+				int i = Integer.parseInt(s.trim());
 				b.addRingtoneID(i);
 			} catch (NumberFormatException e) {
 				Log.e("Alarm-constructor-exception", "Tried to parse something different then int");
