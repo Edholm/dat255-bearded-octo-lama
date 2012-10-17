@@ -25,8 +25,6 @@ import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
-import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
@@ -180,10 +178,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			hour   = cal.get(Calendar.HOUR_OF_DAY);
 			minute = cal.get(Calendar.MINUTE);
 		}
-
 		AlarmController ac = AlarmController.INSTANCE;
-		Alarm.Extras defaultExtras = new Alarm.Extras.Builder().build();
-		Uri uri = ac.addAlarm(this, true, hour, minute, defaultExtras);
+		// Defines the options for the alarm.
+		Alarm.Extras extras = new Alarm.Extras.Builder()
+								.useVibration(vibration.isChecked())
+								.build();
+		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
@@ -301,8 +301,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
-								.gameNotification(true)
-				                .gameName(RocketLanderGame.class.getAnnotation(Game.class).name())
+								.useVibration(vibration.isChecked())
 				                .build();
 		
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -310,13 +309,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
 	}
-	private int vibrationEnabled(){
-		if (vibration.isChecked()) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+	
 
 	/**
 	 * Private class for listening to the Spinner in settings that chooses which sound to play

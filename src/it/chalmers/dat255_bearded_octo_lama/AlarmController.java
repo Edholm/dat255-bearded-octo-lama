@@ -54,13 +54,7 @@ public enum AlarmController {
 	 */
 	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, Alarm.Extras extras) {
 		long time = Time.timeInMsAt(hour, minute);
-		return addAlarm(c, enabled, time, extras);
-		//ContentValues values = constructContentValues(hour, minute, enabled, time, 1, 1, 1, ringToneID);
-		ContentValues values = constructContentValues(
-				then.get(Calendar.HOUR_OF_DAY), then.get(Calendar.MINUTE),
-				true, time, 1, 1, vibration, ringToneID);
-
-		
+		return addAlarm(c, enabled, time, extras);		
 	}
 	
 	/**
@@ -86,7 +80,6 @@ public enum AlarmController {
 
 	private ContentValues constructContentValues(Calendar cal, boolean enabled, Alarm.Extras extras) {
 		ContentValues values = new ContentValues(extras.toContentValues());
-		Log.d("AlarmController.s", "S = " + s);
 		
 		values.put(Alarm.Columns.HOUR,    cal.get(Calendar.HOUR_OF_DAY));
 		values.put(Alarm.Columns.MINUTE,  cal.get(Calendar.MINUTE));
