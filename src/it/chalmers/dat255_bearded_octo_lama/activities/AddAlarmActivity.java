@@ -39,7 +39,6 @@ import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,9 +67,10 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	private List<Ringtone> tones = new ArrayList<Ringtone>();
 	private final List<Ringtone> selectedTones = new ArrayList<Ringtone>();
 	private final ArrayList<String> gamesList= new ArrayList<String>();
+	private final ArrayList<Integer> snoozeList= new ArrayList<Integer>();
 	private String choosenGame;
 	private CheckBox vibration, sound, games;
-	private String gameName;
+	private int snoozeInterval;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,7 +114,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		
 		//TODO refactor
 		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
-		
 		String[] tempGamesString = GameManager.getAvailableGamesStrings();
 		for(int i=0; i < tempGamesString.length; i++){
 			gamesList.add(tempGamesString[i]);
@@ -122,11 +121,25 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		gameSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gamesList));
 		gameSpinner.setOnItemSelectedListener(new GameSpinnerListener());
 		
+		//TODO refactor
+		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
+		addSnoozeNumbers(snoozeList);
+		snoozeSpinner.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, snoozeList));
+		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
+
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
 
 	
+	private void addSnoozeNumbers(ArrayList<Integer> snoozeList) {
+		for(int i = 1; i <= 10; i++){
+			snoozeList.add(i);
+		}
+		
+	}
+
+
 	/**
 	 * Retrieves the time from the "time" buttons.
 	 * @return returns an integer array with four values representing the time in hh:mm format where {@code h0 = int[0]; h1 = int[1]} etc.
@@ -345,7 +358,6 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 				long id) {
 			selectedTones.clear();
 			selectedTones.add(tones.get(pos));
-			Log.d("SoundSpinnerListener", tones.get(pos).getTitle(getApplicationContext()));
 		}
 		public void onNothingSelected(AdapterView<?> parent) {
 			// Do Nothing		
@@ -368,4 +380,21 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 
 	}
+	/**
+	 * Private class for listening to the Spinner in settings that chooses which game to play
+	 * @author e
+	 *
+	 */
+	private class SnoozeSpinnerListener implements OnItemSelectedListener {
+
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			snoozeInterval = snoozeList.get(pos);
+		}
+		public void onNothingSelected(AdapterView<?> parent) {
+			// Do Nothing		
+		}
+
+	}
+
 }
