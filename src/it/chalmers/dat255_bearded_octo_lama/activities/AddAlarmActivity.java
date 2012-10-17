@@ -25,6 +25,7 @@ import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
+import it.chalmers.dat255_bearded_octo_lama.games.GameManager;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
@@ -66,7 +67,10 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
 	private List<Ringtone> tones = new ArrayList<Ringtone>();
 	private final List<Ringtone> selectedTones = new ArrayList<Ringtone>();
-	private CheckBox vibration;
+	private final ArrayList<String> gamesList= new ArrayList<String>();
+	private String choosenGame;
+	private CheckBox vibration, sound, games;
+	private String gameName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,9 +106,22 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
-
+		
+		//Checkboxes for turning on/off sound, vibration and games
 		vibration = (CheckBox)findViewById(id.vibration);
-
+		sound = (CheckBox)findViewById(id.sound);
+		games = (CheckBox)findViewById(id.games);
+		
+		//TODO refactor
+		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
+		
+		String[] tempGamesString = GameManager.getAvailableGamesStrings();
+		for(int i=0; i < tempGamesString.length; i++){
+			gamesList.add(tempGamesString[i]);
+		}
+		gameSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gamesList));
+		gameSpinner.setOnItemSelectedListener(new GameSpinnerListener());
+		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
@@ -182,6 +199,9 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		// Defines the options for the alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
 								.useVibration(vibration.isChecked())
+								.useSound(sound.isChecked())
+								.gameNotification(games.isChecked())
+								.gameName(choosenGame)
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -301,9 +321,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
-								.useVibration(vibration.isChecked())
-				                .build();
-		
+									.useVibration(vibration.isChecked())
+									.useSound(sound.isChecked())
+									.gameNotification(games.isChecked())
+									.gameName(choosenGame)
+									.build();
+
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
 
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
@@ -323,6 +346,22 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 			selectedTones.clear();
 			selectedTones.add(tones.get(pos));
 			Log.d("SoundSpinnerListener", tones.get(pos).getTitle(getApplicationContext()));
+		}
+		public void onNothingSelected(AdapterView<?> parent) {
+			// Do Nothing		
+		}
+
+	}
+	/**
+	 * Private class for listening to the Spinner in settings that chooses which game to play
+	 * @author e
+	 *
+	 */
+	private class GameSpinnerListener implements OnItemSelectedListener {
+
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			choosenGame = gamesList.get(pos);
 		}
 		public void onNothingSelected(AdapterView<?> parent) {
 			// Do Nothing		
