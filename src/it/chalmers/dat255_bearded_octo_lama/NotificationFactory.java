@@ -29,6 +29,7 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import java.util.List;
 
 import android.app.Activity;
+import android.util.Log;
 
 public enum NotificationFactory {
 	;
@@ -39,6 +40,7 @@ public enum NotificationFactory {
 		// TODO fix ringtones
 		if(extras.hasSoundNotification()){
 			List<Integer> toneIDs = extras.getRingtoneIDs();
+			Log.d("NotificationFactory", toneIDs.toString());
 			n = new SoundNotification(n, 
 					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
 		}

@@ -54,7 +54,7 @@ public enum AlarmController {
 	 */
 	public Uri addAlarm(Context c, boolean enabled, int hour, int minute, Alarm.Extras extras) {
 		long time = Time.timeInMsAt(hour, minute);
-		return addAlarm(c, enabled, time, extras);
+		return addAlarm(c, enabled, time, extras);		
 	}
 	
 	/**

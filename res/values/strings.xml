@@ -22,7 +22,10 @@
     <string name="title_activity_list_alarms">Alarms</string>
     <string name="snooze">Snooze</string>
     <string name="dismiss_alarm">Dismiss alarm</string>
-    
+    <string name="vibration">Vibration</string>
+    <string name="sound">Sound</string>
+    <string name="games">Games</string>
+        
     <string name="contextMenuDelete">Delete</string>
     <string name="contextMenuEdit">Edit</string>
 </resources>
