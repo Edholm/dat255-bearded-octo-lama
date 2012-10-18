@@ -39,17 +39,23 @@ import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -76,25 +82,11 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		super.onCreate(savedInstanceState);
 
 		setContentView(layout.activity_alarm_menu);
-		// Had some problems with getting tabs to work
-		// (even though we had almost written correct code)
-		// Got the tabs-setupcode from git://github.com/commonsguy/cw-android.git
-		// in folder Fancy/Tab
-		TabHost tabs=(TabHost)findViewById(R.id.tabhost);
-		tabs.setup();
-		TabHost.TabSpec spec=tabs.newTabSpec("tag1");
-
-		spec.setContent(R.id.tab1);
-		spec.setIndicator("Alarms");
-		tabs.addTab(spec);
-
-		spec=tabs.newTabSpec("tag2");
-		spec.setContent(R.id.tab2);
-		spec.setIndicator("Settings");
-		tabs.addTab(spec);
-
+		initTabs();
+		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
 		spinner.setOnItemSelectedListener(this);
+		
 
 		//TODO refactor
 		// Spinner for choosing which sound should be played
@@ -138,7 +130,41 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		}
 		
 	}
-
+	
+	/**
+	 * This method will create customized tab views overriding the old bland android tab view.
+	 */
+	private void initTabs() {
+		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
+		tabs.setup();
+		
+		TabHost.TabSpec spec;
+		
+		//Setup first tab with specified text.
+		spec = tabs.newTabSpec("tag1");
+		spec.setContent(R.id.tab1);
+		createTabView(spec, "Add alarm");
+		tabs.addTab(spec);
+		
+		//Setup second tab with specified text.
+		spec = tabs.newTabSpec("tag2");
+		spec.setContent(R.id.tab2);
+		createTabView(spec, "Settings");
+		tabs.addTab(spec);
+	}
+	
+	/**
+	 * Helper method for creating tabs with unique text
+	 */
+	private View createTabView(TabHost.TabSpec spec, String text) {
+		View view = LayoutInflater.from(this).inflate(R.layout.tabs_layout, null);
+		TextView tabText = (TextView) view.findViewById(R.id.tabText);
+		tabText.setText(text);
+		
+		spec.setIndicator(view);
+		
+		return view;
+	}
 
 	/**
 	 * Retrieves the time from the "time" buttons.
