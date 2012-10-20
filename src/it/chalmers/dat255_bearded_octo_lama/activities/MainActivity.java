@@ -37,7 +37,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private TextView currentTimeView, currentDateView;
-	private Button settingsBtn, listAlarmsBtn, newAlaramBtn;
+	private Button listAlarmsBtn, newAlaramBtn;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +79,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private void initButtons() {
-		settingsBtn = (Button) findViewById(R.id.settingsBtn);
 		listAlarmsBtn = (Button) findViewById(R.id.notificationBtn);
 		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
-		
-		settingsBtn.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), SettingsActivity.class));
-			}
-		});
 		
 		listAlarmsBtn.setOnClickListener(new View.OnClickListener() {
 			
