@@ -32,6 +32,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Handles the contact with the database.
@@ -42,7 +43,7 @@ public final class AlarmContentProvider extends ContentProvider{
 
     private DatabaseHelper      dbHelper;
     private static final String DATABASE_NAME    = "alarms.db";
-    private static final int    DATABASE_VERSION = 11;
+    private static final int    DATABASE_VERSION = 12;
     private static final String TABLE_NAME       = "Alarms";
     
     // For use in matching uri.
@@ -75,13 +76,14 @@ public final class AlarmContentProvider extends ContentProvider{
             		   "RINGTONE STRING," +
             		   "GAME_NOTIFICATION INTEGER,"+
             		   "GAME_NAME STRING,"+
-            		   "SNOOZE_INTERVAL INTEGER);");
+            		   "SNOOZE_INTERVAL INTEGER," + 
+            		   "REPETITION_DAYS INTEGER);");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        	// Should probably add a debug message here. "Upgrading from oldVersion to newVersion" or some such...
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        	Log.d("AlarmContentProvider", "Updating database from " + oldVersion + " to " + newVersion);
+        	db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
     }
