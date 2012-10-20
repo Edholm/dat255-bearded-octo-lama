@@ -5,5 +5,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dat255-bearded-octo-lama"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="robotium/robotium-solo-3.5.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/tests/robotium/robotium-solo-3.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
