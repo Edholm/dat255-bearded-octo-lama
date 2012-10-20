@@ -27,25 +27,33 @@ package it.chalmers.dat255_bearded_octo_lama.utilities;
  */
 public enum Weekday {
 	
-	MONDAY(),
-	TUESDAY(),
-	WEDNESDAY(),
-	THURSDAY(),
-	FRIDAY(),
-	SATURDAY(true),
-	SUNDAY(true);
+	MONDAY("Monday"),
+	TUESDAY("Tuesday"),
+	WEDNESDAY("Wednesday"),
+	THURSDAY("Thursday"),
+	FRIDAY("Friday"),
+	SATURDAY("Saturday", true),
+	SUNDAY("Sunday", true);
 	
 	private final boolean isWeekend;
+	private final String  stringRepresentation;
 	
-	private Weekday() {
+	private Weekday(String stringRepresentation) {
 		this.isWeekend = false;
+		this.stringRepresentation = stringRepresentation;
 	}
 	
-	private Weekday(boolean isWeekend) {
+	private Weekday(String stringRep, boolean isWeekend) {
 		this.isWeekend = isWeekend;
+		this.stringRepresentation = stringRep;
 	}
 
 	public boolean isWeekend() {
 		return isWeekend;
+	}
+	
+	@Override
+	public String toString() {
+		return stringRepresentation;
 	}
 }
