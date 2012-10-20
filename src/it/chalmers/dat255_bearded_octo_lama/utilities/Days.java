@@ -130,6 +130,18 @@ public class Days {
 	public int hashCode() {
 		return days.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Days: ");
+		
+		for(Weekday d : days) {
+			sb.append(d.toString());
+		}
+		
+		return sb.toString();
+	}
 
 	/**
 	 * Decodes a previously encoded {@code Days} to new instance with the same values 
