@@ -106,7 +106,7 @@ public class Alarm {
 	public long getTimeInMS() {
 		return timeInMS;
 	}
-
+	
 	/**
 	 * @return whether or not the alarm is enabled.
 	 */
@@ -183,6 +183,7 @@ public class Alarm {
 			values.put(Alarm.Columns.VIBRATION_NOTIFICATION, useVibration ? 1 : 0);
 			values.put(Alarm.Columns.GAME_NOTIFICATION, gameNotification ? 1 : 0);
 			values.put(Alarm.Columns.GAME_NAME, gameName);
+			values.put(Alarm.Columns.SNOOZE_INTERVAL, snoozeInterval);
 
 			String s = "";
 			for(Integer i : ringtoneIDs){
@@ -214,7 +215,13 @@ public class Alarm {
 
 		/** @return a list of ringtone ids for use when the alarm goes off. */
 		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
-
+		
+		/** @return the number of times the user is allowed to snooze. */
+		public int getSnoozaAbleTimes() { return snoozableTimes; }
+		
+		/** @return the number of minutes the alarm will sleep/snooze */
+		public int getSnoozeInterval(){ return snoozeInterval; }
+		
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
 			// The optional fields set to their default value.
@@ -278,7 +285,7 @@ public class Alarm {
 		// ALL_COLUMNS must be in the same order as the database schema.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
 			SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
-			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
+			RINGTONE, GAME_NOTIFICATION, GAME_NAME, SNOOZABLE_TIMES, SNOOZE_INTERVAL};
 
 		public static final int ID_ID                     = indexOf(_ID);
 		public static final int HOUR_ID                   = indexOf(HOUR);
