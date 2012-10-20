@@ -38,8 +38,8 @@ import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -238,7 +238,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
-								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+								.addAllRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -363,7 +363,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+									.addAllRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
