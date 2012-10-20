@@ -25,23 +25,27 @@ package it.chalmers.dat255_bearded_octo_lama.utilities;
  * @author Emil Edholm
  * @date 20 okt 2012
  */
-public enum Weekday implements Stable {
+public enum Weekday {
 	
-	MONDAY(0),
-	TUESDAY(1),
-	WEDNESDAY(2),
-	THURSDAY(3),
-	FRIDAY(4),
-	SATURDAY(5),
-	SUNDAY(6);
+	MONDAY(),
+	TUESDAY(),
+	WEDNESDAY(),
+	THURSDAY(),
+	FRIDAY(),
+	SATURDAY(true),
+	SUNDAY(true);
 	
-	private final int stableID;
+	private final boolean isWeekend;
 	
-	private Weekday(int stableID) {
-		this.stableID = stableID;
+	private Weekday() {
+		this.isWeekend = false;
+	}
+	
+	private Weekday(boolean isWeekend) {
+		this.isWeekend = isWeekend;
 	}
 
-	public int getStableID() {
-		return stableID;
+	public boolean isWeekend() {
+		return isWeekend;
 	}
 }
