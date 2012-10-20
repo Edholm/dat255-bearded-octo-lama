@@ -39,6 +39,7 @@ import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -361,6 +362,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
+									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -380,6 +382,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			selectedTones.clear();
+			Log.d("AddAlarmActivity", tones.get(pos).getTitle(getApplicationContext()));
 			selectedTones.add(tones.get(pos));
 		}
 		public void onNothingSelected(AdapterView<?> parent) {
