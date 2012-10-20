@@ -7,4 +7,5 @@
     <color name="red">#FF0000</color>
     <color name="transparent">#00000000</color>
     <color name="translucent_white">#80FFFFFF</color>
+    <color name="light_blue">#449DEF</color>
 </resources>

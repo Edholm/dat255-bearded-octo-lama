@@ -32,8 +32,8 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_selector"
-            android:gravity="center" />
+            android:gravity="center"
+            android:background="#000000" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -258,7 +258,13 @@
                 <TextView 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sound"/>
+                    android:text="@string/sound"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
                 
                 <CheckBox
                     android:id="@+id/sound"
@@ -276,7 +282,13 @@
                 <TextView 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/vibration"/>
+                    android:text="@string/vibration"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
                        
                 <CheckBox
                     android:id="@+id/vibration"
@@ -288,7 +300,13 @@
                 <TextView 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/snoozeInterval"/>
+                    android:text="@string/snoozeInterval"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
                 
                 <Spinner
                     android:id="@+id/snooze_list_spinner"
@@ -299,7 +317,13 @@
                 <TextView 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/games"/>
+                    android:text="@string/games"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
                 
                 <CheckBox
                     android:id="@+id/games"

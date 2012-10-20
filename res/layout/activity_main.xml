@@ -27,23 +27,22 @@
 	
     <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:weightSum="2">
         
         <Button 
             android:id="@+id/newAlarmBtn"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
             android:layout_weight="1"
-            android:textSize="25sp"
-            android:text="@string/new_alarm"/>
+            android:text="@string/new_alarm"
+            android:background="@drawable/button_layout" 
+            style="@style/DefaultButtonText"/>
 
         <Button
             android:id="@+id/notificationBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/title_activity_list_alarms" />
+            android:text="@string/title_activity_list_alarms"
+            android:background="@drawable/button_layout" 
+            style="@style/DefaultButtonText" />
         
     </LinearLayout>
     
@@ -53,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="80dp"
         android:textColor="@color/white"
         android:textSize="70sp" />
 
@@ -84,7 +83,6 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/nextAlarm"
         android:textColor="@color/white"
-        android:text="08:00, in 18 hours"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
