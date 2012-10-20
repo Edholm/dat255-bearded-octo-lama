@@ -61,6 +61,7 @@ public class SoundNotification extends NotificationDecorator {
 		if(!notificationSounds.isEmpty()){
 			playing = notificationSounds.get(0);
 		} else {
+			Log.d("SoundNotification", "notificationSounds is empty");
 			// Use default sound if no sounds listed previously.
 			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
 					Settings.System.DEFAULT_ALARM_ALERT_URI);

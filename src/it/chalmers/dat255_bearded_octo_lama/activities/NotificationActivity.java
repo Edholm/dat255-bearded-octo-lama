@@ -19,21 +19,29 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
-import java.util.List;
-
 import it.chalmers.dat255_bearded_octo_lama.Alarm;
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.NotificationFactory;
 import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.games.AbstractGameView;
-import it.chalmers.dat255_bearded_octo_lama.games.RocketLanderGame;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class NotificationActivity extends AbstractActivity {
 
@@ -42,56 +50,89 @@ public class NotificationActivity extends AbstractActivity {
 	private RelativeLayout mainContentHolder;
 	private boolean gameIsActive;
 	private AbstractGameView gameView; 
-	
+	private TextView currentTimeView, currentDateView;
+	private Alarm alarm;
+	@SuppressLint("NewApi")
 	@Override
+	//We suppress warnings about API level since we will make sure the API level
+	//is up to date before trying to reach it.
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		
+		//Remove the back button in the actionbar
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	        ActionBar actionBar = getActionBar();
+	        actionBar.setDisplayHomeAsUpEnabled(false);
+	    }
+
 		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
-		Alarm alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
-		
+		alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
+
 		n = NotificationFactory.create(alarm, this);
 		setContentView(R.layout.activity_notification);
-        
+
 		mainContentHolder = (RelativeLayout) findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
-		
-        Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
-        disAlarm.setOnClickListener(new View.OnClickListener() {
+
+		currentTimeView = (TextView)findViewById(R.id.currentTime);
+		currentDateView = (TextView)findViewById(R.id.currentDate);
+
+		Button disAlarm = (Button) findViewById(R.id.disAlarmBtn);
+		disAlarm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				n.stop();
 				finish();
 			}
-        });
-        Button snoozeAlarm = (Button) findViewById(R.id.snoozeBtn);
-        snoozeAlarm.setOnClickListener(new View.OnClickListener() {
+		});
+		Button snoozeAlarm = (Button) findViewById(R.id.snoozeBtn);
+		snoozeAlarm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//TODO fix snooze
+				n.stop();
+				AlarmController ac = AlarmController.INSTANCE;
+				int snoozeInterval = alarm.getExtras().getSnoozeInterval();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.MINUTE, snoozeInterval);
+
+				ac.addAlarm(getApplicationContext(), true, cal.getTimeInMillis(), alarm.getExtras());
+				Log.d("NotificationActivity", "Snooze activated");
+				Log.d("NotificationActivity", "Snooze interval" + snoozeInterval);
+				finish();
 			}
-        });
-        
+		});
+
 	} 
-	
+
+	private void setClock() {
+		//TODO: Do a cleaner and better version of this.
+		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
+		String currentDateString = DateFormat.getDateInstance().format(new Date());
+
+		currentTimeView.setText(currentTimeString);
+		currentDateView.setText(currentDateString);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		n.start();
-		
-		
+
 		if(gameIsActive) {
 			gameView.resume();
 		}
+
+		setClock();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		if(gameIsActive) {
 			gameView.pause();
 		}
 	}
-	
+
 	public void endGame(AbstractGameView gameView) {
 		//This will set the dismiss controls to visible again while removing the views used by the game.
 		dismissAlarmLayout.setVisibility(View.VISIBLE);

@@ -23,39 +23,32 @@ import it.chalmers.dat255_bearded_octo_lama.activities.notifications.BaseNotific
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.GameNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.Notification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.SoundNotification;
-import it.chalmers.dat255_bearded_octo_lama.activities.notifications.TextNotification;
 import it.chalmers.dat255_bearded_octo_lama.activities.notifications.VibrationNotification;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+import android.util.Log;
 
-public class NotificationFactory {
-
-
-	
+public enum NotificationFactory {
+	;
 	public static Notification create(Alarm alarm, Activity act){
-		
 		Notification n = new BaseNotification();
-		
-		if(alarm.hasTextNotification()){
-			n = new TextNotification(n, act);
-		}
+		Alarm.Extras extras = alarm.getExtras();
+	
 		// TODO fix ringtones
-		if(alarm.hasSoundNotification()){
-			List<Integer> toneIDs = alarm.getRingtoneIDs();
+		if(extras.hasSoundNotification()){
+			List<Integer> toneIDs = extras.getRingtoneIDs();
+			Log.d("NotificationFactory", toneIDs.toString());
 			n = new SoundNotification(n, 
 					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
 		}
-		if(alarm.hasVibrationNotification()){
+		if(extras.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);
 		}
-		if(alarm.hasGameNotification()) {
-			n = new GameNotification(n, act, alarm.getGameName());
+		if(extras.hasGameNotification()) {
+			n = new GameNotification(n, act, extras.getGameName());
 		}
 		return n;
 	}

@@ -19,7 +19,10 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm;
+import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,8 +36,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	TextView currentTimeView, currentDateView;
-	Button settingsBtn, listAlarmsBtn, newAlaramBtn;
+	private TextView currentTimeView, currentDateView;
+	private Button listAlarmsBtn, newAlaramBtn;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,19 @@ public class MainActivity extends Activity {
 		super.onResume();
 		
 		setClock();
+		updateNextAlarm();
 	}
 	
+	private void updateNextAlarm() {
+		TextView tv = (TextView)findViewById(R.id.timeTilAlarmTextView);
+		Alarm next = AlarmController.INSTANCE.getNextInQueue(this);
+		
+		tv.setText(next != null 
+					? Time.getTimeLeft(next.getTimeInMS(), false) 
+					: "No alarm has been set");
+		
+	}
+
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.
 		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
@@ -65,16 +79,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private void initButtons() {
-		settingsBtn = (Button) findViewById(R.id.settingsBtn);
 		listAlarmsBtn = (Button) findViewById(R.id.notificationBtn);
 		newAlaramBtn = (Button) findViewById(R.id.newAlarmBtn);
-		
-		settingsBtn.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(), SettingsActivity.class));
-			}
-		});
 		
 		listAlarmsBtn.setOnClickListener(new View.OnClickListener() {
 			

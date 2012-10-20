@@ -30,11 +30,17 @@ import java.util.concurrent.TimeUnit;
 public final class Time {
 	;
 	
-	/** Returns the time left until a specified time (in ms) */
-	public static String getTimeLeft(long then) {
+	/** 
+	 * Returns the time left until a specified time (in ms).
+	 * <p>If {@code displaySeconds} is {@code true} then the format is: "22h 14min, 13 sec"
+	 * if not the format becomes: "22h 14min"</p>
+	 * @param until - the time in milliseconds to count towards.
+	 * @param displaySeconds - whether or not the seconds should be displayed.
+	 */
+	public static String getTimeLeft(long until, boolean displaySeconds) {
 		Calendar now = Calendar.getInstance();
 		
-		long millis = then - now.getTimeInMillis();
+		long millis = until - now.getTimeInMillis();
 		
 		long hours   = TimeUnit.MILLISECONDS.toHours(millis);
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - 
@@ -42,7 +48,17 @@ public final class Time {
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - 
 			    		TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
 		
-		return String.format("%d hour %d min, %d sec", hours , minutes, seconds);
+		String baseFormat = "%d hour %d min";
+		String secFormat    = ", %d sec";
+		return String.format(displaySeconds ? baseFormat + secFormat : baseFormat, hours , minutes, seconds);
+	}
+	
+	/**
+	 * Same as {@code getTimeLeft(until, true)}.
+	 * @see Time#getTimeLeft(long, boolean)
+	 */
+	public static String getTimeLeft(long until) {
+		return getTimeLeft(until, true);
 	}
 	
 	/**
