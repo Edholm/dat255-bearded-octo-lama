@@ -58,7 +58,6 @@ public class Alarm {
 								.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
 								.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
 								.gameName(c.getString(Columns.GAME_NAME_ID))
-								.snoozeableTimes(c.getInt(Columns.SNOOZABLE_TIMES_ID))
 								.snoozeInterval(c.getInt(Columns.SNOOZE_INTERVAL_ID));
 
 		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
@@ -148,7 +147,6 @@ public class Alarm {
 		private final List<Integer> ringtoneIDs;
 		private final boolean       gameNotification;  
 		private final String        gameName;
-		private final int			snoozableTimes;
 		private final int 			snoozeInterval;
 
 		private Extras(Builder b) {
@@ -157,7 +155,6 @@ public class Alarm {
 			this.ringtoneIDs         = b.ringtoneIDs;
 			this.gameNotification    = b.gameNotification;
 			this.gameName            = b.gameName;
-			this.snoozableTimes		 = b.snoozableTimes;
 			this.snoozeInterval		 = b.snoozeInterval;
 		}
 
@@ -168,7 +165,6 @@ public class Alarm {
 					"\n\tVibration notification: " + useVibration +
 					"\n\tGame notification: " + gameNotification +
 					"\n\tGame name: " + gameName +
-					"\n\tSnoozable times: " + snoozableTimes +
 					"\n\tSnooze Interval: " + snoozeInterval +
 					"\n}";
 		}
@@ -216,9 +212,6 @@ public class Alarm {
 		/** @return a list of ringtone ids for use when the alarm goes off. */
 		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
 		
-		/** @return the number of times the user is allowed to snooze. */
-		public int getSnoozaAbleTimes() { return snoozableTimes; }
-		
 		/** @return the number of minutes the alarm will sleep/snooze */
 		public int getSnoozeInterval(){ return snoozeInterval; }
 		
@@ -230,7 +223,6 @@ public class Alarm {
 			private final List<Integer> ringtoneIDs         = new ArrayList<Integer>();
 			private boolean             gameNotification    = false;
 			private String              gameName            = "";
-			private Integer				snoozableTimes		= 3; // you can snooze 3 times as standard
 			private Integer				snoozeInterval		= 1;
 
 			public Builder useSound(boolean value)
@@ -247,9 +239,6 @@ public class Alarm {
 
 			public Builder gameName(String name)
 			{ gameName = name; 	return this; }
-
-			public Builder snoozeableTimes(Integer times)
-			{ snoozableTimes = times; return this; }
 
 			public Builder snoozeInterval(Integer time)
 			{ snoozeInterval = time; return this; }
@@ -278,14 +267,13 @@ public class Alarm {
 		public static final String RINGTONE               = "RINGTONE";
 		public static final String GAME_NOTIFICATION      = "GAME_NOTIFICATION";
 		public static final String GAME_NAME              = "GAME_NAME";
-		public static final String SNOOZABLE_TIMES		  = "SNOOZABLE_TIMES";
 		public static final String SNOOZE_INTERVAL		  = "SNOOZE_INTERVAL";
 
 		// Some convenience fields. Makes a lot of stuff easier. 
 		// ALL_COLUMNS must be in the same order as the database schema.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
 			SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
-			RINGTONE, GAME_NOTIFICATION, GAME_NAME, SNOOZABLE_TIMES, SNOOZE_INTERVAL};
+			RINGTONE, GAME_NOTIFICATION, GAME_NAME, SNOOZE_INTERVAL};
 
 		public static final int ID_ID                     = indexOf(_ID);
 		public static final int HOUR_ID                   = indexOf(HOUR);
@@ -297,7 +285,6 @@ public class Alarm {
 		public static final int RINGTONE_ID               = indexOf(RINGTONE);
 		public static final int GAME_NOTIFICATION_ID      = indexOf(GAME_NOTIFICATION);
 		public static final int GAME_NAME_ID              = indexOf(GAME_NAME);
-		public static final int SNOOZABLE_TIMES_ID		  = indexOf(SNOOZABLE_TIMES);
 		public static final int SNOOZE_INTERVAL_ID        = indexOf(SNOOZE_INTERVAL);
 
 		/** Retrieves the index of a specified needle (in a haystack) from the {@code ALL_COLUMNS} */

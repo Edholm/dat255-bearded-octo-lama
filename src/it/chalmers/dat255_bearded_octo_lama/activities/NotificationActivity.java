@@ -80,7 +80,7 @@ public class NotificationActivity extends AbstractActivity {
 				int snoozeInterval = alarm.getExtras().getSnoozeInterval();
 				
 				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.SECOND, snoozeInterval);
+				cal.add(Calendar.MINUTE, snoozeInterval);
 
 				ac.addAlarm(getApplicationContext(), true, cal.getTimeInMillis(), alarm.getExtras());
 				Log.d("NotificationActivity", "Snooze activated");
