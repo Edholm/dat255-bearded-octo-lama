@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
@@ -45,14 +44,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -65,7 +60,7 @@ import android.widget.Toast;
  * @modified by Emil Johansson
  * @date 14 oct 2012
  */
-public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
+public final class AddAlarmActivity extends AbstractActivity implements OnItemSelectedListener {
 
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
@@ -82,15 +77,30 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		super.onCreate(savedInstanceState);
 
 		setContentView(layout.activity_alarm_menu);
+		
 		initTabs();
+		initSettings();
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
 		spinner.setOnItemSelectedListener(this);
-		
 
-		//TODO refactor
-		// Spinner for choosing which sound should be played
+		// Set to the first (hour 0) button.
+		selectTimeButton(id.h0);
+	}
+
+	
+	private void initSettings() {		
+		//Checkboxes for turning on/off sound, vibration and games
+		vibration = (CheckBox)findViewById(id.vibration);
+		sound = (CheckBox)findViewById(id.sound);
+		games = (CheckBox)findViewById(id.games);
+
+		//Get all spinner views from the xml.
 		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
+		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
+		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
+
+		// Init the sound spinner.
 		ArrayList<String> songs = new ArrayList<String>();
 		tones = RingtoneFinder.getRingtones(this);
 		for(Ringtone r:tones){
@@ -99,13 +109,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
 		
-		//Checkboxes for turning on/off sound, vibration and games
-		vibration = (CheckBox)findViewById(id.vibration);
-		sound = (CheckBox)findViewById(id.sound);
-		games = (CheckBox)findViewById(id.games);
-		
-		//TODO refactor
-		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
+		//Init the game spinner.
 		String[] tempGamesString = GameManager.getAvailableGamesStrings();
 		for(int i=0; i < tempGamesString.length; i++){
 			gamesList.add(tempGamesString[i]);
@@ -113,21 +117,12 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		gameSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gamesList));
 		gameSpinner.setOnItemSelectedListener(new GameSpinnerListener());
 		
-		//TODO refactor
-		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
-		addSnoozeNumbers(snoozeList);
-		snoozeSpinner.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, snoozeList));
-		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
-
-		// Set to the first (hour 0) button.
-		selectTimeButton(id.h0);
-	}
-
-	
-	private void addSnoozeNumbers(ArrayList<Integer> snoozeList) {
+		//Init the snooze interval spinner.
 		for(int i = 1; i <= 10; i++){
 			snoozeList.add(i);
 		}
+		snoozeSpinner.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, snoozeList));
+		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
 		
 	}
 	
