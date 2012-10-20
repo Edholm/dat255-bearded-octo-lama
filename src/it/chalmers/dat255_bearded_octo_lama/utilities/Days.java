@@ -58,6 +58,11 @@ public class Days {
 	public Days(EnumSet<Weekday> baseUpon) {
 		days = EnumSet.copyOf(baseUpon);
 	}
+	
+	/** Copy constructor */
+	public Days(Days rhs) {
+		days = EnumSet.copyOf(rhs.days);
+	}
 
 	/**
 	 * @see java.util.AbstractCollection#add(java.lang.Object)
@@ -138,8 +143,9 @@ public class Days {
 		
 		for(Weekday d : days) {
 			sb.append(d.toString());
+			sb.append(", ");
 		}
-		
+		sb.delete(sb.length()-2, sb.length()); // Remove last comma.
 		return sb.toString();
 	}
 
