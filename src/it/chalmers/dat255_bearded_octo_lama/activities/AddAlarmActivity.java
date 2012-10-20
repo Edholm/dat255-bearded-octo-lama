@@ -81,15 +81,27 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		
 		initTabs();
 		initSettings();
+		initAddAlarm();
+
+	}
+
+	
+	private void initAddAlarm() {
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
+		
+		//Create a custom spinner adapter to enable control over textsize.
+		ArrayAdapter<CharSequence> foodadapter = ArrayAdapter.createFromResource(
+	            this, R.array.time_options_array, R.layout.spinner_layout);
+		foodadapter.setDropDownViewResource(R.layout.spinner_layout);
+		spinner.setAdapter(foodadapter);
 		spinner.setOnItemSelectedListener(this);
-
+		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
 
-	
+
 	private void initSettings() {		
 		//Checkboxes for turning on/off sound, vibration and games
 		vibration = (CheckBox)findViewById(id.vibration);

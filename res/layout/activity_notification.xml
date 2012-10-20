@@ -70,14 +70,16 @@
 	            android:background="@drawable/button_layout"
 	            android:text="@string/snooze"
 	            style="@style/DefaultButtonText"
-	            android:layout_margin="40dp"/>
+	            android:layout_margin="40dp"
+	            android:layout_width="match_parent" />
 	        
 	        <Button
 	            android:id="@+id/disAlarmBtn"
 	          	android:background="@drawable/button_layout"
 	            android:text="@string/dismiss_alarm"
 	            style="@style/DefaultButtonText"
-	            android:layout_margin="40dp" />
+	            android:layout_margin="40dp"
+	            android:layout_width="match_parent" />
 	        
 	    </LinearLayout>
 	    

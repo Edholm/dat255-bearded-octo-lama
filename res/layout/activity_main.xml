@@ -35,14 +35,16 @@
             android:layout_weight="1"
             android:text="@string/new_alarm"
             android:background="@drawable/button_layout" 
-            style="@style/DefaultButtonText"/>
+            style="@style/DefaultButtonText"
+            android:layout_width="match_parent"/>
 
         <Button
             android:id="@+id/notificationBtn"
             android:layout_weight="1"
             android:text="@string/title_activity_list_alarms"
             android:background="@drawable/button_layout" 
-            style="@style/DefaultButtonText" />
+            style="@style/DefaultButtonText"
+            android:layout_width="match_parent" />
         
     </LinearLayout>
     
