@@ -15,7 +15,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabhost"
@@ -32,12 +32,14 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:gravity="center"
+            android:background="#000000" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:background="#D7D7D7" >
 
             <LinearLayout
                 android:id="@+id/tab1"
@@ -245,60 +247,100 @@
                     android:onClick="addTestAlarm"
                     android:text="Add test alarm (in 5 sec)" />
             </LinearLayout>
-
+            
             <LinearLayout
                 android:id="@+id/tab2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="left"
-                android:orientation="vertical" >
-
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" 
+                android:padding="5dip" >
+				
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sound"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
+                
                 <CheckBox
                     android:id="@+id/sound"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:gravity="left"
-                    android:text="@string/sound" />
+                    android:text="@string/enabled"/>
 
                 <Spinner
                     android:id="@+id/sound_list_spinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="15dp" />
+                    android:layout_gravity="left" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vibration"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
+                       
+                <CheckBox
+                    android:id="@+id/vibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/enabled" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/snoozeInterval"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
                 
                 <Spinner
                     android:id="@+id/snooze_list_spinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="15dp" />
+                    android:layout_gravity="left"/>
                 
-                
-                <CheckBox
-                    android:id="@+id/vibration"
-                    android:layout_width="wrap_content"
+                <TextView 
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:gravity="left"
-                    android:text="@string/vibration" />
-
+                    android:text="@string/games"
+                    android:textColor="#000000"
+                    android:textSize="15dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
+                
                 <CheckBox
                     android:id="@+id/games"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/games"                    
-                    android:gravity="left" />
+                    android:text="@string/enabled" />
 
                 <Spinner
                     android:id="@+id/games_list_spinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginTop="15dp" />
+                    android:layout_gravity="left" />
+                
             </LinearLayout>
+
         </FrameLayout>
+        
     </LinearLayout>
 
 </TabHost>

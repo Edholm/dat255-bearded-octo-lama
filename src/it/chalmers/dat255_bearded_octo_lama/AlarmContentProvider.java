@@ -42,7 +42,7 @@ public final class AlarmContentProvider extends ContentProvider{
 
     private DatabaseHelper      dbHelper;
     private static final String DATABASE_NAME    = "alarms.db";
-    private static final int    DATABASE_VERSION = 8;
+    private static final int    DATABASE_VERSION = 11;
     private static final String TABLE_NAME       = "Alarms";
     
     // For use in matching uri.
@@ -74,7 +74,8 @@ public final class AlarmContentProvider extends ContentProvider{
             		   "VIBRATION_NOTIFICATION INTEGER,"+
             		   "RINGTONE STRING," +
             		   "GAME_NOTIFICATION INTEGER,"+
-            		   "GAME_NAME STRING);");
+            		   "GAME_NAME STRING,"+
+            		   "SNOOZE_INTERVAL INTEGER);");
         }
 
         @Override
