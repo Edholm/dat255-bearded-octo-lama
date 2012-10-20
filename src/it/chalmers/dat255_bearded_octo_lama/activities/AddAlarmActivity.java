@@ -215,6 +215,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 								.useSound(sound.isChecked())
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
+								.snoozeInterval(snoozeInterval)
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -338,6 +339,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 									.useSound(sound.isChecked())
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
+									.snoozeInterval(snoozeInterval)
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);

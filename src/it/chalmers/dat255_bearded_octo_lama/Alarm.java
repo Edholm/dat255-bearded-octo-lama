@@ -54,15 +54,16 @@ public class Alarm {
 		this.timeInMS = c.getLong(Columns.TIME_ID);
 		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
 		Extras.Builder b = new Extras.Builder()
-							.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
-							.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
-							.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
-							.gameName(c.getString(Columns.GAME_NAME_ID));
-		
+								.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
+								.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
+								.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
+								.gameName(c.getString(Columns.GAME_NAME_ID))
+								.snoozeInterval(c.getInt(Columns.SNOOZE_INTERVAL_ID));
+
 		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
 		for(String s : toneID){
 			if(s.isEmpty()) continue;
-			
+
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
 			try {
@@ -72,7 +73,7 @@ public class Alarm {
 				Log.e("Alarm-constructor-exception", "Tried to parse something different then int");
 			}
 		}
-		
+
 		this.extras = b.build();
 	}
 
@@ -104,7 +105,7 @@ public class Alarm {
 	public long getTimeInMS() {
 		return timeInMS;
 	}
-
+	
 	/**
 	 * @return whether or not the alarm is enabled.
 	 */
@@ -128,15 +129,15 @@ public class Alarm {
 				"\n}";
 		//TODO update
 	}
-	
+
 	/**
 	 * @return returns a string detailing the time the alarm is set to go off in the format of "HH:mm".
 	 */
 	public String toPrettyString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        return sdf.format(new Date(getTimeInMS()));
+		return sdf.format(new Date(getTimeInMS()));
 	}
-	
+
 	/**
 	 * Defines the extra (optional) values of the alarm and a builder for setting them.
 	 */
@@ -146,15 +147,17 @@ public class Alarm {
 		private final List<Integer> ringtoneIDs;
 		private final boolean       gameNotification;  
 		private final String        gameName;
-		
+		private final int 			snoozeInterval;
+
 		private Extras(Builder b) {
 			this.useSound            = b.useSound;
 			this.useVibration        = b.useVibration;
 			this.ringtoneIDs         = b.ringtoneIDs;
 			this.gameNotification    = b.gameNotification;
 			this.gameName            = b.gameName;
+			this.snoozeInterval		 = b.snoozeInterval;
 		}
-		
+
 		@Override
 		public String toString() {
 			return "Extras {" + 
@@ -162,19 +165,21 @@ public class Alarm {
 					"\n\tVibration notification: " + useVibration +
 					"\n\tGame notification: " + gameNotification +
 					"\n\tGame name: " + gameName +
+					"\n\tSnooze Interval: " + snoozeInterval +
 					"\n}";
 		}
-		
+
 		/** 
 		 * @return {@code this} converted to a {@code ContentValues}.
 		 */
 		public ContentValues toContentValues() {
 			ContentValues values = new ContentValues();
-			
+
 			values.put(Alarm.Columns.SOUND_NOTIFICATION, useSound ? 1 : 0);
 			values.put(Alarm.Columns.VIBRATION_NOTIFICATION, useVibration ? 1 : 0);
 			values.put(Alarm.Columns.GAME_NOTIFICATION, gameNotification ? 1 : 0);
 			values.put(Alarm.Columns.GAME_NAME, gameName);
+			values.put(Alarm.Columns.SNOOZE_INTERVAL, snoozeInterval);
 
 			String s = "";
 			for(Integer i : ringtoneIDs){
@@ -185,27 +190,30 @@ public class Alarm {
 				s = s.substring(0, s.length()-1);
 			}
 			values.put(Alarm.Columns.RINGTONE, s);
-			
+
 			return values;
 		}
 
 		/** @return whether or not the alarm has sound notification */
 		public boolean hasSoundNotification() { return useSound; }
-		
+
 		/** @return whether or not the alarm has vibration notification */
 		public boolean hasVibrationNotification() { return useVibration; }
-		
+
 		/** 
 		 * @return whether or not the alarm has game component that the 
 		 *         user must complete before he is able to disable the alarm 
 		 */
 		public boolean hasGameNotification() { return gameNotification; }
-		
+
 		/** @return the name of the selected game. */
 		public String getGameName() { return gameName; }
-		
+
 		/** @return a list of ringtone ids for use when the alarm goes off. */
 		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
+		
+		/** @return the number of minutes the alarm will sleep/snooze */
+		public int getSnoozeInterval(){ return snoozeInterval; }
 		
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
@@ -215,22 +223,26 @@ public class Alarm {
 			private final List<Integer> ringtoneIDs         = new ArrayList<Integer>();
 			private boolean             gameNotification    = false;
 			private String              gameName            = "";
-			
+			private Integer				snoozeInterval		= 1;
+
 			public Builder useSound(boolean value)
-				{ useSound = value; 	return this; }
-			
+			{ useSound = value; 	return this; }
+
 			public Builder useVibration(boolean value)
-				{ useVibration = value; 	return this; }
-			
+			{ useVibration = value; 	return this; }
+
 			public Builder addRingtoneID(Integer id)
-				{ ringtoneIDs.add(id); 	return this; }
-			
+			{ ringtoneIDs.add(id); 	return this; }
+
 			public Builder gameNotification(boolean value)
-				{ gameNotification = value; 	return this; }
-			
+			{ gameNotification = value; 	return this; }
+
 			public Builder gameName(String name)
-				{ gameName = name; 	return this; }
-			
+			{ gameName = name; 	return this; }
+
+			public Builder snoozeInterval(Integer time)
+			{ snoozeInterval = time; return this; }
+
 			public Extras build() {
 				return new Extras(this);
 			}
@@ -255,12 +267,13 @@ public class Alarm {
 		public static final String RINGTONE               = "RINGTONE";
 		public static final String GAME_NOTIFICATION      = "GAME_NOTIFICATION";
 		public static final String GAME_NAME              = "GAME_NAME";
-		
+		public static final String SNOOZE_INTERVAL		  = "SNOOZE_INTERVAL";
+
 		// Some convenience fields. Makes a lot of stuff easier. 
 		// ALL_COLUMNS must be in the same order as the database schema.
 		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
 			SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
-			RINGTONE, GAME_NOTIFICATION, GAME_NAME};
+			RINGTONE, GAME_NOTIFICATION, GAME_NAME, SNOOZE_INTERVAL};
 
 		public static final int ID_ID                     = indexOf(_ID);
 		public static final int HOUR_ID                   = indexOf(HOUR);
@@ -272,15 +285,16 @@ public class Alarm {
 		public static final int RINGTONE_ID               = indexOf(RINGTONE);
 		public static final int GAME_NOTIFICATION_ID      = indexOf(GAME_NOTIFICATION);
 		public static final int GAME_NAME_ID              = indexOf(GAME_NAME);
-		
+		public static final int SNOOZE_INTERVAL_ID        = indexOf(SNOOZE_INTERVAL);
+
 		/** Retrieves the index of a specified needle (in a haystack) from the {@code ALL_COLUMNS} */
 		private static int indexOf(String needle)
 		{
 			int counter = -1;
 			while(ALL_COLUMNS[++counter] != needle 
 					&& counter < ALL_COLUMNS.length);
-			
-		    return counter;
+
+			return counter;
 		}
 	}
 }
