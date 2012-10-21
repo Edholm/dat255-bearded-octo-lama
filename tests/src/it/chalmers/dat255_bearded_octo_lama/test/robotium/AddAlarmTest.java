@@ -4,7 +4,6 @@ import it.chalmers.dat255_bearded_octo_lama.activities.MainActivity;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
-
 public class AddAlarmTest extends
 		ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -22,7 +21,9 @@ public class AddAlarmTest extends
 	
 	public void testAddAlarm(){
 		solo.assertCurrentActivity("Check on activity", MainActivity.class);
-		solo.clickOnButton("+");
+		solo.clickOnButton("Add alarm");
+		solo.clickOnButton("Settings");
+		
 	}
 
 }
