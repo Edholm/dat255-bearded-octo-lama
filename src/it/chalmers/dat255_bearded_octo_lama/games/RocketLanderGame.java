@@ -47,7 +47,7 @@ public class RocketLanderGame extends AbstractGameView {
 	private double currentYSpd, currentXSpd;
 	private double rocketX, rocketY;
 	private boolean engineIsRunning;
-	private int groundYLevel;
+	private double groundYLevel;
 	private float pressX;
 	
 	private Bitmap rocketBitmap, backgroundBitmap;
@@ -96,7 +96,7 @@ public class RocketLanderGame extends AbstractGameView {
 		rocketX = w/2;
 		rocketY = 0;
 		
-		groundYLevel = h/4 * 3; //Set groundlevel to three fourth of the view height.
+		groundYLevel = h/4.0 * 3.0; //Set groundlevel to three fourth of the view height.
 		//Rezise the background
 		backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, w, h, true);
 	}
