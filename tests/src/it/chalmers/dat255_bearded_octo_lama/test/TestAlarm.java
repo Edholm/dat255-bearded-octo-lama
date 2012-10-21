@@ -28,7 +28,7 @@ public class TestAlarm extends AndroidTestCase {
 	}
 	
 	private final Cursor constructMockupCursor() {
-		MatrixCursor cursor = new MatrixCursor(Alarm.Columns.ALL_COLUMNS);
+		MatrixCursor cursor = new MatrixCursor(Alarm.Columns.ALL_COLUMN_NAMES);
 		// Note that the order must be the same as Alarm.AlarmColumns.ALL_COLUMNS,
 		cursor.newRow()
 				.add(0)         // _ID
@@ -49,7 +49,7 @@ public class TestAlarm extends AndroidTestCase {
 	
 	public final void testProperSetup() {
 		// Ensure nothing wrong with cursor.
-		assertEquals(Alarm.Columns.ALL_COLUMNS.length, cursor.getColumnCount());
+		assertEquals(Alarm.Columns.ALL_COLUMN_NAMES.length, cursor.getColumnCount());
 		assertEquals(1, cursor.getCount());
 		assertNotNull(cursor);
 	}

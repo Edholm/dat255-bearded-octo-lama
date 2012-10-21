@@ -19,6 +19,11 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.utilities.Tuple;
+
+import java.util.Iterator;
+import java.util.List;
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -42,7 +47,7 @@ public final class AlarmContentProvider extends ContentProvider{
 
     private DatabaseHelper      dbHelper;
     private static final String DATABASE_NAME    = "alarms.db";
-    private static final int    DATABASE_VERSION = 11;
+    private static final int    DATABASE_VERSION = 12;
     private static final String TABLE_NAME       = "Alarms";
     
     // For use in matching uri.
@@ -63,19 +68,36 @@ public final class AlarmContentProvider extends ContentProvider{
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            //create table to store user names
-            db.execSQL("Create table " + TABLE_NAME + "( " + 
-                       "_id INTEGER PRIMARY KEY AUTOINCREMENT," + 
-                       "HOUR INTEGER, " +
-                       "MINUTE INTEGER, " +
-                       "TIME_IN_MS INTEGER, " +
-            		   "ENABLED INTEGER, "+
-            		   "SOUND_NOTIFICATION INTEGER,"+
-            		   "VIBRATION_NOTIFICATION INTEGER,"+
-            		   "RINGTONE STRING," +
-            		   "GAME_NOTIFICATION INTEGER,"+
-            		   "GAME_NAME STRING,"+
-            		   "SNOOZE_INTERVAL INTEGER);");
+            db.execSQL(buildCreateSQL());
+        }
+        
+        private String buildCreateSQL() {
+        	// Dynamically builds the SQL for creating the database using
+        	// the columns defined in Alarms.Columns.
+            List<Tuple<String, String>> columns = Alarm.Columns.ALL_COLUMNS;
+            String idOptions = "PRIMARY KEY AUTOINCREMENT";
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("Create table " + TABLE_NAME + " (");
+            
+            Iterator<Tuple<String, String>> it = columns.iterator();
+            Tuple<String, String> col = null;
+            while(it.hasNext()) {
+            	col = it.next();
+            	sb.append(col.getLeft() + " ");
+            	sb.append(col.getRight());
+            	
+            	if(col.getLeft() == BaseColumns._ID) {
+            		sb.append(" " + idOptions);
+            	}
+            	
+            	if(it.hasNext()) {
+            		sb.append(", ");
+            	}
+            }
+            sb.append(");");
+            
+            return sb.toString();
         }
 
         @Override
