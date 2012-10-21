@@ -19,20 +19,28 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabsLayout" 
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:background="@drawable/tab_backg_selector"
-    android:padding="10dip"
-    android:gravity="center"
-    android:orientation="vertical">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <TextView 
-        android:id="@+id/tabText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dip"/>
+    <item 
+        android:state_selected="true"
+        android:state_focused="false"
+        android:state_pressed="false"
+        android:drawable="@drawable/tab_backg_selected" />
     
-</LinearLayout>
+	<item 
+	    android:state_selected="false" 
+	    android:state_focused="false"
+        android:state_pressed="false" 
+        android:drawable="@drawable/tab_backg_unselected" />
+	
+    <item 
+        android:state_pressed="true" 
+        android:drawable="@color/light_blue" />
+    
+    <item 
+        android:state_focused="true" 
+        android:state_selected="true"
+        android:state_pressed="false" 
+        android:drawable="@color/light_blue" />
+    
+</selector>

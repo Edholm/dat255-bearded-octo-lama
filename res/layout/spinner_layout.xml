@@ -19,20 +19,16 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout 
+<!-- 
+This xml file is used to control the textsize and other attributes of spinners.
+It will be loaded programmatically during runtime.
+-->
+<TextView 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabsLayout" 
+    android:id="@+id/spinnerTarget"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:background="@drawable/tab_backg_selector"
-    android:padding="10dip"
-    android:gravity="center"
-    android:orientation="vertical">
-    
-    <TextView 
-        android:id="@+id/tabText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dip"/>
-    
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:textColor="#000000"
+    android:textSize="23dp"
+
+/>

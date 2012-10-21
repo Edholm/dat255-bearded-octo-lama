@@ -43,8 +43,9 @@ public class WhacAMoleGame extends AbstractGameView {
 	private static final int GREEN = 245;
 	private static final int BLUE  = 0;
 	
+	private static final int NUMBER_OF_BUTTONS = 3;
+	
 	private List<Integer>  btnsToHit;
-	private int numberOfButtons;
 	
 	public WhacAMoleGame(Context context) {
 		super(context);
@@ -53,19 +54,23 @@ public class WhacAMoleGame extends AbstractGameView {
 		initGame();
 	}
 
-	private void initGame() {
-		numberOfButtons = 3;
-		
+	private void initGame() {		
 		//Decide what buttons that needs to be pressed to complete the game.
 		Random numberGen = new Random();
 		btnsToHit = new ArrayList<Integer>();
 		
-		for(int i = 0; i < numberOfButtons; i++) {
+		for(int i = 0; i < NUMBER_OF_BUTTONS; i++) {
 			//Add 1 button on each row of the game.
-			btnsToHit.add(numberGen.nextInt(numberOfButtons) + (numberOfButtons * i) + 1);
+			btnsToHit.add(numberGen.nextInt(NUMBER_OF_BUTTONS) + (NUMBER_OF_BUTTONS * i) + 1);
 		}
 		
 		getPainter().setColor(getResources().getColor(R.color.red));
+		
+		//TESTCODE: This will only be used when testing the game to remove random elements.
+		btnsToHit.clear();
+		btnsToHit.add(1);
+		btnsToHit.add(2);
+		btnsToHit.add(3);
 	}
 	
 	
@@ -81,22 +86,21 @@ public class WhacAMoleGame extends AbstractGameView {
 		
 		uiLayout.setOrientation(LinearLayout.VERTICAL);
 		uiLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		int totalWeightSum = 3;
-		uiLayout.setWeightSum(totalWeightSum);
+		uiLayout.setWeightSum(NUMBER_OF_BUTTONS);
 		
 		//Using nested LinearLayout's instead of a GridLayout to make it work properly on low API Levels.
 		LinearLayout horizontalLayout1 = new LinearLayout(getContext());
 		horizontalLayout1.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
 				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
-		horizontalLayout1.setWeightSum(totalWeightSum);
+		horizontalLayout1.setWeightSum(NUMBER_OF_BUTTONS);
 		LinearLayout horizontalLayout2 = new LinearLayout(getContext());
 		horizontalLayout2.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
 				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
-		horizontalLayout2.setWeightSum(totalWeightSum);
+		horizontalLayout2.setWeightSum(NUMBER_OF_BUTTONS);
 		LinearLayout horizontalLayout3 = new LinearLayout(getContext());
 		horizontalLayout3.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
 				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
-		horizontalLayout3.setWeightSum(totalWeightSum);
+		horizontalLayout3.setWeightSum(NUMBER_OF_BUTTONS);
 		
 		uiLayout.addView(horizontalLayout1);
 		uiLayout.addView(horizontalLayout2);
@@ -158,19 +162,21 @@ public class WhacAMoleGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {		
+	protected void updateGraphics(Canvas c) {
+		List<Integer> redButtons = new ArrayList<Integer>(btnsToHit);
+		
 		//Draw button graphics for the game.
 		
-		int currentWidth = getWidth()/numberOfButtons;
-		int currentHeight = getHeight()/numberOfButtons;
+		int currentWidth = getWidth()/NUMBER_OF_BUTTONS;
+		int currentHeight = getHeight()/NUMBER_OF_BUTTONS;
 		
 		//Paint background color
 		c.drawARGB(ALPHA, RED, GREEN, BLUE);
 		
-		for(Integer i : btnsToHit) {
+		for(Integer i : redButtons) {
 			//Calculate row and column placement based on the button value.
-			int x = (i-1)%numberOfButtons;
-			int y = (i-1)/numberOfButtons;
+			int x = (i-1)%NUMBER_OF_BUTTONS;
+			int y = (i-1)/NUMBER_OF_BUTTONS;
 			c.drawRect(new Rect(currentWidth*x, currentHeight*(y), currentWidth*(x+1), currentHeight*(y+1)), getPainter());
 		}
 	}

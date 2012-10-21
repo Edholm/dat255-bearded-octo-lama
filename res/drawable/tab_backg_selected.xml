@@ -19,20 +19,21 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout 
+<shape
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabsLayout" 
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:background="@drawable/tab_backg_selector"
-    android:padding="10dip"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:shape="rectangle">
     
-    <TextView 
-        android:id="@+id/tabText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dip"/>
+    <gradient
+        android:startColor="#FFFFFF"
+        android:centerColor="#ECECEC"
+        android:endColor="#D7D7D7"
+        android:angle="-90" />
     
-</LinearLayout>
+    <corners 
+     	android:topLeftRadius="7dp" 
+    	android:topRightRadius="7dp"/>
+    
+    <padding
+        android:top="4dp" />
+
+</shape>

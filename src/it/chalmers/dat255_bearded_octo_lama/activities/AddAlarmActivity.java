@@ -35,9 +35,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.res.TypedArray;
-import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,8 +65,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
-	private List<Ringtone> tones = new ArrayList<Ringtone>();
-	private final List<Ringtone> selectedTones = new ArrayList<Ringtone>();
+	private List<String> tones = new ArrayList<String>();
+	private final List<String> selectedTones = new ArrayList<String>();
 	private final ArrayList<String> gamesList= new ArrayList<String>();
 	private final ArrayList<Integer> snoozeList= new ArrayList<Integer>();
 	private String choosenGame;
@@ -80,15 +80,27 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		
 		initTabs();
 		initSettings();
+		initAddAlarm();
+
+	}
+
+	
+	private void initAddAlarm() {
 		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
+		
+		//Create a custom spinner adapter to enable control over textsize.
+		ArrayAdapter<CharSequence> foodadapter = ArrayAdapter.createFromResource(
+	            this, R.array.time_options_array, R.layout.spinner_layout);
+		foodadapter.setDropDownViewResource(R.layout.spinner_layout);
+		spinner.setAdapter(foodadapter);
 		spinner.setOnItemSelectedListener(this);
-
+		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
 
-	
+
 	private void initSettings() {		
 		//Checkboxes for turning on/off sound, vibration and games
 		vibration = (CheckBox)findViewById(id.vibration);
@@ -101,12 +113,12 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
 
 		// Init the sound spinner.
-		ArrayList<String> songs = new ArrayList<String>();
-		tones = RingtoneFinder.getRingtones(this);
-		for(Ringtone r:tones){
-			songs.add(r.getTitle(getBaseContext()));
-		}
-		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
+		tones = RingtoneFinder.getRingtonesTitle(this);
+//		tones = RingtoneFinder.getRingtones(this);
+//		for(Ringtone r:tones){
+//			songs.add(r.getTitle(getBaseContext()));
+//		}
+		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tones));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
 		
 		//Init the game spinner.
@@ -237,6 +249,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
+								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -361,6 +374,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
+									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -380,6 +394,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			selectedTones.clear();
+			Log.d("AddAlarmActivity", tones.get(pos));
 			selectedTones.add(tones.get(pos));
 		}
 		public void onNothingSelected(AdapterView<?> parent) {

@@ -19,14 +19,24 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.utilities.Tuple;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -48,19 +58,19 @@ public class Alarm {
 	 * @param c the cursor object tied to the content provider.
 	 */
 	public Alarm(Cursor c) {	
-		this.id       = c.getInt(Columns.ID_ID);
-		this.hour     = c.getInt(Columns.HOUR_ID);
-		this.minute   = c.getInt(Columns.MINUTE_ID);
-		this.timeInMS = c.getLong(Columns.TIME_ID);
-		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
+		this.id       = c.getInt(Columns.idOf(Columns.ID));
+		this.hour     = c.getInt(Columns.idOf(Columns.HOUR));
+		this.minute   = c.getInt(Columns.idOf(Columns.MINUTE));
+		this.timeInMS = c.getLong(Columns.idOf(Columns.TIME));
+		this.enabled  = c.getInt(Columns.idOf(Columns.ENABLED)) == 1;
 		Extras.Builder b = new Extras.Builder()
-								.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
-								.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
-								.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
-								.gameName(c.getString(Columns.GAME_NAME_ID))
-								.snoozeInterval(c.getInt(Columns.SNOOZE_INTERVAL_ID));
+		.useSound(c.getInt(Columns.idOf(Columns.SOUND_NOTIFICATION)) == 1)
+		.useVibration(c.getInt(Columns.idOf(Columns.VIBRATION_NOTIFICATION)) == 1)
+		.gameNotification(c.getInt(Columns.idOf(Columns.GAME_NOTIFICATION)) == 1)
+		.gameName(c.getString(Columns.idOf(Columns.GAME_NAME)))
+		.snoozeInterval(c.getInt(Columns.idOf(Columns.SNOOZE_INTERVAL)));
 
-		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
+		String[] toneID = c.getString(Columns.idOf(Columns.RINGTONE)).split(",");
 		for(String s : toneID){
 			if(s.isEmpty()) continue;
 
@@ -105,7 +115,7 @@ public class Alarm {
 	public long getTimeInMS() {
 		return timeInMS;
 	}
-	
+
 	/**
 	 * @return whether or not the alarm is enabled.
 	 */
@@ -141,13 +151,28 @@ public class Alarm {
 	/**
 	 * Defines the extra (optional) values of the alarm and a builder for setting them.
 	 */
-	public static class Extras {
+	public static class Extras implements Parcelable {
 		private final boolean       useSound;
 		private final boolean       useVibration;
 		private final List<Integer> ringtoneIDs;
 		private final boolean       gameNotification;  
 		private final String        gameName;
 		private final int 			snoozeInterval;
+		
+		public Extras(Parcel p) {
+			this.useSound            = p.readInt() == 1;
+			this.useVibration        = p.readInt() == 1;
+			
+			int size = p.readInt();
+			ringtoneIDs = new ArrayList<Integer>(size);
+			for (int i = 0; i < size; i++) {
+				ringtoneIDs.add(p.readInt());
+			}
+			
+			this.gameNotification    = p.readInt() == 1;
+			this.gameName            = p.readString();
+			this.snoozeInterval		 = p.readInt();
+		}
 
 		private Extras(Builder b) {
 			this.useSound            = b.useSound;
@@ -175,11 +200,11 @@ public class Alarm {
 		public ContentValues toContentValues() {
 			ContentValues values = new ContentValues();
 
-			values.put(Alarm.Columns.SOUND_NOTIFICATION, useSound ? 1 : 0);
-			values.put(Alarm.Columns.VIBRATION_NOTIFICATION, useVibration ? 1 : 0);
-			values.put(Alarm.Columns.GAME_NOTIFICATION, gameNotification ? 1 : 0);
-			values.put(Alarm.Columns.GAME_NAME, gameName);
-			values.put(Alarm.Columns.SNOOZE_INTERVAL, snoozeInterval);
+			values.put(Alarm.Columns.SOUND_NOTIFICATION.getLeft(), useSound ? 1 : 0);
+			values.put(Alarm.Columns.VIBRATION_NOTIFICATION.getLeft(), useVibration ? 1 : 0);
+			values.put(Alarm.Columns.GAME_NOTIFICATION.getLeft(), gameNotification ? 1 : 0);
+			values.put(Alarm.Columns.GAME_NAME.getLeft(), gameName);
+			values.put(Alarm.Columns.SNOOZE_INTERVAL.getLeft(), snoozeInterval);
 
 			String s = "";
 			for(Integer i : ringtoneIDs){
@@ -189,7 +214,7 @@ public class Alarm {
 			if(ringtoneIDs.size() > 0) {
 				s = s.substring(0, s.length()-1);
 			}
-			values.put(Alarm.Columns.RINGTONE, s);
+			values.put(Alarm.Columns.RINGTONE.getLeft(), s);
 
 			return values;
 		}
@@ -211,10 +236,10 @@ public class Alarm {
 
 		/** @return a list of ringtone ids for use when the alarm goes off. */
 		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
-		
+
 		/** @return the number of minutes the alarm will sleep/snooze */
 		public int getSnoozeInterval(){ return snoozeInterval; }
-		
+
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
 			// The optional fields set to their default value.
@@ -234,6 +259,13 @@ public class Alarm {
 			public Builder addRingtoneID(Integer id)
 			{ ringtoneIDs.add(id); 	return this; }
 
+			public Builder addRingtoneIDs(List<Integer> id){ 
+				for(Integer i:id){
+					ringtoneIDs.add(i);
+				}	
+				return this; 
+			}
+
 			public Builder gameNotification(boolean value)
 			{ gameNotification = value; 	return this; }
 
@@ -247,6 +279,34 @@ public class Alarm {
 				return new Extras(this);
 			}
 		}
+		
+		public static final Parcelable.Creator<Extras> CREATOR
+					= new Parcelable.Creator<Extras>() {
+						public Extras createFromParcel (Parcel p) {
+							return new Extras(p);
+						}
+						public Extras[] newArray(int size) {
+							return new Extras[size];
+						}
+					};
+
+		public int describeContents() {
+			return 0;
+		}
+
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(useSound ? 1 : 0);
+			dest.writeInt(useVibration ? 1 : 0);
+			
+			dest.writeInt(ringtoneIDs.size());
+			for (Integer i : ringtoneIDs) {
+				dest.writeInt(i);
+			}
+			
+			dest.writeInt(gameNotification ? 1 : 0);
+			dest.writeString(gameName);
+			dest.writeInt(snoozeInterval);
+		}
 	}
 
 	/** 
@@ -257,44 +317,91 @@ public class Alarm {
 		/** The uri that represents an alarm */
 		public static final Uri CONTENT_URI = Uri.parse("content://it.chalmers.dat255-bearded-octo-lama/alarm");
 
-		// The rest is pretty self explanatory
-		public static final String HOUR                   = "HOUR";
-		public static final String MINUTE                 = "MINUTE";
-		public static final String TIME                   = "TIME_IN_MS";
-		public static final String ENABLED                = "ENABLED";
-		public static final String SOUND_NOTIFICATION     = "SOUND_NOTIFICATION";
-		public static final String VIBRATION_NOTIFICATION = "VIBRATION_NOTIFICATION";
-		public static final String RINGTONE               = "RINGTONE";
-		public static final String GAME_NOTIFICATION      = "GAME_NOTIFICATION";
-		public static final String GAME_NAME              = "GAME_NAME";
-		public static final String SNOOZE_INTERVAL		  = "SNOOZE_INTERVAL";
+		// This describes the table structure for the database.
+		// The left hand side of the tuple is the table name and the right is the type.
+		public static final Tuple<String, String> ID                     = intCol(_ID);
+		public static final Tuple<String, String> HOUR                   = intCol("HOUR");
+		public static final Tuple<String, String> MINUTE                 = intCol("MINUTE");
+		public static final Tuple<String, String> TIME                   = intCol("TIME_IN_MS");
+		public static final Tuple<String, String> ENABLED                = intCol("ENABLED");
+		public static final Tuple<String, String> SOUND_NOTIFICATION     = intCol("SOUND_NOTIFICATION");
+		public static final Tuple<String, String> VIBRATION_NOTIFICATION = intCol("VIBRATION_NOTIFICATION");
+		public static final Tuple<String, String> RINGTONE               = strCol("RINGTONE");
+		public static final Tuple<String, String> GAME_NOTIFICATION      = intCol("GAME_NOTIFICATION");
+		public static final Tuple<String, String> GAME_NAME              = strCol("GAME_NAME");
+		public static final Tuple<String, String> SNOOZE_INTERVAL        = intCol("SNOOZE_INTERVAL");
 
-		// Some convenience fields. Makes a lot of stuff easier. 
-		// ALL_COLUMNS must be in the same order as the database schema.
-		public static final String[] ALL_COLUMNS = {_ID, HOUR, MINUTE, TIME, ENABLED, 
-			SOUND_NOTIFICATION, VIBRATION_NOTIFICATION,
-			RINGTONE, GAME_NOTIFICATION, GAME_NAME, SNOOZE_INTERVAL};
+		/** The list is sorted alphabetically after the field names */
+		public static final String[] ALL_COLUMN_NAMES               = getColumnNames();
+		public static final List<Tuple<String, String>> ALL_COLUMNS = getColumns();
 
-		public static final int ID_ID                     = indexOf(_ID);
-		public static final int HOUR_ID                   = indexOf(HOUR);
-		public static final int MINUTE_ID                 = indexOf(MINUTE);
-		public static final int TIME_ID                   = indexOf(TIME);
-		public static final int ENABLED_ID                = indexOf(ENABLED);
-		public static final int SOUND_NOTIFICATION_ID     = indexOf(SOUND_NOTIFICATION);
-		public static final int VIBRATION_NOTIFICATION_ID = indexOf(VIBRATION_NOTIFICATION);
-		public static final int RINGTONE_ID               = indexOf(RINGTONE);
-		public static final int GAME_NOTIFICATION_ID      = indexOf(GAME_NOTIFICATION);
-		public static final int GAME_NAME_ID              = indexOf(GAME_NAME);
-		public static final int SNOOZE_INTERVAL_ID        = indexOf(SNOOZE_INTERVAL);
 
-		/** Retrieves the index of a specified needle (in a haystack) from the {@code ALL_COLUMNS} */
-		private static int indexOf(String needle)
-		{
-			int counter = -1;
-			while(ALL_COLUMNS[++counter] != needle 
-					&& counter < ALL_COLUMNS.length);
-
-			return counter;
+		/** Retrieves the ID/index of a specified db column */
+		public static<E, T> int idOf(Tuple<String, T> column) {
+			return ALL_COLUMNS.indexOf(column);
+		}
+		
+		// Shortcut methods used for brevity.
+		private static Tuple<String, String> intCol(String colName) {
+			return Tuple.valueOf(colName, "INTEGER");
+		}
+		
+		private static Tuple<String, String> strCol(String colName) {
+			return Tuple.valueOf(colName, "STRING");
+		}
+		
+		@SuppressWarnings("unchecked") // We know the type of our fields and can ignore.
+		private static List<Tuple<String, String>> getColumns() {
+			Field[] fields = Columns.class.getDeclaredFields();
+			SortedSet<Field> sortedFields = new TreeSet<Field>(new FieldComparator());
+			
+			// Only add our column (Tuple) fields.
+			for(Field f : fields) {
+				if(Modifier.isStatic(f.getModifiers()) &&
+						f.getType() == Tuple.class) {
+					sortedFields.add(f);
+				}
+			}
+			
+			// Convert our fields to their tuple value.
+			List<Tuple<String, String>> list = new ArrayList<Tuple<String,String>>(sortedFields.size());
+			Tuple<String, String> tmpTuple = null;
+			
+			for(Field f : sortedFields) {
+				try {
+					tmpTuple = (Tuple<String, String>)f.get(tmpTuple);
+					
+					list.add(tmpTuple);
+				} catch (IllegalArgumentException e) {
+					Log.d("Alarm.Columns", 
+							"Caught IllegalArgumentException. Msg: " + e.getMessage() +
+							"\nField name: " + f.getName());
+				} catch (IllegalAccessException e) {
+					Log.d("Alarm.Columns", 
+							"Caught IllegalAccessException. Msg: " + e.getMessage() +
+							"\nField name: " + f.getName());
+				}
+			}
+			
+			return Collections.unmodifiableList(list);
+		}
+		
+		private static String[] getColumnNames() {
+			 List<Tuple<String, String>> columns = getColumns();
+			 String[] names = new String[columns.size()];
+			 
+			 for(int i = 0; i < names.length; i++) {
+				 names[i] = columns.get(i).getLeft();
+			 }
+			 
+			 return names;
+		}
+		
+		private static class FieldComparator implements Comparator<Field> {
+			public int compare(Field lhs, Field rhs) {
+				// Sort by the variable name, alphabetically.
+				return lhs.getName().compareTo(rhs.getName());
+			}
 		}
 	}
 }

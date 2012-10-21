@@ -55,32 +55,31 @@
         android:id="@+id/mainContentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey"
-        android:layout_weight="30"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp">
+        android:background="@drawable/notification_background"
+        android:layout_weight="30" >
 	    
 	    <LinearLayout
 	        android:id="@+id/dismissAlarmLayout"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        android:orientation="vertical"
-	        android:gravity="center_horizontal">
+	        android:gravity="center_vertical" >
 	        
 	        <Button
 	            android:id="@+id/snoozeBtn"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginTop="70dp"
-	            android:text="@string/snooze"/>
+	            android:background="@drawable/button_layout"
+	            android:text="@string/snooze"
+	            style="@style/DefaultButtonText"
+	            android:layout_margin="40dp"
+	            android:layout_width="match_parent" />
 	        
 	        <Button
 	            android:id="@+id/disAlarmBtn"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginTop="70dp"
-	            android:text="@string/dismiss_alarm"/>
+	          	android:background="@drawable/button_layout"
+	            android:text="@string/dismiss_alarm"
+	            style="@style/DefaultButtonText"
+	            android:layout_margin="40dp"
+	            android:layout_width="match_parent" />
 	        
 	    </LinearLayout>
 	    
