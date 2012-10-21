@@ -22,8 +22,11 @@ public class AddAlarmTest extends
 	public void testAddAlarm(){
 		solo.assertCurrentActivity("Check on activity", MainActivity.class);
 		solo.clickOnButton("Add alarm");
-		solo.clickOnButton("Settings");
-		
+		solo.clickOnScreen(400, 100);
+		solo.clickOnCheckBox(1);
+		solo.goBack();
+		solo.clickOnScreen(90, 400);
+		solo.clickOnScreen(90, 500);
 	}
 
 }
