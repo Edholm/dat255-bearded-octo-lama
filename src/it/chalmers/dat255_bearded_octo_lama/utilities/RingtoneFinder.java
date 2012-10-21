@@ -24,7 +24,11 @@
 package it.chalmers.dat255_bearded_octo_lama.utilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -47,20 +51,54 @@ public class RingtoneFinder {
 	public static List<Ringtone> getRingtones(Activity currentActivity){	
 		//TODO: Cleaner implementation with activity
 		RingtoneManager rm = new RingtoneManager(currentActivity);
-		List<Ringtone> tones = new ArrayList<Ringtone>();
+//		List<Ringtone> tones = new ArrayList<Ringtone>();
+		Set<Ringtone> tones = new HashSet<Ringtone>();
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		Ringtone tone;
+		double t0 = System.currentTimeMillis();
 		while(!c.isAfterLast()){
 			tone = rm.getRingtone(c.getPosition());
 			//Adding ringtone at current cursor position
 			if(!tones.contains(tone)){
-				tones.add(rm.getRingtone(c.getPosition()));
+				tones.add(tone);				
 			}
+//			if(!tones.contains(tone)){
+//				tones.add(rm.getRingtone(c.getPosition()));
+//			}
 			c.moveToNext();
 		}
-		return tones;
+		double t1 = (System.currentTimeMillis() - t0)/1000.0;
+		Log.d("RingtoneFinder", "Time taken: "+t1);
+//		return tones;
+		return new ArrayList<Ringtone>(tones);
 	}
+	
+	/**	Provides a list of the devices possible ringtones (including alarm and notification sounds)
+	 * 
+	 * @param currentActivity - Current activity to carry out resource gathering
+	 * @return - list of ringtones.
+	 */
+	public static List<String> getRingtonesTitle(Activity currentActivity){	
+		//TODO: Cleaner implementation with activity
+		RingtoneManager rm = new RingtoneManager(currentActivity);
+
+		List<String> titles = new ArrayList<String>();
+		Cursor c = rm.getCursor();
+		c.moveToFirst();
+		double t0 = System.currentTimeMillis();
+		String title = "";
+		while(!c.isAfterLast()){
+			title = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
+			if(!titles.contains(title))
+			titles.add(title);
+			c.moveToNext();
+		}
+		double t1 = (System.currentTimeMillis() - t0)/1000.0;
+		Log.d("RingtoneFinder", "Time taken for StringURIMap: "+t1);
+		return titles;
+	}
+	
 	
 	/**
 	 * Takes a ringtone and returns it's URI.
@@ -92,21 +130,14 @@ public class RingtoneFinder {
 	 * @param tone - Ringtone to find ID of.
 	 * @return ID - ID of ringtone if found, otherwise -1.
 	 */
-	public static List<Integer> findRingtoneID(Activity currentActivity, List<Ringtone> tones){
+	public static List<Integer> findRingtoneID(Activity currentActivity, List<String> titles){
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
-		Ringtone current;
-		
-		List<String> titles = new ArrayList<String>();
-		for(Ringtone r:tones){
-			titles.add(r.getTitle(currentActivity));
-		}
 		
 		while(!c.isAfterLast()){
-			current = rm.getRingtone(c.getPosition());
-			if(titles.contains(current.getTitle(currentActivity))){
+			if(titles.contains(c.getString(RingtoneManager.TITLE_COLUMN_INDEX))){
 				ids.add(c.getInt(RingtoneManager.ID_COLUMN_INDEX));
 			}
 			c.moveToNext();
