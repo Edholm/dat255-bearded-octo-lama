@@ -19,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.utilities;
 
+import java.util.Calendar;
 import java.util.EnumSet;
 
 /**
@@ -74,8 +75,8 @@ public class Days {
 	/**
 	 * @see java.util.AbstractCollection#contains(java.lang.Object)
 	 */
-	public boolean contains(Object object) {
-		return days.contains(object);
+	public boolean contains(Weekday day) {
+		return days.contains(day);
 	}
 
 	/**
@@ -103,6 +104,49 @@ public class Days {
 	/** Whether or not all days are added to the list */
 	public boolean containsAllDays() {
 		return size() == Weekday.values().length;
+	}
+	
+	/**
+	 * Whether or not the set contains the specified {@code day}.
+	 * @param day - an integer that describes the day of week where 0 
+	 *              correlates to Monday and 6 correlates to Sunday
+	 * @return true if the corresponding day exists in the set, else false.
+	 */
+	public boolean contains(int day) {
+		for(Weekday d : days) {
+			if(d.ordinal() == day) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * @return returns the number of days left until the nearest day in the set
+	 *  	   or 0 if same day or -1 if there are no days in the set.
+	 */
+	public int daysLeft() {
+		Calendar cal = Calendar.getInstance();
+		return daysLeft(cal);
+	}
+	
+	/** Same as {@code Days#daysLeft()} but with specified calendar to check against. */
+	public int daysLeft(Calendar cal) {
+		if(size() == 0) return -1;
+		
+		// Normalize the day since DAY_OF_WEEK starts on sunday.
+		int today = (cal.get(Calendar.DAY_OF_WEEK) + 5) % 7;
+		
+		int dayCount = 0, day = 0;
+		for(; dayCount < 7; dayCount++) {
+			day = (today + dayCount) % 7;
+			if(contains(day)) {
+				break;
+			}
+		}
+		
+		return dayCount;
 	}
 	
 	/**

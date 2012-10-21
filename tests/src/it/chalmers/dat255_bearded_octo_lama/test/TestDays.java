@@ -22,6 +22,7 @@ package it.chalmers.dat255_bearded_octo_lama.test;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Days;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Weekday;
 
+import java.util.Calendar;
 import java.util.EnumSet;
 
 import junit.framework.Assert;
@@ -104,5 +105,23 @@ public class TestDays extends TestCase {
 		d2.add(Weekday.WEDNESDAY);
 		
 		Assert.assertFalse(d1.equals(d2));
+	}
+	
+	public final void testDaysLeft() {
+		Calendar cal = Calendar.getInstance();
+		Days d = new Days(Weekday.WEDNESDAY);
+		
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		Assert.assertEquals(2, d.daysLeft(cal));
+		
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+		Assert.assertEquals(0, d.daysLeft(cal));
+		
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+		Assert.assertEquals(6, d.daysLeft(cal));
+		
+		d = new Days();
+		Assert.assertTrue(d.isEmpty());
+		Assert.assertEquals(-1, d.daysLeft());
 	}
 }

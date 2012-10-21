@@ -19,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama.utilities;
 
+
 /**
  * Represents a day of the week.
  * @see java.util.EnumSet<E>
