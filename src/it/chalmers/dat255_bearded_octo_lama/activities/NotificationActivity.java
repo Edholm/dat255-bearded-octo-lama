@@ -52,6 +52,7 @@ public class NotificationActivity extends AbstractActivity {
 	private AbstractGameView gameView; 
 	private TextView currentTimeView, currentDateView;
 	private Alarm alarm;
+	
 	@SuppressLint("NewApi")
 	@Override
 	//We suppress warnings about API level since we will make sure the API level
@@ -64,13 +65,11 @@ public class NotificationActivity extends AbstractActivity {
 	        ActionBar actionBar = getActionBar();
 	        actionBar.setDisplayHomeAsUpEnabled(false);
 	    }
-
-		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
-		alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
-
-		n = NotificationFactory.create(alarm, this);
-		setContentView(R.layout.activity_notification);
-
+	    
+	    setContentView(R.layout.activity_notification);
+	    
+	    initNotification();
+	    
 		mainContentHolder = (RelativeLayout) findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) findViewById(R.id.dismissAlarmLayout);
 
@@ -101,7 +100,25 @@ public class NotificationActivity extends AbstractActivity {
 			}
 		});
 
-	} 
+	}
+	
+	private void initNotification() {
+	    if (getIntent().getExtras().getBoolean("isTest")) {
+	    	//Get the alarm extra from the provided parceable.
+	    	Alarm.Extras extras = getIntent().getParcelableExtra("extras");
+	    	
+	    	n = NotificationFactory.create(extras, this);
+	    }
+	    
+	    else {
+			    
+			int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
+			alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
+			
+			n = NotificationFactory.create(alarm.getExtras(), this);
+			
+	    }
+	}
 
 	private void setClock() {
 		//TODO: Do a cleaner and better version of this.

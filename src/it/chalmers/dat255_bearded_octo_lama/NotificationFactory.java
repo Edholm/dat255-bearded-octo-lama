@@ -33,9 +33,8 @@ import android.util.Log;
 
 public enum NotificationFactory {
 	;
-	public static Notification create(Alarm alarm, Activity act){
+	public static Notification create(Alarm.Extras extras, Activity act){
 		Notification n = new BaseNotification();
-		Alarm.Extras extras = alarm.getExtras();
 	
 		// TODO fix ringtones
 		if(extras.hasSoundNotification()){

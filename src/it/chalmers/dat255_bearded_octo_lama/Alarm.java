@@ -35,6 +35,8 @@ import java.util.TreeSet;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -149,13 +151,28 @@ public class Alarm {
 	/**
 	 * Defines the extra (optional) values of the alarm and a builder for setting them.
 	 */
-	public static class Extras {
+	public static class Extras implements Parcelable {
 		private final boolean       useSound;
 		private final boolean       useVibration;
 		private final List<Integer> ringtoneIDs;
 		private final boolean       gameNotification;  
 		private final String        gameName;
 		private final int 			snoozeInterval;
+		
+		public Extras(Parcel p) {
+			this.useSound            = p.readInt() == 1;
+			this.useVibration        = p.readInt() == 1;
+			
+			int size = p.readInt();
+			ringtoneIDs = new ArrayList<Integer>(size);
+			for (int i = 0; i < size; i++) {
+				ringtoneIDs.add(p.readInt());
+			}
+			
+			this.gameNotification    = p.readInt() == 1;
+			this.gameName            = p.readString();
+			this.snoozeInterval		 = p.readInt();
+		}
 
 		private Extras(Builder b) {
 			this.useSound            = b.useSound;
@@ -261,6 +278,34 @@ public class Alarm {
 			public Extras build() {
 				return new Extras(this);
 			}
+		}
+		
+		public static final Parcelable.Creator<Extras> CREATOR
+					= new Parcelable.Creator<Extras>() {
+						public Extras createFromParcel (Parcel p) {
+							return new Extras(p);
+						}
+						public Extras[] newArray(int size) {
+							return new Extras[size];
+						}
+					};
+
+		public int describeContents() {
+			return 0;
+		}
+
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(useSound ? 1 : 0);
+			dest.writeInt(useVibration ? 1 : 0);
+			
+			dest.writeInt(ringtoneIDs.size());
+			for (Integer i : ringtoneIDs) {
+				dest.writeInt(i);
+			}
+			
+			dest.writeInt(gameNotification ? 1 : 0);
+			dest.writeString(gameName);
+			dest.writeInt(snoozeInterval);
 		}
 	}
 
