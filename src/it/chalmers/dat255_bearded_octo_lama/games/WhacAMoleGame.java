@@ -162,7 +162,9 @@ public class WhacAMoleGame extends AbstractGameView {
 	}
 
 	@Override
-	protected void updateGraphics(Canvas c) {	
+	protected void updateGraphics(Canvas c) {
+		List<Integer> redButtons = new ArrayList<Integer>(btnsToHit);
+		
 		//Draw button graphics for the game.
 		
 		int currentWidth = getWidth()/NUMBER_OF_BUTTONS;
@@ -171,7 +173,7 @@ public class WhacAMoleGame extends AbstractGameView {
 		//Paint background color
 		c.drawARGB(ALPHA, RED, GREEN, BLUE);
 		
-		for(Integer i : btnsToHit) {
+		for(Integer i : redButtons) {
 			//Calculate row and column placement based on the button value.
 			int x = (i-1)%NUMBER_OF_BUTTONS;
 			int y = (i-1)/NUMBER_OF_BUTTONS;
