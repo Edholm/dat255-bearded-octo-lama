@@ -34,6 +34,7 @@ import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 @Game(name = "Calculus")
 public class CalculusGame extends AbstractGameView {
@@ -43,6 +44,8 @@ public class CalculusGame extends AbstractGameView {
 	private static final int RED   = 51;
 	private static final int GREEN = 204;
 	private static final int BLUE  = 255;
+	
+	private static final int MAX_NUMBER = 100;
 	
 	private String exerciseText;
 	private int var1, var2;
@@ -60,14 +63,18 @@ public class CalculusGame extends AbstractGameView {
 		Random randomGenerator = new Random();
 		
 		//Decide 2 random number between 1 and 100 to be added to each other.
-		int maxNumberValue = 100;
-		var1 = randomGenerator.nextInt(maxNumberValue) + 1;
-		var2 = randomGenerator.nextInt(maxNumberValue) + 1;
+		var1 = randomGenerator.nextInt(MAX_NUMBER) + 1;
+		var2 = randomGenerator.nextInt(MAX_NUMBER) + 1;
+		
+		//TESTCODE: Used to control what numbers are given by the game. To remove random values.
+		var1 = MAX_NUMBER;
+		var2 = MAX_NUMBER;
+		//TESTCODE:
 		
 		exerciseText = "What is: " + var1 + " + " + var2;
 	}
 	
-	private void initUI() {
+	private void initUI() {		
 		//Initiate the UI components.
 		RelativeLayout uiHolder = new RelativeLayout(getContext());
 		uiHolder.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
@@ -86,7 +93,16 @@ public class CalculusGame extends AbstractGameView {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				//Make sure not to try and parse an empty string.
 				if(s.length() > 0) {
-					int givenAnswer = Integer.parseInt(s.toString());
+					int givenAnswer = 0;
+					
+					try {
+						givenAnswer = Integer.parseInt(s.toString());
+					} catch (NumberFormatException e) {
+						Toast.makeText(getContext(), "An invalid character has been forced into the text box, clearing the text box",
+								Toast.LENGTH_LONG).show();
+						answerTextField.setText("");
+						e.printStackTrace();
+					}
 					
 					//End game if the given answer is correct, else do nothing.
 					if(givenAnswer == var1 + var2) {
