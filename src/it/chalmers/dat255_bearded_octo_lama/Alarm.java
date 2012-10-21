@@ -292,13 +292,8 @@ public class Alarm {
 
 
 		/** Retrieves the ID/index of a specified db column */
-		public static<E, T> int idOf(Tuple<String, T> column)
-		{
-			int counter = -1;
-			while(ALL_COLUMN_NAMES[++counter] != column.getLeft() 
-					&& counter < ALL_COLUMN_NAMES.length);
-
-			return counter;
+		public static<E, T> int idOf(Tuple<String, T> column) {
+			return ALL_COLUMNS.indexOf(column);
 		}
 		
 		// Shortcut methods used for brevity.
