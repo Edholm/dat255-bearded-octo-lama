@@ -1,5 +1,6 @@
 package it.chalmers.dat255_bearded_octo_lama.test.robotium;
 
+import it.chalmers.dat255_bearded_octo_lama.Alarm.Extras;
 import it.chalmers.dat255_bearded_octo_lama.activities.MainActivity;
 import it.chalmers.dat255_bearded_octo_lama.activities.NotificationActivity;
 import android.content.Intent;
@@ -34,17 +35,13 @@ public class TestRocketLanderGame extends
 	
 	public void testLandingRocket() {
 		Intent intent = new Intent(getActivity(), NotificationActivity.class);
+		
+		String gName = "Rocket Lander"; //RocketLanderGame.class.getAnnotation(Game.class)
+		Extras extra = new Extras.Builder().gameName(gName).gameNotification(true).build();
 		intent.putExtra("isTest", true);
+		intent.putExtra("extras", extra);
 		getActivity().startActivity(intent);
 		
-		solo.assertCurrentActivity("Check on activity", MainActivity.class);
-		solo.clickOnButton("Add alarm");
-		solo.clickOnText("Settings");
-		solo.clickOnCheckBox(2);
-		solo.pressSpinnerItem(2, 2);
-		solo.clickOnText("Add alarm");
-		solo.clickOnText("test");
-		solo.goBack();
 		solo.waitForActivity("NotificiationActivity");
 		solo.clickLongOnScreen(200, 600, 2000);
 		solo.clickLongOnScreen(200, 600, 5000);
