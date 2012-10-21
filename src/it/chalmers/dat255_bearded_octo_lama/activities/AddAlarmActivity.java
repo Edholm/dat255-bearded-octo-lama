@@ -34,11 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.res.TypedArray;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,6 +51,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -59,7 +61,7 @@ import android.widget.Toast;
  * @modified by Emil Johansson
  * @date 14 oct 2012
  */
-public final class AddAlarmActivity extends Activity implements OnItemSelectedListener {
+public final class AddAlarmActivity extends AbstractActivity implements OnItemSelectedListener {
 
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
@@ -76,29 +78,42 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		super.onCreate(savedInstanceState);
 
 		setContentView(layout.activity_alarm_menu);
-		// Had some problems with getting tabs to work
-		// (even though we had almost written correct code)
-		// Got the tabs-setupcode from git://github.com/commonsguy/cw-android.git
-		// in folder Fancy/Tab
-		TabHost tabs=(TabHost)findViewById(R.id.tabhost);
-		tabs.setup();
-		TabHost.TabSpec spec=tabs.newTabSpec("tag1");
+		
+		initTabs();
+		initSettings();
+		initAddAlarm();
 
-		spec.setContent(R.id.tab1);
-		spec.setIndicator("Alarms");
-		tabs.addTab(spec);
+	}
 
-		spec=tabs.newTabSpec("tag2");
-		spec.setContent(R.id.tab2);
-		spec.setIndicator("Settings");
-		tabs.addTab(spec);
-
+	
+	private void initAddAlarm() {
+		
 		Spinner spinner = (Spinner)findViewById(id.time_options_spinner);
+		
+		//Create a custom spinner adapter to enable control over textsize.
+		ArrayAdapter<CharSequence> foodadapter = ArrayAdapter.createFromResource(
+	            this, R.array.time_options_array, R.layout.spinner_layout);
+		foodadapter.setDropDownViewResource(R.layout.spinner_layout);
+		spinner.setAdapter(foodadapter);
 		spinner.setOnItemSelectedListener(this);
+		
+		// Set to the first (hour 0) button.
+		selectTimeButton(id.h0);
+	}
 
-		//TODO refactor
-		// Spinner for choosing which sound should be played
+
+	private void initSettings() {		
+		//Checkboxes for turning on/off sound, vibration and games
+		vibration = (CheckBox)findViewById(id.vibration);
+		sound = (CheckBox)findViewById(id.sound);
+		games = (CheckBox)findViewById(id.games);
+
+		//Get all spinner views from the xml.
 		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
+		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
+		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
+
+		// Init the sound spinner.
 		ArrayList<String> songs = new ArrayList<String>();
 		tones = RingtoneFinder.getRingtones(this);
 		for(Ringtone r:tones){
@@ -107,13 +122,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, songs));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
 		
-		//Checkboxes for turning on/off sound, vibration and games
-		vibration = (CheckBox)findViewById(id.vibration);
-		sound = (CheckBox)findViewById(id.sound);
-		games = (CheckBox)findViewById(id.games);
-		
-		//TODO refactor
-		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
+		//Init the game spinner.
 		String[] tempGamesString = GameManager.getAvailableGamesStrings();
 		for(int i=0; i < tempGamesString.length; i++){
 			gamesList.add(tempGamesString[i]);
@@ -121,24 +130,49 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		gameSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gamesList));
 		gameSpinner.setOnItemSelectedListener(new GameSpinnerListener());
 		
-		//TODO refactor
-		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
-		addSnoozeNumbers(snoozeList);
-		snoozeSpinner.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, snoozeList));
-		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
-
-		// Set to the first (hour 0) button.
-		selectTimeButton(id.h0);
-	}
-
-	
-	private void addSnoozeNumbers(ArrayList<Integer> snoozeList) {
+		//Init the snooze interval spinner.
 		for(int i = 1; i <= 10; i++){
 			snoozeList.add(i);
 		}
+		snoozeSpinner.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, snoozeList));
+		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
 		
 	}
-
+	
+	/**
+	 * This method will create customized tab views overriding the old bland android tab view.
+	 */
+	private void initTabs() {
+		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
+		tabs.setup();
+		
+		TabHost.TabSpec spec;
+		
+		//Setup first tab with specified text.
+		spec = tabs.newTabSpec("tag1");
+		spec.setContent(R.id.tab1);
+		createTabView(spec, "Add alarm");
+		tabs.addTab(spec);
+		
+		//Setup second tab with specified text.
+		spec = tabs.newTabSpec("tag2");
+		spec.setContent(R.id.tab2);
+		createTabView(spec, "Settings");
+		tabs.addTab(spec);
+	}
+	
+	/**
+	 * Helper method for creating tabs with unique text
+	 */
+	private View createTabView(TabHost.TabSpec spec, String text) {
+		View view = LayoutInflater.from(this).inflate(R.layout.tabs_layout, null);
+		TextView tabText = (TextView) view.findViewById(R.id.tabText);
+		tabText.setText(text);
+		
+		spec.setIndicator(view);
+		
+		return view;
+	}
 
 	/**
 	 * Retrieves the time from the "time" buttons.
@@ -216,6 +250,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
+								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -340,6 +375,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
+									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -359,6 +395,7 @@ public final class AddAlarmActivity extends Activity implements OnItemSelectedLi
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			selectedTones.clear();
+			Log.d("AddAlarmActivity", tones.get(pos).getTitle(getApplicationContext()));
 			selectedTones.add(tones.get(pos));
 		}
 		public void onNothingSelected(AdapterView<?> parent) {

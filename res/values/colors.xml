@@ -5,4 +5,10 @@
     <color name="green">#00c400</color>
     <color name="grey">#3D3D3D</color>
     <color name="red">#FF0000</color>
+    <color name="transparent">#00000000</color>
+    <color name="translucent_white">#80FFFFFF</color>
+    <color name="light_blue">#449DEF</color>
+    <color name="blue">#41A9FF</color>
+    <color name="medium_blue">#008BFF</color>
+    <color name="dark_blue">#005BA7</color>
 </resources>

@@ -54,11 +54,11 @@ public class Alarm {
 		this.timeInMS = c.getLong(Columns.TIME_ID);
 		this.enabled  = c.getInt(Columns.ENABLED_ID) == 1;
 		Extras.Builder b = new Extras.Builder()
-								.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
-								.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
-								.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
-								.gameName(c.getString(Columns.GAME_NAME_ID))
-								.snoozeInterval(c.getInt(Columns.SNOOZE_INTERVAL_ID));
+		.useSound(c.getInt(Columns.SOUND_NOTIFICATION_ID) == 1)
+		.useVibration(c.getInt(Columns.VIBRATION_NOTIFICATION_ID) == 1)
+		.gameNotification(c.getInt(Columns.GAME_NOTIFICATION_ID) == 1)
+		.gameName(c.getString(Columns.GAME_NAME_ID))
+		.snoozeInterval(c.getInt(Columns.SNOOZE_INTERVAL_ID));
 
 		String[] toneID = c.getString(Columns.RINGTONE_ID).split(",");
 		for(String s : toneID){
@@ -105,7 +105,7 @@ public class Alarm {
 	public long getTimeInMS() {
 		return timeInMS;
 	}
-	
+
 	/**
 	 * @return whether or not the alarm is enabled.
 	 */
@@ -211,10 +211,10 @@ public class Alarm {
 
 		/** @return a list of ringtone ids for use when the alarm goes off. */
 		public List<Integer> getRingtoneIDs(){ return ringtoneIDs; }
-		
+
 		/** @return the number of minutes the alarm will sleep/snooze */
 		public int getSnoozeInterval(){ return snoozeInterval; }
-		
+
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
 			// The optional fields set to their default value.
@@ -233,6 +233,13 @@ public class Alarm {
 
 			public Builder addRingtoneID(Integer id)
 			{ ringtoneIDs.add(id); 	return this; }
+
+			public Builder addRingtoneIDs(List<Integer> id){ 
+				for(Integer i:id){
+					ringtoneIDs.add(i);
+				}	
+				return this; 
+			}
 
 			public Builder gameNotification(boolean value)
 			{ gameNotification = value; 	return this; }

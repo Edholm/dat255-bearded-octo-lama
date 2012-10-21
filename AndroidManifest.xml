@@ -34,7 +34,8 @@
         <activity
             android:name=".activities.NotificationActivity"
             android:exported="false"
-            android:label="Notification" >
+            android:label="Notification"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFICATION" />
 
@@ -49,7 +50,8 @@
 
         <activity
             android:name=".activities.AddAlarmActivity"
-            android:label="@string/title_activity_add_alarm" >
+            android:label="@string/title_activity_add_alarm"
+            android:screenOrientation="portrait" >
         </activity>
 
         <provider

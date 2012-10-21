@@ -31,6 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
@@ -49,9 +52,18 @@ public class NotificationActivity extends AbstractActivity {
 	private AbstractGameView gameView; 
 	private TextView currentTimeView, currentDateView;
 	private Alarm alarm;
+	@SuppressLint("NewApi")
 	@Override
+	//We suppress warnings about API level since we will make sure the API level
+	//is up to date before trying to reach it.
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
+		
+		//Remove the back button in the actionbar
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	        ActionBar actionBar = getActionBar();
+	        actionBar.setDisplayHomeAsUpEnabled(false);
+	    }
 
 		int bundledID = getIntent().getExtras().getInt(BaseColumns._ID);
 		alarm = AlarmController.INSTANCE.getAlarm(this, bundledID);
