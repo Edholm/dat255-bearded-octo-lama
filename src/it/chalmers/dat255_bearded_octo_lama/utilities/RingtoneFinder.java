@@ -1,10 +1,5 @@
 /**
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
-<<<<<<< HEAD
- * 
-=======
- *
->>>>>>> ea91234303ed22065e0dd3d88803576708d4ef3f
  * This file is part of dat255-bearded-octo-lama
  *
  *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
@@ -51,29 +46,20 @@ public class RingtoneFinder {
 	public static List<Ringtone> getRingtones(Activity currentActivity){	
 		//TODO: Cleaner implementation with activity
 		RingtoneManager rm = new RingtoneManager(currentActivity);
-//		List<Ringtone> tones = new ArrayList<Ringtone>();
 		Set<Ringtone> tones = new HashSet<Ringtone>();
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-		Ringtone tone;
 		double t0 = System.currentTimeMillis();
 		while(!c.isAfterLast()){
-			tone = rm.getRingtone(c.getPosition());
-			//Adding ringtone at current cursor position
-			if(!tones.contains(tone)){
-				tones.add(tone);				
-			}
-//			if(!tones.contains(tone)){
-//				tones.add(rm.getRingtone(c.getPosition()));
-//			}
+			//Adding all tones since it's a set doublets doesn't unimportant.
+			tones.add(rm.getRingtone(c.getPosition()));				
 			c.moveToNext();
 		}
 		double t1 = (System.currentTimeMillis() - t0)/1000.0;
 		Log.d("RingtoneFinder", "Time taken: "+t1);
-//		return tones;
 		return new ArrayList<Ringtone>(tones);
 	}
-	
+
 	/**	Provides a list of the devices possible ringtones (including alarm and notification sounds)
 	 * 
 	 * @param currentActivity - Current activity to carry out resource gathering
@@ -91,15 +77,15 @@ public class RingtoneFinder {
 		while(!c.isAfterLast()){
 			title = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
 			if(!titles.contains(title))
-			titles.add(title);
+				titles.add(title);
 			c.moveToNext();
 		}
 		double t1 = (System.currentTimeMillis() - t0)/1000.0;
 		Log.d("RingtoneFinder", "Time taken for StringURIMap: "+t1);
 		return titles;
 	}
-	
-	
+
+
 	/**
 	 * Takes a ringtone and returns it's URI.
 	 * @param currentActivity - Activity to carry out the resource gathering.
@@ -110,7 +96,7 @@ public class RingtoneFinder {
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-		
+
 		Ringtone current;
 		while(!c.isAfterLast()){
 			current = rm.getRingtone(c.getPosition());
@@ -123,7 +109,7 @@ public class RingtoneFinder {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Takes a ringtone and returns it's URI.
 	 * @param currentActivity - Activity to carry out the resource gathering.
@@ -135,7 +121,7 @@ public class RingtoneFinder {
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
-		
+
 		while(!c.isAfterLast()){
 			if(titles.contains(c.getString(RingtoneManager.TITLE_COLUMN_INDEX))){
 				ids.add(c.getInt(RingtoneManager.ID_COLUMN_INDEX));
@@ -166,6 +152,6 @@ public class RingtoneFinder {
 		return tones;
 	}
 
-	
-	
+
+
 }

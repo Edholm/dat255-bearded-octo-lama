@@ -82,7 +82,7 @@ public class SoundNotification extends NotificationDecorator {
 				//Saves volume to reset to previous state.
 				origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
 				int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-				audio.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, AudioManager.FLAG_SHOW_UI);
+				audio.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
 				mp = new MediaPlayer();
 				try {
 					mp.reset();
@@ -113,8 +113,9 @@ public class SoundNotification extends NotificationDecorator {
 	@Override
 	public void stop() {
 		super.stop();
+		//Gets the audiomanager and return volume to system original
 		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
-		.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, AudioManager.FLAG_SHOW_UI);
+		.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, 0);
 		if(mp != null && mp.isPlaying()){
 			mp.stop();
 		}
