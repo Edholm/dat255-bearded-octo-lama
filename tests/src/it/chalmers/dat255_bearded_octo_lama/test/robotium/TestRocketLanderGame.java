@@ -42,16 +42,15 @@ public class TestRocketLanderGame extends
 		intent.putExtra("extras", extra);
 		getActivity().startActivity(intent);
 		
-		solo.waitForActivity("NotificiationActivity");
-		solo.clickLongOnScreen(200, 600, 2000);
-		solo.clickLongOnScreen(200, 600, 5000);
-	}
-	
-	public void testScreenOverlappingLeft() {
+		solo.waitForActivity("NotificiationActivity", 3000);
 		
-	}
-	
-	public void testScreenOverlappingRight() {
+		for(int i = 0; i <15; i++) {
+			solo.clickLongOnScreen(20, 600, 850);
+			solo.clickLongOnScreen(450, 600, 850);
+		}
 		
+		solo.clickOnText("Dismiss alarm");
+		solo.assertCurrentActivity("Check on activity", MainActivity.class);
 	}
+
 }

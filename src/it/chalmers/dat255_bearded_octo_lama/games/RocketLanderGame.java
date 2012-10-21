@@ -88,7 +88,7 @@ public class RocketLanderGame extends AbstractGameView {
 		currentXSpd = INIT_SPD*randomValue;
 		
 		//TESTCODE: Only use this if testing with Robotium. This will remove the x-speed.
-		//currentXSpd = 0;
+		currentXSpd = 0;
 	}
 	
 	@Override
