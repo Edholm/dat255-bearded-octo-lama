@@ -43,10 +43,8 @@ public class TestAddAlarmActivity extends
 		solo.clickOnCheckBox(2);
 		solo.sleep(250);
 		solo.clickOnCheckBox(1);
-		solo.clickOnScreen(50, 550);
-		solo.clickInList(3, 0);
+		solo.pressSpinnerItem(1, 3);
 		solo.sleep(250);
-		solo.clickOnScreen(50, 720);
-		solo.clickInList(2, 0);
+		solo.pressSpinnerItem(2, 2);
 	}
 }
