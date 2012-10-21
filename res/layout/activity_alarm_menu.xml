@@ -257,8 +257,8 @@
                     android:checked="true"
                     android:text="@string/enabled"/>
 
-                <Spinner
-                    android:id="@+id/sound_list_spinner"
+                <Button
+                    android:id="@+id/sound_list_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left" />

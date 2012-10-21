@@ -35,11 +35,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.res.TypedArray;
-import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -115,12 +114,11 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 
 		// Init the sound spinner.
 		tones = RingtoneFinder.getRingtonesTitle(this);
-//		tones = RingtoneFinder.getRingtones(this);
-//		for(Ringtone r:tones){
-//			songs.add(r.getTitle(getBaseContext()));
-//		}
 		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tones));
 		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
+		
+		
+		
 		
 		//Init the game spinner.
 		String[] tempGamesString = GameManager.getAvailableGamesStrings();
@@ -435,5 +433,6 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 
 	}
+		
 
 }
