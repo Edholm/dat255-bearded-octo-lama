@@ -35,11 +35,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.res.TypedArray;
-import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
