@@ -19,10 +19,8 @@
 package it.chalmers.dat255_bearded_octo_lama.utilities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -121,6 +119,9 @@ public class RingtoneFinder {
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
+		if(titles == null){
+			return ids;
+		}
 
 		while(!c.isAfterLast()){
 			if(titles.contains(c.getString(RingtoneManager.TITLE_COLUMN_INDEX))){

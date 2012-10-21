@@ -32,8 +32,8 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -65,13 +66,16 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
-	private List<String> tones = new ArrayList<String>();
-	private final List<String> selectedTones = new ArrayList<String>();
 	private final ArrayList<String> gamesList= new ArrayList<String>();
 	private final ArrayList<Integer> snoozeList= new ArrayList<Integer>();
 	private String choosenGame;
 	private CheckBox vibration, sound, games;
 	private int snoozeInterval;
+	private Button pickSongsBtn;
+	private Intent songPickIntent;
+	private SongButtonClickListener songBtnListener;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +84,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		
 		initTabs();
 		initSettings();
+		initButtons();
 		initAddAlarm();
 
 	}
@@ -108,17 +113,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		games = (CheckBox)findViewById(id.games);
 
 		//Get all spinner views from the xml.
-		Spinner soundSpinner = (Spinner)findViewById(id.sound_list_spinner);
 		Spinner gameSpinner = (Spinner)findViewById(id.games_list_spinner);
 		Spinner snoozeSpinner = (Spinner)findViewById(id.snooze_list_spinner);
-
-		// Init the sound spinner.
-		tones = RingtoneFinder.getRingtonesTitle(this);
-		soundSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tones));
-		soundSpinner.setOnItemSelectedListener(new SoundSpinnerListener());
-		
-		
-		
 		
 		//Init the game spinner.
 		String[] tempGamesString = GameManager.getAvailableGamesStrings();
@@ -136,7 +132,14 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		snoozeSpinner.setOnItemSelectedListener(new SnoozeSpinnerListener());
 		
 	}
-	
+	private void initButtons() {
+		pickSongsBtn = (Button) findViewById(R.id.sound_list_btn);
+
+		songBtnListener = new SongButtonClickListener();
+		pickSongsBtn.setOnClickListener(songBtnListener);
+	}
+
+
 	/**
 	 * This method will create customized tab views overriding the old bland android tab view.
 	 */
@@ -248,7 +251,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
-								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, songBtnListener.getIntent().getStringArrayListExtra("pickedSongs")))
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -366,6 +369,12 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, countdown);
 		
+		if(songBtnListener.getIntent() == null){
+			Log.d("AddAlarmActivity", "pickedSongsIntent is null");
+		}
+		if(songBtnListener.getIntent().getStringArrayListExtra("pickedSongs") == null){
+			Log.d("AddAlarmActivity", "pickedSongs is null");
+		}
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
 									.useVibration(vibration.isChecked())
@@ -373,33 +382,13 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, songBtnListener.getIntent().getStringArrayListExtra("pickedSongs")))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
 
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
-	}
-	
-
-	/**
-	 * Private class for listening to the Spinner in settings that chooses which sound to play
-	 * @author e
-	 *
-	 */
-	private class SoundSpinnerListener implements OnItemSelectedListener {
-
-		public void onItemSelected(AdapterView<?> parent, View view, int pos,
-				long id) {
-			selectedTones.clear();
-			Log.d("AddAlarmActivity", tones.get(pos));
-			selectedTones.add(tones.get(pos));
-		}
-		public void onNothingSelected(AdapterView<?> parent) {
-			// Do Nothing		
-		}
-
 	}
 	/**
 	 * Private class for listening to the Spinner in settings that chooses which game to play
@@ -433,6 +422,24 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 
 	}
+	
+	private class SongButtonClickListener implements OnClickListener {
 		
-
+		private Intent intent;
+		
+		public void onClick(View v) {
+			intent = new Intent(getBaseContext(), SongPickerActivity.class);
+			startActivity(intent);
+		}
+		
+		public Intent getIntent() {
+			return intent;
+		}
+		
+	}
+	
+	
+	
+	
+	
 }

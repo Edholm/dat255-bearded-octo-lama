@@ -22,16 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false"
-            android:label="Settings" >
-            <intent-filter>
-                <action android:name="android.intent.action.SETTINGS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activities.NotificationActivity"
             android:exported="false"
             android:label="Notification"
@@ -68,6 +58,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.SongPickerActivity" android:label="SongPickerActivity"></activity>
     </application>
 
 </manifest>

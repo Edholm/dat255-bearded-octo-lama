@@ -1,3 +1,22 @@
+/**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ *
+ * This file is part of dat255-bearded-octo-lama
+ *
+ *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  dat255-bearded-octo-lama is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
@@ -10,6 +29,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,14 +49,13 @@ public class SongPickerActivity extends AbstractActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_alarms);
-
+		intent = getIntent();
 		List<String> allTones = RingtoneFinder.getRingtonesTitle(this);
-		adapter = new RingtoneAdapter(this, R.layout.row_alarm, allTones, intent);
+		adapter = new RingtoneAdapter(this, R.layout.row_ringtone, allTones, intent);
 
 		ListView lv = (ListView)findViewById(R.id.listView);
 		lv.setAdapter(adapter);
 		registerForContextMenu(lv);
-		intent = this.getIntent();
 	}
 
 
@@ -88,7 +107,6 @@ public class SongPickerActivity extends AbstractActivity {
 			}
 
 			String title = titles.get(position);
-
 			holder.title.setText(title);
 			holder.enabled.setChecked(false);
 
@@ -123,9 +141,20 @@ public class SongPickerActivity extends AbstractActivity {
 			public void onClick(View v) {
 				String title = (String)v.getTag();
 				if(checkbox.isChecked()){
+					if(title == null){
+						Log.d("SongPickerActivity", "title is null");
+					}
 					selectedTitles.add(title);
 				} else if(!checkbox.isChecked()){
 					selectedTitles.remove(title);
+				}
+				if(intent == null){
+					Log.d("SongPickerActivity", "intent is null");
+				} else if(selectedTitles == null){
+					Log.d("SongPickerActivity", "selectedtitles is null");
+				}
+				if(selectedTitles.isEmpty()){
+					Log.d("SongPickerActivity", "Empty list");
 				}
 				intent.putStringArrayListExtra("pickedSongs", new ArrayList<String>(selectedTitles));
 				
