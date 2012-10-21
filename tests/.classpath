@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/it.chalmers.dat255_bearded_octo_lama"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dat255-bearded-octo-lama"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
