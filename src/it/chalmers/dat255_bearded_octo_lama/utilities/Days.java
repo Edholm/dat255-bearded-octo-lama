@@ -100,6 +100,11 @@ public class Days {
 		return days.size();
 	}
 	
+	/** Whether or not all days are added to the list */
+	public boolean containsAllDays() {
+		return size() == Weekday.values().length;
+	}
+	
 	/**
 	 * @see java.util.AbstractSet#equals(java.lang.Object)
 	 */

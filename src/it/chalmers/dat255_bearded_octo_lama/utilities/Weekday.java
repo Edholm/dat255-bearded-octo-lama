@@ -56,4 +56,9 @@ public enum Weekday {
 	public String toString() {
 		return stringRepresentation;
 	}
+	
+	public String toShortString() {
+		int retLength = 3;
+		return toString().substring(0, retLength);
+	}
 }
