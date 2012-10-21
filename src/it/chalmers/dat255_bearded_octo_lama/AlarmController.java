@@ -81,10 +81,10 @@ public enum AlarmController {
 	private ContentValues constructContentValues(Calendar cal, boolean enabled, Alarm.Extras extras) {
 		ContentValues values = new ContentValues(extras.toContentValues());
 		
-		values.put(Alarm.Columns.HOUR,    cal.get(Calendar.HOUR_OF_DAY));
-		values.put(Alarm.Columns.MINUTE,  cal.get(Calendar.MINUTE));
-		values.put(Alarm.Columns.TIME,    cal.getTimeInMillis());
-		values.put(Alarm.Columns.ENABLED, enabled ? 1 : 0);
+		values.put(Alarm.Columns.HOUR.getLeft(),    cal.get(Calendar.HOUR_OF_DAY));
+		values.put(Alarm.Columns.MINUTE.getLeft(),  cal.get(Calendar.MINUTE));
+		values.put(Alarm.Columns.TIME.getLeft(),    cal.getTimeInMillis());
+		values.put(Alarm.Columns.ENABLED.getLeft(), enabled ? 1 : 0);
 
 		return values;
 	}
@@ -109,13 +109,13 @@ public enum AlarmController {
 		ContentValues values = new ContentValues();
 		
 		// Reverse enabled
-		values.put(Alarm.Columns.ENABLED, alarm.isEnabled() ? 0 : 1);
+		values.put(Alarm.Columns.ENABLED.getLeft(), alarm.isEnabled() ? 0 : 1);
 		
 		// If we are re-enabling the alarm again, and its time has passed/expired, we need to update it first.
 		long now = System.currentTimeMillis();
 		if(!alarm.isEnabled() && alarm.getTimeInMS() < now) { // Since we are reversing the boolean...
 			long time = Time.timeInMsAt(alarm.getHour(), alarm.getMinute());
-			values.put(Alarm.Columns.TIME, time);
+			values.put(Alarm.Columns.TIME.getLeft(), time);
 		}
 		
 		cr.update(uri, values, null, null);
@@ -131,7 +131,7 @@ public enum AlarmController {
 		ContentResolver cr = c.getContentResolver();
 		
 		Uri uri = Uri.withAppendedPath(Alarm.Columns.CONTENT_URI, alarmID + "");
-		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMNS, null, null, null);
+		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMN_NAMES, null, null, null);
 		
 		Alarm a = null;
 		if(cur != null && cur.moveToFirst()) {
@@ -155,7 +155,7 @@ public enum AlarmController {
 		ContentResolver cr = c.getContentResolver();
 		
 		Uri uri = Alarm.Columns.CONTENT_URI;
-		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMNS, where, args, sortOrder);
+		Cursor cur = cr.query(uri, Alarm.Columns.ALL_COLUMN_NAMES, where, args, sortOrder);
 		
 		
 		if(cur != null && cur.moveToFirst()) {
@@ -230,7 +230,7 @@ public enum AlarmController {
 		
 		Uri uri = null;
 		ContentValues value = new ContentValues();
-		value.put(Alarm.Columns.ENABLED, 0); // == Disable alarm.
+		value.put(Alarm.Columns.ENABLED.getLeft(), 0); // == Disable alarm.
 		for(Alarm a : alarms) {
 			uri = Alarm.Columns.CONTENT_URI.buildUpon().appendPath(a.getId() + "").build();
 			cr.update(uri, value, null, null);

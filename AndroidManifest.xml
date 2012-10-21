@@ -50,7 +50,8 @@
 
         <activity
             android:name=".activities.AddAlarmActivity"
-            android:label="@string/title_activity_add_alarm" >
+            android:label="@string/title_activity_add_alarm"
+            android:screenOrientation="portrait" >
         </activity>
 
         <provider

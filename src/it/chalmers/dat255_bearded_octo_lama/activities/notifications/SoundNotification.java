@@ -22,15 +22,18 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -42,10 +45,11 @@ import android.util.Log;
 public class SoundNotification extends NotificationDecorator {
 
 	private List<Ringtone> notificationSounds = Collections.emptyList();
-	private Ringtone playing = null;
+	private Ringtone selectedSound = null;
 	private final Context context;
 	private final Activity act;
 	MediaPlayer mp = null;
+	int origVolume;
 
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
@@ -57,40 +61,60 @@ public class SoundNotification extends NotificationDecorator {
 	@Override
 	public void start() {
 		super.start();
-		Collections.shuffle(notificationSounds);
-		if(!notificationSounds.isEmpty()){
-			playing = notificationSounds.get(0);
-		} else {
-			Log.d("SoundNotification", "notificationSounds is empty");
-			// Use default sound if no sounds listed previously.
-			playing = RingtoneManager.getRingtone(context.getApplicationContext(), 
-					Settings.System.DEFAULT_ALARM_ALERT_URI);
-		}
-		//If clause if you use the emulator or device without sound
-		Uri uri = null;
-		if(playing != null){
-			uri = RingtoneFinder.findRingtoneUri(act, playing);
-			if(uri == null){
-				uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
-				Log.d("SoundNotification", "Uri is null replaced with "+uri);
-			}
-		}
+		//If clause to check if running on emulator
+		if(!(Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))){
 
-		//If clause if you use the emulator or device without sound
-		if(uri != null){
-			mp = MediaPlayer.create(context, uri);
-			if(mp != null) {
-				mp.setLooping(true);
-				//TODO: None-hardcoded-volume
-				mp.setVolume(1f, 1f);
-				mp.start();
+			//Using random song of those listed.
+			Collections.shuffle(notificationSounds);
+			if(!notificationSounds.isEmpty()){
+				selectedSound = notificationSounds.get(0);
+			} else {
+				Log.d("SoundNotification", "notificationSounds is empty");
+				// Use default sound if no sounds listed previously.
+				selectedSound = RingtoneManager.getRingtone(context.getApplicationContext(), 
+						Settings.System.DEFAULT_ALARM_ALERT_URI);
+			}
+			//If clause if you use a device without sound/default alarm.
+			Uri uri = null;
+			if(selectedSound != null){
+				uri = RingtoneFinder.findRingtoneUri(act, selectedSound);	
+				AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
+				//Saves volume to reset to previous state.
+				origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
+				int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+				audio.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, AudioManager.FLAG_SHOW_UI);
+				mp = new MediaPlayer();
+				try {
+					mp.reset();
+					mp.setDataSource(context, uri);
+					mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+					mp.setLooping(true);
+					mp.setVolume(1f,1.f);
+					mp.prepare();
+					mp.start();
+				} catch (IllegalArgumentException e) {
+					Log.e("SoundNotification", "IllegalArgumentException");
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					Log.e("SoundNotification", "SecurityException");
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					Log.e("SoundNotification", "IllegalStateException");
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.e("SoundNotification", "IOException");
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
+
 	@Override
 	public void stop() {
 		super.stop();
+		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
+		.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, AudioManager.FLAG_SHOW_UI);
 		if(mp != null && mp.isPlaying()){
 			mp.stop();
 		}

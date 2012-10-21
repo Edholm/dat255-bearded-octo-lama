@@ -45,72 +45,83 @@
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:gravity="center"
                 android:orientation="vertical" >
 
-                <Spinner
-                    android:id="@+id/time_options_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="25dp"
-                    android:entries="@array/time_options_array" />
-
                 <LinearLayout
-                    android:id="@+id/timeSelector"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
-                    android:orientation="horizontal" >
-
-                    <Button
-                        android:id="@+id/h0"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="1"
-                        android:background="@color/green"
-                        android:onClick="onTimeClick"
-                        android:tag="@string/h0"
-                        android:text="0" />
-
-                    <Button
-                        android:id="@+id/h1"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        android:onClick="onTimeClick"
-                        android:tag="@string/h1"
-                        android:text="0" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text=":"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                    <Button
-                        android:id="@+id/m0"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        android:onClick="onTimeClick"
-                        android:tag="@string/m0"
-                        android:text="0" />
-
-                    <Button
-                        android:id="@+id/m1"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        android:onClick="onTimeClick"
-                        android:tag="@string/m1"
-                        android:text="0" />
+                    android:orientation="vertical" >
+                    
+                    <Spinner
+	                    android:id="@+id/time_options_spinner"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center"
+	                    android:layout_marginTop="15dp"
+	                    android:entries="@array/time_options_array" />
+                    
+                    <LinearLayout
+	                    android:id="@+id/timeSelector"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center_horizontal"
+	                    android:layout_marginTop="15dp"
+	                    android:layout_marginLeft="80dp"
+	                    android:layout_marginRight="80dp"
+	                    android:orientation="horizontal" >
+	                    
+	                    <Button
+	                        android:id="@+id/h0"
+	                        android:layout_width="35dp"
+	                        android:layout_height="35dp"
+	                        android:layout_weight="1"
+	                        android:background="@color/green"
+	                        android:onClick="onTimeClick"
+	                        android:tag="@string/h0"
+	                        android:text="0" />
+	
+	                    <Button
+	                        android:id="@+id/h1"
+	                        android:layout_width="35dp"
+	                        android:layout_height="35dp"
+	                        android:layout_weight="1"
+	                        android:background="@color/white"
+	                        android:onClick="onTimeClick"
+	                        android:tag="@string/h1"
+	                        android:text="0" />
+	
+	                    <TextView
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_weight="1"
+	                        android:gravity="center"
+	                        android:text=":"
+	                        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	                    <Button
+	                        android:id="@+id/m0"
+	                        android:layout_width="35dp"
+	                        android:layout_height="35dp"
+	                        android:layout_weight="1"
+	                        android:background="@color/white"
+	                        android:onClick="onTimeClick"
+	                        android:tag="@string/m0"
+	                        android:text="0" />
+	
+	                    <Button
+	                        android:id="@+id/m1"
+	                        android:layout_width="35dp"
+	                        android:layout_height="35dp"
+	                        android:layout_weight="1"
+	                        android:background="@color/white"
+	                        android:onClick="onTimeClick"
+	                        android:tag="@string/m1"
+	                        android:text="0" />
+                    
+                    </LinearLayout>
+                    
                 </LinearLayout>
 
                 <LinearLayout
@@ -128,30 +139,22 @@
 
                         <Button
                             android:id="@+id/button1"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="1" />
 
                         <Button
                             android:id="@+id/button2"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="2" />
 
                         <Button
                             android:id="@+id/button3"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="3" />
+                        
                     </LinearLayout>
 
                     <LinearLayout
@@ -162,29 +165,19 @@
 
                         <Button
                             android:id="@+id/button4"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="4" />
 
                         <Button
                             android:id="@+id/button5"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left|bottom"
-                            android:layout_weight="1"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="5" />
 
                         <Button
                             android:id="@+id/button6"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left|bottom"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="6" />
                     </LinearLayout>
@@ -197,28 +190,19 @@
 
                         <Button
                             android:id="@+id/button7"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="7" />
 
                         <Button
                             android:id="@+id/button8"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="8" />
 
                         <Button
                             android:id="@+id/button9"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="9" />
                     </LinearLayout>
@@ -231,21 +215,21 @@
 
                         <Button
                             android:id="@+id/button0"
-                            style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="0" />
+                        
                     </LinearLayout>
+                    
                 </LinearLayout>
-
+				
                 <Button
                     android:id="@+id/buttonAddTest"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:onClick="addTestAlarm"
                     android:text="Add test alarm (in 5 sec)" />
+                
             </LinearLayout>
             
             <LinearLayout
@@ -260,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/sound"
                     android:textColor="#000000"
-                    android:textSize="15dp"
+                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
@@ -284,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/vibration"
                     android:textColor="#000000"
-                    android:textSize="15dp"
+                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
@@ -302,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/snoozeInterval"
                     android:textColor="#000000"
-                    android:textSize="15dp"
+                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
@@ -319,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/games"
                     android:textColor="#000000"
-                    android:textSize="15dp"
+                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
