@@ -113,11 +113,6 @@ public class ListAlarmsActivity extends AbstractActivity {
 		  return true;
 	}
 
-	/** Launches the AddAlarmActivity with the specified alarm used for template/base. */
-	private void editAlarm(Alarm affectedAlarm) {
-		//TODO: Launch AddAlarmActivity with this alarm as base so the user can edit it.
-	}
-
 	/** Removes the specified alarm from the database and from the adapter backed list containing all alarms. */
 	private void deleteAlarm(Alarm affectedAlarm) {
 		AlarmController.INSTANCE.deleteAlarm(this, affectedAlarm.getId());
