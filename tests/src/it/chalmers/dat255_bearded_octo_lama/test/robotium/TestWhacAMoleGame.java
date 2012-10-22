@@ -32,7 +32,7 @@ public class TestWhacAMoleGame extends
 		solo.clickOnButton("Add alarm");
 		solo.clickOnText("Settings");
 		solo.clickOnCheckBox(2);
-		solo.pressSpinnerItem(2, 1);
+		solo.pressSpinnerItem(1, 1);
 		solo.goBack();
 		solo.assertCurrentActivity("Check on activity", MainActivity.class);
 	}

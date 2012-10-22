@@ -33,7 +33,7 @@ public class TestCalculusGame extends
 		solo.clickOnButton("Add alarm");
 		solo.clickOnText("Settings");
 		solo.clickOnCheckBox(2);
-		solo.pressSpinnerItem(2, 0);
+		solo.pressSpinnerItem(1, 0);
 		solo.goBack();
 		solo.assertCurrentActivity("Check on activity", MainActivity.class);
 	}
