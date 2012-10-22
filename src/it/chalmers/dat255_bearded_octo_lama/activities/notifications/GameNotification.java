@@ -30,8 +30,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+/**
+ * This game notification will hide the dismiss view and then
+ * add a {@code SurfaceView} containing a given game instance.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 public class GameNotification extends NotificationDecorator {
-	
 	private RelativeLayout mainContentHolder;
 	private LinearLayout dismissAlarmLayout;
 	private final Activity act;

@@ -20,7 +20,7 @@
 package it.chalmers.dat255_bearded_octo_lama.utilities;
 
 /**
- * Generic filter interface
+ * Generic filter interface.
  * @author Emil Edholm
  * @date 28 sep 2012
  */

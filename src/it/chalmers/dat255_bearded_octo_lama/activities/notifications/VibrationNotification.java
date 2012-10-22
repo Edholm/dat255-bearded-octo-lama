@@ -24,7 +24,11 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
 
-
+/**
+ * A notification that decorates with vibration.
+ * @author E
+ * @date 12-oct 2012
+ */
 public class VibrationNotification extends NotificationDecorator {
 	
 	private final Vibrator vib;

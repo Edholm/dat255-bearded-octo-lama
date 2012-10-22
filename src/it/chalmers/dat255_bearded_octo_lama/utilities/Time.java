@@ -23,17 +23,17 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Contains utility methods for working with time
+ * Contains utility methods for working with time.
  * @author Emil Edholm
  * @date 14 okt 2012
  */
-public final class Time {
+public enum Time {;
 	;
 	
 	/** 
 	 * Returns the time left until a specified time (in ms).
 	 * <p>If {@code displaySeconds} is {@code true} then the format is: "22h 14min, 13 sec"
-	 * if not the format becomes: "22h 14min"</p>
+	 * if not the format becomes: "22h 14min"</p>.
 	 * @param until - the time in milliseconds to count towards.
 	 * @param displaySeconds - whether or not the seconds should be displayed.
 	 */

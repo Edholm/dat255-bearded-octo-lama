@@ -25,14 +25,20 @@ import it.chalmers.dat255_bearded_octo_lama.games.anno.Game;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+/**
+ * This game will launch a small rocket that the user will then have to land
+ * by pressing on the screen. If user lands the rocket correctly the game will end.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 @Game(name = "Rocket Lander")
 public class RocketLanderGame extends AbstractGameView {
-	
 	//Set all physics constants
 	private static final int GRAV_ACCEL        = 90;
 	private static final int ENGINE_ACCEL      = 140;
@@ -40,8 +46,18 @@ public class RocketLanderGame extends AbstractGameView {
 	private static final int INIT_SPD          = 50;
 	
 	//Set goal constants
-	private static final int MAX_VERT_SPD = 100;
-	private static final int MAX_HORI_SPD = 50;
+	private static final int MAX_VERT_SPD 	   = 100;
+	private static final int MAX_HORI_SPD      = 50;
+	
+	//Set color for engine fire
+	private static final int ALPHA  		   = 255;
+	private static final int RED  			   = 255;
+	private static final int GREEN 			   = 100;
+	private static final int BLUE			   = 0;
+	
+	private static final int FIRST_RUN_DELAY   = 100;
+	private static final int X_SPD_VARIATION   = 10;
+	private static final double TIME_SCALE     = 1000.0;
 	
 	private long lastTime;
 	private double currentYSpd, currentXSpd;
@@ -59,18 +75,14 @@ public class RocketLanderGame extends AbstractGameView {
 	}
 
 	private void initGame() {
-		int firstRunDelay = 100;
-		lastTime = System.currentTimeMillis() + firstRunDelay;
+		lastTime = System.currentTimeMillis() + FIRST_RUN_DELAY;
 		
-		rocketBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.rocket);
-		backgroundBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.rocket_background);
+		Resources res = getContext().getResources();
+		rocketBitmap = BitmapFactory.decodeResource(res, R.drawable.rocket);
+		backgroundBitmap = BitmapFactory.decodeResource(res, R.drawable.rocket_background);
 		
-		//Set painter color to orange for when painting the rocket flame.
-		int alpha = 255;
-		int red = 255;
-		int green = 100;
-		int blue = 0;
-		getPainter().setARGB(alpha, red, green, blue);
+		//Set painter color
+		getPainter().setARGB(ALPHA, RED, GREEN, BLUE);
 		
 		resetGame();
 	}
@@ -83,9 +95,11 @@ public class RocketLanderGame extends AbstractGameView {
 		currentYSpd = INIT_SPD;
 		//Make so the initial x-axis speed is a bit random.
 		Random random = new Random();
-		int maxVariation = 10;
-		double randomValue = random.nextInt(maxVariation)-maxVariation/2;
+		double randomValue = random.nextInt(X_SPD_VARIATION)-X_SPD_VARIATION/2;
 		currentXSpd = INIT_SPD*randomValue;
+		
+		//TESTCODE: Only use this if testing with Robotium. This will remove the x-speed.
+		currentXSpd = 0;
 	}
 	
 	@Override
@@ -109,8 +123,7 @@ public class RocketLanderGame extends AbstractGameView {
 			return;
 		}
 		
-		double msPerSec = 1000.0;
-		double timeSinceLast = (now - lastTime)/msPerSec;
+		double timeSinceLast = (now - lastTime)/TIME_SCALE;
 		
 		//Set and calculate acceleration.
 		double xAcceleration = 0;
@@ -143,7 +156,6 @@ public class RocketLanderGame extends AbstractGameView {
 		
 		//Check if aircraft has landed or crashed.
 		if(rocketY >= groundYLevel) {
-			
 			//Check if it's a crash.
 			if(currentYSpd > MAX_VERT_SPD || currentXSpd > MAX_HORI_SPD
 					|| currentXSpd < -MAX_HORI_SPD) {

@@ -67,8 +67,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private Button currentTimeButton;
 	private final TimeFilter filter = new TimeFilter();
 	private boolean setAlarmAT = true; // if false, set alarm to an interval instead.
-	private final ArrayList<String> gamesList= new ArrayList<String>();
-	private final ArrayList<Integer> snoozeList= new ArrayList<Integer>();
+	private final List<String> gamesList= new ArrayList<String>();
+	private final List<Integer> snoozeList= new ArrayList<Integer>();
 	private String choosenGame;
 	private CheckBox vibration, sound, games;
 	private int snoozeInterval;
@@ -164,7 +164,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	}
 	
 	/**
-	 * Helper method for creating tabs with unique text
+	 * Helper method for creating tabs with unique text.
 	 */
 	private View createTabView(TabHost.TabSpec spec, String text) {
 		View view = LayoutInflater.from(this).inflate(R.layout.tabs_layout, null);
@@ -192,7 +192,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		return time;
 	}
 
-	/** Select a specific time button based on ID */
+	/** Select a specific time button based on ID. */
 	private void selectTimeButton(int id) {
 		if(currentTimeButton != null) {
 			currentTimeButton.setBackgroundColor(getResources().getColor(R.color.white));
@@ -203,7 +203,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		currentTimeButton.setBackgroundColor(getResources().getColor(R.color.green));
 	}
 
-	/** Selects the next "time" button */
+	/** Selects the next "time" button. */
 	private void selectNextTimeButton() {
 		switch(currentTimeButton.getId()) {
 		case R.id.h0: 
@@ -221,7 +221,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 	}
 
-	/** When the user clicks the add button (ie. when he is finished) */
+	/** When the user clicks the add button (ie. when he is finished). */
 	private void addAlarm() {
 		int[] time = queryTimeValues();
 
@@ -285,7 +285,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	}
 
 	/**
-	 * @return number on the button
+	 * @return number on the button.
 	 */
 	private int getButtonNumber(Button button) {
 		return Integer.parseInt(button.getText().toString());
@@ -311,7 +311,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		selectTimeButton(view.getId());
 	}
 
-	/** What happens when an item is selected on the options spinner */
+	/** What happens when an item is selected on the options spinner. */
 	public void onItemSelected(AdapterView<?> parent, View view, 
 			int pos, long id) {
 		String option = String.valueOf(parent.getItemAtPosition(pos));
@@ -389,10 +389,10 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
 	}
-	/**
-	 * Private class for listening to the Spinner in settings that chooses which game to play
-	 * @author e
-	 *
+	 * Private class for listening to the Spinner in settings that chooses which sound to play.
+	 * @author E
+	 * @date 18-oct 2012
+
 	 */
 	private class GameSpinnerListener implements OnItemSelectedListener {
 
@@ -406,9 +406,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 
 	}
 	/**
-	 * Private class for listening to the Spinner in settings that chooses which game to play
-	 * @author e
-	 *
+	 * Private class for listening to the Spinner in settings that chooses which game to play.
+	 * @author E
+	 * @date 18-oct 2012
 	 */
 	private class SnoozeSpinnerListener implements OnItemSelectedListener {
 

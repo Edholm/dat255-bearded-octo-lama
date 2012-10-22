@@ -43,6 +43,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * An activity for listing alarms in the database.
+ * @author Emil Edholm
+ * @date 12-oct 2012
+ */
 public class ListAlarmsActivity extends AbstractActivity {
 	private AlarmAdapter adapter;
 	
@@ -97,7 +102,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 	
 		  switch(item.getItemId()) {
 		  	case DELETE_CONTEXT_MENU_ID:
-		  		deleteAlarm(affectedAlarm, info.position);
+		  		deleteAlarm(affectedAlarm);
 		  		break;
 		  	case EDIT_CONTEXT_MENU_ID:
 		  		editAlarm(affectedAlarm);
@@ -107,13 +112,13 @@ public class ListAlarmsActivity extends AbstractActivity {
 		  return true;
 	}
 
-	/** Launches the AddAlarmActivity with the specified alarm used for template/base */
+	/** Launches the AddAlarmActivity with the specified alarm used for template/base. */
 	private void editAlarm(Alarm affectedAlarm) {
 		//TODO: Launch AddAlarmActivity with this alarm as base so the user can edit it.
 	}
 
-	/** Removes the specified alarm from the database and from the adapter backed list containing all alarms */
-	private void deleteAlarm(Alarm affectedAlarm, int rowIndex) {
+	/** Removes the specified alarm from the database and from the adapter backed list containing all alarms. */
+	private void deleteAlarm(Alarm affectedAlarm) {
 		AlarmController.INSTANCE.deleteAlarm(this, affectedAlarm.getId());
 		adapter.remove(affectedAlarm);
 
@@ -132,7 +137,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 		private final LayoutInflater inflater;
 		
 		/**
-		 * @param context the context
+		 * @param context the context.
 		 * @param textViewResourceId id of the layout file for displaying each ListView item.
 		 * @param items a list of all the items to adapt.
 		 * @see AlarmController#getAllAlarms

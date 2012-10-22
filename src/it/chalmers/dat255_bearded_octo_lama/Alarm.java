@@ -35,6 +35,8 @@ import java.util.TreeSet;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -70,7 +72,9 @@ public class Alarm {
 
 		String[] toneID = c.getString(Columns.idOf(Columns.RINGTONE)).split(",");
 		for(String s : toneID){
-			if(s.isEmpty()) continue;
+			if(s.isEmpty()){
+				continue;
+			}
 
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
@@ -121,7 +125,7 @@ public class Alarm {
 		return enabled;
 	}
 
-	/** Retrieve any extra information stored with the alarm */
+	/** Retrieve any extra information stored with the alarm. */
 	public Extras getExtras() {
 		return extras;
 	}
@@ -149,13 +153,28 @@ public class Alarm {
 	/**
 	 * Defines the extra (optional) values of the alarm and a builder for setting them.
 	 */
-	public static class Extras {
+	public static class Extras implements Parcelable {
 		private final boolean       useSound;
 		private final boolean       useVibration;
 		private final List<Integer> ringtoneIDs;
 		private final boolean       gameNotification;  
 		private final String        gameName;
 		private final int 			snoozeInterval;
+		
+		public Extras(Parcel p) {
+			this.useSound            = p.readInt() == 1;
+			this.useVibration        = p.readInt() == 1;
+			
+			int size = p.readInt();
+			ringtoneIDs = new ArrayList<Integer>(size);
+			for (int i = 0; i < size; i++) {
+				ringtoneIDs.add(p.readInt());
+			}
+			
+			this.gameNotification    = p.readInt() == 1;
+			this.gameName            = p.readString();
+			this.snoozeInterval		 = p.readInt();
+		}
 
 		private Extras(Builder b) {
 			this.useSound            = b.useSound;
@@ -262,10 +281,38 @@ public class Alarm {
 				return new Extras(this);
 			}
 		}
+		
+		public static final Parcelable.Creator<Extras> CREATOR
+					= new Parcelable.Creator<Extras>() {
+						public Extras createFromParcel (Parcel p) {
+							return new Extras(p);
+						}
+						public Extras[] newArray(int size) {
+							return new Extras[size];
+						}
+					};
+
+		public int describeContents() {
+			return 0;
+		}
+
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(useSound ? 1 : 0);
+			dest.writeInt(useVibration ? 1 : 0);
+			
+			dest.writeInt(ringtoneIDs.size());
+			for (Integer i : ringtoneIDs) {
+				dest.writeInt(i);
+			}
+			
+			dest.writeInt(gameNotification ? 1 : 0);
+			dest.writeString(gameName);
+			dest.writeInt(snoozeInterval);
+		}
 	}
 
 	/** 
-	 * This class describes the columns for use with a ContentProvider 
+	 * This class describes the columns for use with a ContentProvider. 
 	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
 	 */
 	public static class Columns implements BaseColumns {
@@ -286,19 +333,14 @@ public class Alarm {
 		public static final Tuple<String, String> GAME_NAME              = strCol("GAME_NAME");
 		public static final Tuple<String, String> SNOOZE_INTERVAL        = intCol("SNOOZE_INTERVAL");
 
-		/** The list is sorted alphabetically after the field names */
+		/** The list is sorted alphabetically after the field names. */
 		public static final String[] ALL_COLUMN_NAMES               = getColumnNames();
 		public static final List<Tuple<String, String>> ALL_COLUMNS = getColumns();
 
 
-		/** Retrieves the ID/index of a specified db column */
-		public static<E, T> int idOf(Tuple<String, T> column)
-		{
-			int counter = -1;
-			while(ALL_COLUMN_NAMES[++counter] != column.getLeft() 
-					&& counter < ALL_COLUMN_NAMES.length);
-
-			return counter;
+		/** Retrieves the ID/index of a specified db column. */
+		public static<E, T> int idOf(Tuple<String, T> column) {
+			return ALL_COLUMNS.indexOf(column);
 		}
 		
 		// Shortcut methods used for brevity.
