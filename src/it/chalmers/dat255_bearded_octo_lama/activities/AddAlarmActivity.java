@@ -73,7 +73,6 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private CheckBox vibration, sound, games;
 	private int snoozeInterval;
 	private Button pickSongsBtn;
-	private Intent songPickIntent;
 	private SongButtonClickListener songBtnListener;
 	
 	
