@@ -21,12 +21,12 @@
     <string name="m1">M1</string>
     <string name="title_activity_list_alarms">Alarms</string>
     <string name="snooze">Snooze</string>
-    <string name="snoozeInterval">Snooze interval</string>
+    <string name="snoozeInterval"><u>Snooze interval</u></string>
     <string name="dismiss_alarm">Dismiss alarm</string>
-    <string name="vibration">Vibration</string>
-    <string name="sound">Sound</string>
-    <string name="games">Challenge before dismiss</string>
-    <string name="repeatOnDays">Repeat on days</string>
+    <string name="vibration"><u>Vibration</u></string>
+    <string name="sound"><u>Sound</u></string>
+    <string name="games"><u>Challenge before dismiss</u></string>
+    <string name="repeatOnDays"><u>Repeat on days</u></string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="pick_songs">Select alarmsound...</string>

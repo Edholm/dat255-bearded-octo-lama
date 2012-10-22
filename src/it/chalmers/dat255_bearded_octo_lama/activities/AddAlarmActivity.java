@@ -55,6 +55,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private Button pickSongsBtn;
 	private SongButtonClickListener songBtnListener;
 	private Days days;
+	private SeekBar volumeSlider;
 	
 	
 	
@@ -107,6 +109,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		foodadapter.setDropDownViewResource(R.layout.spinner_layout);
 		spinner.setAdapter(foodadapter);
 		spinner.setOnItemSelectedListener(this);
+		
+		//VolumeSlider for sound notification volume
+		volumeSlider = (SeekBar)findViewById(R.id.volumeSlider);
 		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
@@ -276,7 +281,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
-								.repetitionDays(days);
+								.repetitionDays(days)
+								.volume(volumeSlider.getProgress());
 								
 		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
 		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneIDs(this, ringtones);
@@ -409,6 +415,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.snoozeInterval(snoozeInterval)
 									.addAllRingtoneIDs(RingtoneFinder.findRingtoneIDs(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
 									.repetitionDays(days)
+									.volume(volumeSlider.getProgress())
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);

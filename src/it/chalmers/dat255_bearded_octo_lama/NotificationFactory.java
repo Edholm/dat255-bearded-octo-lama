@@ -51,7 +51,7 @@ public enum NotificationFactory {
 		if(extras.hasSoundNotification()){
 			List<Integer> toneIDs = extras.getRingtoneIDs();
 			List<Ringtone> tones = RingtoneFinder.getRingtonesFromID(act, toneIDs);
-			n = new SoundNotification(n, tones, act);
+			n = new SoundNotification(n, tones, act, extras.getVolume());
 		}
 		if(extras.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);
