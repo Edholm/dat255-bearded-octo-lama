@@ -106,8 +106,8 @@ public class ListAlarmsActivity extends AbstractActivity {
 		  		deleteAlarm(affectedAlarm);
 		  		break;
 		  	case EDIT_CONTEXT_MENU_ID:
-		  		editAlarm(affectedAlarm);
-		  		break;
+				Toast.makeText(getApplicationContext(), "Not implemented yet ", Toast.LENGTH_SHORT).show();
+				break;
 		  }
 		  
 		  return true;
