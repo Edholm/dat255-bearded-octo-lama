@@ -22,6 +22,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 import it.chalmers.dat255_bearded_octo_lama.Alarm;
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Days;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.List;
@@ -159,6 +160,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 	            holder = new AlarmHolder();
 	            holder.clock  = (TextView)row.findViewById(R.id.clockTextView);
 	            holder.enabled = (CheckBox)row.findViewById(R.id.alarmEnabledCheckBox);
+	            holder.daysText = (TextView)row.findViewById(R.id.daysText);
 	            
 	            row.setTag(holder);
 	        } else {
@@ -174,6 +176,10 @@ public class ListAlarmsActivity extends AbstractActivity {
 	        holder.enabled.setTag(alarm);
 	        holder.enabled.setOnClickListener(checkboxClickListener);
 	        
+	        //Add each activated day to the view.
+	        Days days = alarm.getExtras().getRepetitionDays();
+	        holder.daysText.setText(days.toShortStringList());
+	        
 	        return row;
 		}
 		
@@ -183,6 +189,7 @@ public class ListAlarmsActivity extends AbstractActivity {
 		private static class AlarmHolder {
 			private TextView clock;
 			private CheckBox enabled;
+			private TextView daysText;
 		}	
 	}
 }

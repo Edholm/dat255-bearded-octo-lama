@@ -274,6 +274,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
 								.addAllRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+								.repetitionDays(days)
 								.build();
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -400,6 +401,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
 									.addAllRingtoneIDs(RingtoneFinder.findRingtoneID(this, selectedTones))
+									.repetitionDays(days)
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);

@@ -197,6 +197,29 @@ public class Days {
 		sb.delete(sb.length()-2, sb.length()); // Remove last comma.
 		return sb.toString();
 	}
+	
+	/**
+	 * This will return a list with every day in the {@code Days}.
+	 * The weekdays will be written with short annotations.
+	 * Will return {@value "All days"} if all weekdays are represented in {@code Days}.
+	 */
+	public String toShortStringList() {
+		StringBuilder sb = new StringBuilder();
+		
+		if(containsAllDays()) {
+			sb.append("Everyday");
+			return sb.toString();
+		}
+		
+		for(Weekday d : days) {
+			sb.append(d.toShortString());
+			sb.append(", ");
+		}
+		if(sb.length() > 2) {
+			sb.delete(sb.length()-2, sb.length()); // Remove last comma only if there are weekdays represented.
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * Decodes a previously encoded {@code Days} to new instance with the same values 
