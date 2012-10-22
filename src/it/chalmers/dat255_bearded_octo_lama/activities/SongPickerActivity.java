@@ -162,6 +162,7 @@ public class SongPickerActivity extends AbstractActivity {
 			}
 		}
 		
+		//Private inner class to handle preview-listening on songs in the picker.
 		private class SongTextClickListener implements OnClickListener {
 			
 			private final Activity act;
