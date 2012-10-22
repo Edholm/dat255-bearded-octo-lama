@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.res.TypedArray;
-import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -337,6 +336,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		return true;
 	}
 
+	/** Used for filtering out illegal numbers when using the numpad. */
 	private static class TimeFilter implements Filter<Integer> {
 		private int selectedTimeButtonId, h0;
 
