@@ -74,7 +74,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void setClock() {
-		//TODO: Do a cleaner and better version of this.
 		String currentTimeString = new SimpleDateFormat("HH:mm").format(new Date());
 		String currentDateString = DateFormat.getDateInstance().format(new Date());
 		
