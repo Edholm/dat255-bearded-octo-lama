@@ -35,11 +35,15 @@ public abstract class NotificationDecorator implements Notification {
 	public NotificationDecorator(Notification decoratedNotification) {
 		this.decoratedNotification = decoratedNotification;
 	}
-
+	/**
+	 * A call method for activating the notification.
+	 */
 	public void start() {
 		decoratedNotification.start();
 	}
-	
+	/**
+	 * A call method for deactivating the notification.
+	 */
 	public void stop() {
 		decoratedNotification.stop();
 	}

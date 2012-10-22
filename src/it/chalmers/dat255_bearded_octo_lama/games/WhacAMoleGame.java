@@ -51,7 +51,10 @@ public class WhacAMoleGame extends AbstractGameView {
 	private static final int NUMBER_OF_BUTTONS = 3;
 	
 	private List<Integer>  btnsToHit;
-	
+	/**
+	 * Construcor for the WhacAMole game.
+	 * @param context
+	 */
 	public WhacAMoleGame(Context context) {
 		super(context);
 		

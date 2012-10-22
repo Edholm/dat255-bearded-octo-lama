@@ -48,7 +48,7 @@ public enum Weekday {
 		this.isWeekend = isWeekend;
 		this.stringRepresentation = stringRep;
 	}
-
+	
 	public boolean isWeekend() {
 		return isWeekend;
 	}

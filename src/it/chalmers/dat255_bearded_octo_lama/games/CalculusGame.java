@@ -61,7 +61,10 @@ public class CalculusGame extends AbstractGameView {
 	private String exerciseText;
 	private int var1, var2;
 	private EditText answerTextField;
-	
+	/**
+	 * A constructor for the calculus-game
+	 * @param context 
+	 */
 	public CalculusGame(Context context) {
 		super(context);
 		

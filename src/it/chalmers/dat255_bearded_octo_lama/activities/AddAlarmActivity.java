@@ -403,7 +403,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
 									.useVibration(vibration.isChecked())
-									.useSound(sound.isChecked())
+									.useSound((sound.isChecked()))
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
@@ -469,7 +469,11 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 		
 	}
-	
+	/**
+	 * Listener for keeping track of which songs is selected.
+	 * @author Johan Andersson
+	 *
+	 */
 	private class SongButtonClickListener implements OnClickListener {
 		public void onClick(View v) {
 			Intent i = new Intent(getApplicationContext(), SongPickerActivity.class);

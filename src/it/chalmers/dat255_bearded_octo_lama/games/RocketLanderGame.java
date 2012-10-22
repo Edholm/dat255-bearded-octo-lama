@@ -67,7 +67,10 @@ public class RocketLanderGame extends AbstractGameView {
 	private float pressX;
 	
 	private Bitmap rocketBitmap, backgroundBitmap;
-	
+	/**
+	 * Constructor for the RocketLander game.
+	 * @param context
+	 */
 	public RocketLanderGame(Context context) {
 		super(context);
 		

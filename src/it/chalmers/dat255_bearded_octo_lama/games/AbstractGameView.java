@@ -50,7 +50,10 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	private SurfaceHolder surfaceHolder;
 	private AbstractGameView myself;
 	private Handler uiHandler;
-	
+	/**
+	 * Constructor for the AbstractGameView.
+	 * @param context 
+	 */
 	public AbstractGameView(Context context) {
 		super(context);
 		

@@ -262,28 +262,60 @@ public class Alarm {
 			private String              gameName          = "";
 			private Integer				snoozeInterval	  = 1;
 			private Days 				repetitionDays    = new Days();
-
+			/**
+			 * Sets the boolean useSound to value.
+			 * @param value 
+			 * @return the builder.
+			 */
 			public Builder useSound(boolean value)
 				{ useSound = value; 	return this; }
-
+			/**
+			 * Sets the boolean useVibration to value.
+			 * @param value
+			 * @return the builder.
+			 */
 			public Builder useVibration(boolean value)
 				{ useVibration = value; 	return this; }
-
+			/**
+			 * Sets the addRingtoneID to id.
+			 * @param id
+			 * @return the builder.
+			 */
 			public Builder addRingtoneID(Integer id)
 				{ ringtoneIDs.add(id); 	return this; }	
-
+			/**
+			 * Add multiple ids to ringtoneIDs.
+			 * @param ids
+			 * @return the builder.
+			 */
 			public Builder addAllRingtoneIDs(List<Integer> ids)
 				{ ringtoneIDs.addAll(ids); return this; }
-
+			/**
+			 * Sets the boolean gameNotification to value.
+			 * @param value
+			 * @return the builder.
+			 */
 			public Builder gameNotification(boolean value)
 				{ gameNotification = value; 	return this; }
-
+			/**
+			 * Sets the gameName to name
+			 * @param name
+			 * @return the builder.
+			 */
 			public Builder gameName(String name)
 				{ gameName = name; 	return this; }
-
+			/**
+			 * Sets the interval of the snoozetimer
+			 * @param time
+			 * @return the builder.
+			 */
 			public Builder snoozeInterval(Integer time)
 				{ snoozeInterval = time; return this; }
-
+			/**
+			 * Sets which days the alarm should be activated on.
+			 * @param days
+			 * @return the builder.
+			 */
 			public Builder repetitionDays(Days days) 
 				{ repetitionDays = new Days(days); return this; }
 			
