@@ -52,7 +52,7 @@ public class SoundNotification extends NotificationDecorator {
 	private int origVolume;
 	private static boolean isPlaying = false;
 	private final String logString = "SoundNotification";
-	private final double volume;
+	private final double volumeFactor;
 
 	/**
 	 * 
@@ -61,16 +61,16 @@ public class SoundNotification extends NotificationDecorator {
 	 * @param act - Activity.
 	 * @param volume - Volume between 0.0 and 1.0.
 	 */
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act, double volume) {
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act, int volume) {
 		super(decoratedNotification);
 		this.context = act;
 		this.act = act;
 		notificationSounds = ringtones;
 		//To make sure volume falls within range.
-		if(volume < 1.001 && volume > 0){
-			this.volume = volume;
+		if(volume <= 100 && volume >= 0){
+			this.volumeFactor = volume/100.0D;
 		} else {
-			this.volume = 1.0;
+			this.volumeFactor = 1.0;
 		}
 	}
 
@@ -94,12 +94,15 @@ public class SoundNotification extends NotificationDecorator {
 				//If clause if you use a device without sound/default alarm.
 				Uri uri = null;
 				if(selectedSound != null){
-					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);	
+					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);
+					if(uri == null){
+						uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
+					}
 					AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
 					//Saves volume to be able to reset to previous state after playback.
 					origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
 					int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-					int vol = (int) (maxVolume * volume);
+					int vol = (int) (maxVolume * volumeFactor);
 					audio.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
 					mp = new MediaPlayer();
 					try {
@@ -107,7 +110,7 @@ public class SoundNotification extends NotificationDecorator {
 						mp.setDataSource(context, uri);
 						mp.setAudioStreamType(AudioManager.STREAM_ALARM);
 						mp.setLooping(true);
-						mp.setVolume(1f,1.f);
+						mp.setVolume((float)volumeFactor,(float)volumeFactor);
 						mp.prepare();
 						mp.start();
 						isPlaying = true;
