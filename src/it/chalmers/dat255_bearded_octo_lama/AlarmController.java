@@ -58,7 +58,7 @@ public enum AlarmController {
 	}
 	
 	/**
-	 * Adds a new alarm to the database
+	 * Adds a new alarm to the database.
 	 * @param c - the context
 	 * @param enabled - whether or not the alarm should be enabled
 	 * @param time - the time and date the alarm should go off (in milliseconds)
@@ -90,8 +90,8 @@ public enum AlarmController {
 	}
 	
 	/**
-	 * Removes a specific alarm from the database
-	 * @param c the context
+	 * Removes a specific alarm from the database.
+	 * @param c the context.
 	 * @param alarmID the ID of the alarm to remove.
 	 */
 	public void deleteAlarm(Context c, int alarmID) {
@@ -123,8 +123,8 @@ public enum AlarmController {
 	
 	/**
 	 * Returns the alarm with the specified ID.
-	 * @param c the context
-	 * @param alarmID the alarm to fetch
+	 * @param c the context.
+	 * @param alarmID the alarm to fetch.
 	 * @return the alarm with the specified ID if found, else null.
 	 */
 	public Alarm getAlarm(Context c, int alarmID) {
@@ -144,7 +144,7 @@ public enum AlarmController {
 	
 	/**
 	 * Returns all alarms in the database sorted by hour and minute in ascending order.
-	 * @param c the context
+	 * @param c the context.
 	 * @return a list of all alarms in the database.
 	 */
 	public List<Alarm> getAllAlarms(Context c) {
@@ -172,7 +172,7 @@ public enum AlarmController {
 	}
 	
 	/**
-	 * @return given an uri that points to a specific alarm, returns the id of that Alarm
+	 * @return given an uri that points to a specific alarm, returns the id of that Alarm.
 	 */
 	public int extractIDFromUri(Uri uri) {
 		String segment = uri.getPathSegments().get(1);
@@ -181,7 +181,7 @@ public enum AlarmController {
 	
 	/** 
 	 * Activates next alarm in the database if one exists.
-	 * @param c the context
+	 * @param c the context.
 	 */
 	public void renewAlarmQueue(Context c) {		
 		Alarm a = getNextInQueue(c);
@@ -193,9 +193,9 @@ public enum AlarmController {
 		disableAlarmManager(c);
 	}
 	/** 
-	 * Get the next alarm that is enabled and nearest in time to now 
-	 * @param context - the context
-	 * @return returns the alarm enabled and set to neareast in time 
+	 * Get the next alarm that is enabled and nearest in time to now. 
+	 * @param context - the context.
+	 * @return returns the alarm enabled and set to neareast in time. 
 	 *         to {@code now} or {@code null} if no alarms has been 
 	 *         added or some error occurred.
 	 */
@@ -222,7 +222,7 @@ public enum AlarmController {
 		return theAlarm;
 	} 
 	
-	/** Disable all alarms that have expired (time for their alert has passed) */ 
+	/** Disable all alarms that have expired (time for their alert has passed). */ 
 	public void disableExpired(Context c) {
 		ContentResolver cr = c.getContentResolver();
 		long now = System.currentTimeMillis();
@@ -237,7 +237,7 @@ public enum AlarmController {
 		}
 	}
 	
-	/** Enable an alarm in the AlarmManager. Only one alarm should be activated at a time */
+	/** Enable an alarm in the AlarmManager. Only one alarm should be activated at a time. */
 	private void enableAlarmManager(Context c, Alarm a) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
 
@@ -251,7 +251,7 @@ public enum AlarmController {
 		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
 	}
 	
-	/** Disable/cancel the pending intent in the AlarmManager */
+	/** Disable/cancel the pending intent in the AlarmManager. */
 	private void disableAlarmManager(Context c) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 0, new Intent(c, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);

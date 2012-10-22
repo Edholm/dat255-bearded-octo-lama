@@ -15,7 +15,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabhost"
@@ -32,8 +32,8 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="#000000" />
+            android:background="#000000"
+            android:gravity="center" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -53,75 +53,73 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:orientation="vertical" >
-                    
+
                     <Spinner
-	                    android:id="@+id/time_options_spinner"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:layout_gravity="center"
-	                    android:layout_marginTop="15dp"
-	                    android:entries="@array/time_options_array" />
-                    
+                        android:id="@+id/time_options_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:entries="@array/time_options_array" />
+
                     <LinearLayout
-	                    android:id="@+id/timeSelector"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="wrap_content"
-	                    android:layout_gravity="center_horizontal"
-	                    android:layout_marginTop="15dp"
-	                    android:layout_marginLeft="80dp"
-	                    android:layout_marginRight="80dp"
-	                    android:orientation="horizontal" >
-	                    
-	                    <Button
-	                        android:id="@+id/h0"
-	                        android:layout_width="35dp"
-	                        android:layout_height="35dp"
-	                        android:layout_weight="1"
-	                        android:background="@color/green"
-	                        android:onClick="onTimeClick"
-	                        android:tag="@string/h0"
-	                        android:text="0" />
-	
-	                    <Button
-	                        android:id="@+id/h1"
-	                        android:layout_width="35dp"
-	                        android:layout_height="35dp"
-	                        android:layout_weight="1"
-	                        android:background="@color/white"
-	                        android:onClick="onTimeClick"
-	                        android:tag="@string/h1"
-	                        android:text="0" />
-	
-	                    <TextView
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                        android:layout_weight="1"
-	                        android:gravity="center"
-	                        android:text=":"
-	                        android:textAppearance="?android:attr/textAppearanceLarge" />
-	
-	                    <Button
-	                        android:id="@+id/m0"
-	                        android:layout_width="35dp"
-	                        android:layout_height="35dp"
-	                        android:layout_weight="1"
-	                        android:background="@color/white"
-	                        android:onClick="onTimeClick"
-	                        android:tag="@string/m0"
-	                        android:text="0" />
-	
-	                    <Button
-	                        android:id="@+id/m1"
-	                        android:layout_width="35dp"
-	                        android:layout_height="35dp"
-	                        android:layout_weight="1"
-	                        android:background="@color/white"
-	                        android:onClick="onTimeClick"
-	                        android:tag="@string/m1"
-	                        android:text="0" />
-                    
+                        android:id="@+id/timeSelector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="80dp"
+                        android:layout_marginRight="80dp"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal" >
+
+                        <Button
+                            android:id="@+id/h0"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_weight="1"
+                            android:background="@color/green"
+                            android:onClick="onTimeClick"
+                            android:tag="@string/h0"
+                            android:text="0" />
+
+                        <Button
+                            android:id="@+id/h1"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:onClick="onTimeClick"
+                            android:tag="@string/h1"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text=":"
+                            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                        <Button
+                            android:id="@+id/m0"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:onClick="onTimeClick"
+                            android:tag="@string/m0"
+                            android:text="0" />
+
+                        <Button
+                            android:id="@+id/m1"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:onClick="onTimeClick"
+                            android:tag="@string/m1"
+                            android:text="0" />
                     </LinearLayout>
-                    
                 </LinearLayout>
 
                 <LinearLayout
@@ -154,7 +152,6 @@
                             style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="3" />
-                        
                     </LinearLayout>
 
                     <LinearLayout
@@ -218,97 +215,96 @@
                             style="@style/KeypadButtonStyle"
                             android:onClick="onNumpadClick"
                             android:text="0" />
-                        
                     </LinearLayout>
-                    
                 </LinearLayout>
-				
+
                 <Button
                     android:id="@+id/buttonAddTest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="addTestAlarm"
                     android:text="Add test alarm (in 5 sec)" />
-                
             </LinearLayout>
-            
+
             <LinearLayout
                 android:id="@+id/tab2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" 
+                android:orientation="vertical"
                 android:padding="5dip" >
-				
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sound"
-                    android:textColor="#000000"
-                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
-                    android:shadowRadius="2"/>
-                
+                    android:shadowRadius="2"
+                    android:text="@string/sound"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
                 <CheckBox
                     android:id="@+id/sound"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="@string/enabled"/>
+                    android:text="@string/enabled" />
 
-                <Spinner
-                    android:id="@+id/sound_list_spinner"
+                <Button
+                    android:id="@+id/sound_list_btn"
+                    style="@style/DefaultButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_layout"
+                    android:text="@string/pick_songs" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left" />
-                
-                <TextView 
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/vibration"
-                    android:textColor="#000000"
-                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
-                    android:shadowRadius="2"/>
-                       
+                    android:shadowRadius="2"
+                    android:text="@string/vibration"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
                 <CheckBox
                     android:id="@+id/vibration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="@string/enabled" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/snoozeInterval"
-                    android:textColor="#000000"
-                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
-                    android:shadowRadius="2"/>
-                
+                    android:shadowRadius="2"
+                    android:text="@string/snoozeInterval"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
                 <Spinner
                     android:id="@+id/snooze_list_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"/>
-                
-                <TextView 
+                    android:layout_gravity="left" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/games"
-                    android:textColor="#000000"
-                    android:textSize="18dp"
                     android:shadowColor="@color/grey"
                     android:shadowDx="1"
                     android:shadowDy="1"
-                    android:shadowRadius="2"/>
-                
+                    android:shadowRadius="2"
+                    android:text="@string/games"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
                 <CheckBox
                     android:id="@+id/games"
                     android:layout_width="match_parent"
@@ -320,11 +316,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left" />
-                
             </LinearLayout>
-
         </FrameLayout>
-        
     </LinearLayout>
 
 </TabHost>

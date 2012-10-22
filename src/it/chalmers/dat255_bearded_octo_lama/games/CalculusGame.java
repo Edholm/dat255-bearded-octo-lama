@@ -37,19 +37,29 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 @Game(name = "Calculus")
+/**
+ * This game will present the user with 2 random between 1 and 100 which the user
+ * must then add together. If the answer is correct the game will end.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 public class CalculusGame extends AbstractGameView {
-	
 	//Set all background color attributes.
-	private static final int ALPHA = 255;
-	private static final int RED   = 51;
-	private static final int GREEN = 204;
-	private static final int BLUE  = 255;
+	private static final int ALPHA 			= 255;
+	private static final int RED   			= 51;
+	private static final int GREEN 			= 204;
+	private static final int BLUE 			= 255;
 	
-	private static final int MAX_NUMBER = 100;
+	//Set max number the two variables can be.
+	private static final int MAX_NUMBER 	= 100;
+	
+	//Set user interface constants
+	private static final int TEXTSIZE 		= 40;
+	private static final int WIDTH_SCALING 	= 2;
+	private static final int HEIGHT_SCALING = 5;
 	
 	private String exerciseText;
 	private int var1, var2;
-	private int textSize;
 	private EditText answerTextField;
 	
 	public CalculusGame(Context context) {
@@ -78,7 +88,8 @@ public class CalculusGame extends AbstractGameView {
 		//Initiate the UI components.
 		RelativeLayout uiHolder = new RelativeLayout(getContext());
 		uiHolder.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-		uiHolder.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		uiHolder.setLayoutParams(new RelativeLayout.LayoutParams
+				(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		
 		//Add the text field that will take the users answer.
 		answerTextField = new EditText(getContext());
@@ -87,42 +98,10 @@ public class CalculusGame extends AbstractGameView {
 		answerTextField.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
 		answerTextField.setInputType(InputType.TYPE_CLASS_NUMBER);
 		
-		//Adding a custom TextWatcher to handle the input as we want it to.
-		answerTextField.addTextChangedListener(new TextWatcher() {
-			
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				//Make sure not to try and parse an empty string.
-				if(s.length() > 0) {
-					int givenAnswer = 0;
-					
-					try {
-						givenAnswer = Integer.parseInt(s.toString());
-					} catch (NumberFormatException e) {
-						Toast.makeText(getContext(), "An invalid character has been forced into the text box, clearing the text box",
-								Toast.LENGTH_LONG).show();
-						answerTextField.setText("");
-						e.printStackTrace();
-					}
-					
-					//End game if the given answer is correct, else do nothing.
-					if(givenAnswer == var1 + var2) {
-						endGame();
-					}
-				}
-			}
-			
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				//Do nothing.
-			}
-			
-			public void afterTextChanged(Editable s) {
-				//Do nothing.
-			}
-		});
+		//Adding a custom CalculusTextWatcher to handle the input as we want it to.
+		answerTextField.addTextChangedListener(new CalculusTextWatcher());
 		
-		textSize = 40;
-		getPainter().setTextSize(textSize);
+		getPainter().setTextSize(TEXTSIZE);
 		getPainter().setTextAlign(Align.CENTER);
 		
 		uiHolder.addView(answerTextField);
@@ -132,12 +111,9 @@ public class CalculusGame extends AbstractGameView {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		
-		//Scale the width and height of the text field if the user view size is changed.
-		int xScaling = 2;
-		int yScaling = 5;
-		answerTextField.setWidth(w/xScaling);
-		answerTextField.setHeight(h/yScaling);
+		//Scale the UI
+		answerTextField.setWidth(w/WIDTH_SCALING);
+		answerTextField.setHeight(h/HEIGHT_SCALING);
 	}
 
 	@Override
@@ -152,7 +128,47 @@ public class CalculusGame extends AbstractGameView {
 		c.drawARGB(ALPHA, RED, GREEN, BLUE);
 		
 		//Draw text.
-		c.drawText(exerciseText, getWidth()/2, textSize*2, getPainter());
+		c.drawText(exerciseText, getWidth()/2, TEXTSIZE*2, getPainter());
+	}
+	
+	/**
+	 * This inner class implements functions as custom {@code TextWatcher} for handling
+	 * all text/number inputs in the Calculus game.
+	 * @author Johan Gustafsson
+	 * @date 22 okt 2012
+	 */
+	private class CalculusTextWatcher implements TextWatcher {
+		
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			//Make sure not to try and parse an empty string.
+			if(s.length() > 0) {
+				int givenAnswer = 0;
+				
+				try {
+					givenAnswer = Integer.parseInt(s.toString());
+				} catch (NumberFormatException e) {
+					String errorMsg = "An invalid character has been forced into " +
+							"the text box, clearing the text box";
+					Toast.makeText(getContext(), errorMsg,
+							Toast.LENGTH_LONG).show();
+					answerTextField.setText("");
+				}
+				
+				//End game if the given answer is correct, else do nothing.
+				if(givenAnswer == var1 + var2) {
+					endGame();
+				}
+			}
+		}
+		
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			//Do nothing.
+		}
+		
+		public void afterTextChanged(Editable s) {
+			//Do nothing.
+		}
 	}
 
 }

@@ -4,9 +4,14 @@ import it.chalmers.dat255_bearded_octo_lama.activities.AddAlarmActivity;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
+
+/**
+ * This will test the AddAlarmActivity by using robotium.
+ * @author Emil Johansson
+ * @date 22 okt 2012
+ */
 public class TestAddAlarmActivity extends
 		ActivityInstrumentationTestCase2<AddAlarmActivity> {
-
 	private Solo solo;
 	
 	public TestAddAlarmActivity() {
@@ -21,14 +26,14 @@ public class TestAddAlarmActivity extends
 	public void testAddAlarm(){
 		solo.assertCurrentActivity("Check on activity", AddAlarmActivity.class);
 		solo.sleep(250);		
-		solo.clickOnScreen(90, 400);
-		solo.clickOnScreen(90, 500);
-		solo.clickOnScreen(350, 400);
-		solo.clickOnScreen(90, 500);
+		solo.clickOnText("1");
+		solo.clickOnText("2");
+		solo.clickOnText("3");
+		solo.clickOnText("4");
 		solo.sendKey(Solo.MENU);
 		solo.sleep(250);
 		solo.sendKey(Solo.MENU);
-		solo.clickOnScreen(240, 790);
+		solo.clickOnText("Add test");
 		solo.sleep(7000);
 		solo.clickOnButton("Dismiss alarm");
 		solo.sleep(250);

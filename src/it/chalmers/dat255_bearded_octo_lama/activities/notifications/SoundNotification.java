@@ -51,6 +51,7 @@ public class SoundNotification extends NotificationDecorator {
 	private MediaPlayer mp = null;
 	private int origVolume;
 	private static boolean isPlaying = false;
+	private final String logString = "SoundNotification";
 
 	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
 		super(decoratedNotification);
@@ -71,7 +72,7 @@ public class SoundNotification extends NotificationDecorator {
 				if(!notificationSounds.isEmpty()){
 					selectedSound = notificationSounds.get(0);
 				} else {
-					Log.d("SoundNotification", "notificationSounds is empty");
+					Log.d(logString, "notificationSounds is empty");
 					// Use default sound if no sounds listed previously.
 					selectedSound = RingtoneManager.getRingtone(context.getApplicationContext(), 
 							Settings.System.DEFAULT_ALARM_ALERT_URI);
@@ -96,17 +97,13 @@ public class SoundNotification extends NotificationDecorator {
 						mp.start();
 						isPlaying = true;
 					} catch (IllegalArgumentException e) {
-						Log.e("SoundNotification", "IllegalArgumentException");
-						e.printStackTrace();
+						Log.e(logString, "IllegalArgumentException");
 					} catch (SecurityException e) {
-						Log.e("SoundNotification", "SecurityException");
-						e.printStackTrace();
+						Log.e(logString, "SecurityException");
 					} catch (IllegalStateException e) {
-						Log.e("SoundNotification", "IllegalStateException");
-						e.printStackTrace();
+						Log.e(logString, "IllegalStateException");
 					} catch (IOException e) {
-						Log.e("SoundNotification", "IOException");
-						e.printStackTrace();
+						Log.e(logString, "IOException");
 					}
 				}
 			}

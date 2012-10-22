@@ -8,6 +8,11 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.test.AndroidTestCase;
 
+/**
+ * This will test the Alarm class.
+ * @author Emil Edholm
+ * @date 22 okt 2012
+ */
 public class TestAlarm extends AndroidTestCase {
 	
 	private final int hour = 10, minute = 11;
@@ -23,7 +28,6 @@ public class TestAlarm extends AndroidTestCase {
 	public final void setUp() {
 		// We need to test that the cursor adds the correct information to the correct place.
 		// First, some mock-data.
-		
 		this.cursor = constructMockupCursor();
 	}
 	

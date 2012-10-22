@@ -43,6 +43,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+/**
+ * An activity for changing view when an alarm is activated.
+ * Also starts a gameview if alarm has games enabled.
+ * @author Johan Gustafsson
+ */
 public class NotificationActivity extends AbstractActivity {
 
 	private Notification n;

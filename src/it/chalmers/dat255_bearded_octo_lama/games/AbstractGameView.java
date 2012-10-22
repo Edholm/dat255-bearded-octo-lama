@@ -35,11 +35,17 @@ import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
+/**
+ * This is a abstract game implementation that holds all abstract logic for
+ * running games. This includes the game thread, graphics and communication with UI thread.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	private Thread t;
 	private Paint painter;
 	private List<View> uiList;
-	private Context context;
+	private final Context context;
 	private boolean gameIsActive;
 	private SurfaceHolder surfaceHolder;
 	private AbstractGameView myself;
@@ -90,7 +96,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 	 * Set the size of the surface view to match the parent.
 	 */
 	private void setSurfaceSize() {
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+								LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	    setLayoutParams(params);
 	}
 	

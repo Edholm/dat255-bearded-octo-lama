@@ -17,18 +17,26 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package it.chalmers.dat255_bearded_octo_lama.utilities;
+package it.chalmers.dat255_bearded_octo_lama;
+
+import java.util.List;
 
 /**
- * Generic filter interface.
+ * Used for passing ringtones between activities safely.
  * @author Emil Edholm
- * @date 28 sep 2012
+ * @date 22 okt 2012
+ * @see {@link http://developer.android.com/guide/faq/framework.html#3}
  */
-public interface Filter<T> {
-	/**
-	 * The filter method.
-	 * @param object the object to check.
-	 * @return true if the position is accepted, else false.
-	 */
-	public boolean accept(T object);
+public enum RingtoneStorage {
+	INSTANCE;
+	
+	private List<String> selectedRingtones;
+	
+	public void setSelectedRingtones(List<String> selectedRingtones) {
+		this.selectedRingtones = selectedRingtones;
+	}
+	
+	public List<String> getSelectedRingtones() {
+		return selectedRingtones;
+	}
 }

@@ -9,9 +9,13 @@ import android.widget.EditText;
 
 import com.jayway.android.robotium.solo.Solo;
 
+/**
+ * This will test the CalculusGame by using robotium.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 public class TestCalculusGame extends
 			ActivityInstrumentationTestCase2<MainActivity> {
-	
 	private Solo solo;
 	
 	public TestCalculusGame() {

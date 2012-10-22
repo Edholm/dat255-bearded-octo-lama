@@ -8,9 +8,13 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
 
+/**
+ * This will test the NotificationActivity by using robotium.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 public class TestNotificationActivity extends
 				ActivityInstrumentationTestCase2<MainActivity>{
-	
 	private Solo solo;
 	
 	public TestNotificationActivity() {

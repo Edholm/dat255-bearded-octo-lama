@@ -28,6 +28,7 @@
     <string name="games">Challenge before dismiss</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="pick_songs">Ringtones</string>
     
     <string name="contextMenuDelete">Delete</string>
     <string name="contextMenuEdit">Edit</string>

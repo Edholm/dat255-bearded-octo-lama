@@ -21,7 +21,11 @@
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 
-
+/**
+ * An interface for Notifications.
+ * @author Johan Andersson
+ * @date 12-oct 2012
+ */
 public interface Notification {
 	/**
 	 * Action to be performed upon notification activation.

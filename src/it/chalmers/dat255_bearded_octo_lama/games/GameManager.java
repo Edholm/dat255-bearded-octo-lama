@@ -35,7 +35,8 @@ import android.content.Context;
  * @author Emil Edholm, Johan Gustafsson
  * @date 14 okt 2012
  */ 
-public final class GameManager {
+public enum GameManager {
+	;
 	private static Map<String, Class<?>> gameCache = null;
 	
 	/**

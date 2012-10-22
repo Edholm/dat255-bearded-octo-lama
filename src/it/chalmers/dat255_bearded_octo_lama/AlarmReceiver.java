@@ -26,6 +26,12 @@ import android.content.Intent;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+/**
+ * A class that receivs an alarm, and forwards it to NotificationActivity.
+ * @author Johan Gustafsson
+ * @modified by Emil Edholm
+ * @date 10-oct 2012
+ */
 public class AlarmReceiver extends BroadcastReceiver {
 
 	@Override
@@ -49,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 			ac.disableExpired(context);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.e("AlarmReciver", "Exception");
 		}		 
     }
 }
