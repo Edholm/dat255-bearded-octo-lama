@@ -30,22 +30,38 @@ public final class Tuple<E, T> {
 	private final E left;
 	private final T right;
 	
-	
 	private Tuple(E left, T right) {
 		this.left = left;
 		this.right = right;
 	}
 	
+	/**
+	 * Constructs a new tuple with specified values
+	 * @param left - the value of the left container
+	 * @param right - the value of the right container
+	 * @return a tuple that contains the values provided.
+	 */
 	public static <E, T> Tuple<E, T> valueOf(E left, T right) {
 		return new Tuple<E, T>(left, right);
 	}
 	
+	/**
+	 * Construct a copy of the provided tuple.
+	 * @param other - the tuple to copy.
+	 * @return a new instance but with the same values as {@code other}.
+	 */
 	public static <E, T> Tuple<E, T> valueOf(Tuple<E, T> other) {
 		return valueOf(other.left, other.right);
 	}
 	
+	/**
+	 * @return the value stored in the left container
+	 */
 	public E getLeft() { return left; }
 	
+	/**
+	 * @return the value stored in the right container
+	 */
 	public T getRight() { return right; }
 
 	@Override
