@@ -29,6 +29,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -84,7 +85,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 						t.join();
 					}
 					catch(InterruptedException e) {
-						e.printStackTrace();
+						Log.e(this.getClass().getName(), "Caught interruptedException." 
+													+ "/nError Message:/n" + e.getMessage());
 					}
 					break;
 				}
@@ -153,7 +155,8 @@ public abstract class AbstractGameView extends SurfaceView implements Runnable {
 				t.join();
 			}
 			catch(InterruptedException e) {
-				e.printStackTrace();
+				Log.e(this.getClass().getName(), "Caught interruptedException." 
+						+ "/nError Message:/n" + e.getMessage());
 			}
 			break;
 		}

@@ -28,7 +28,7 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
  */
 public abstract class NotificationDecorator implements Notification {
 
-	protected final Notification decoratedNotification;
+	private final Notification decoratedNotification;
 	/**
 	 * @param decoratedNotification is the notification that should be decorated
 	 */

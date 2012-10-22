@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Manages and searches for games.
@@ -103,7 +104,7 @@ public enum GameManager {
 		try {
 			game = (AbstractGameView)type.getConstructor(Context.class).newInstance(c);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e("GameManager", "Caught Exception." + "/nError Message:/n" + e.getMessage());
 			return null;
 		}
 		

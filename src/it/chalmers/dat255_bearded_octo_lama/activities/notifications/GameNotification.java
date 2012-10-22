@@ -37,8 +37,6 @@ import android.widget.RelativeLayout;
  * @date 22 okt 2012
  */
 public class GameNotification extends NotificationDecorator {
-	private RelativeLayout mainContentHolder;
-	private LinearLayout dismissAlarmLayout;
 	private final Activity act;
 	private final String gameName;
 	
@@ -60,6 +58,9 @@ public class GameNotification extends NotificationDecorator {
 		
 		AbstractGameView gameView = GameManager.createGame(gameName, act);
 		
+		RelativeLayout mainContentHolder;
+		LinearLayout dismissAlarmLayout;
+		
 		mainContentHolder = (RelativeLayout) act.findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) act.findViewById(R.id.dismissAlarmLayout);
 
@@ -77,9 +78,5 @@ public class GameNotification extends NotificationDecorator {
 		} 
 		gameView.resume();
 	}
-
-	@Override
-	public void stop() {
-		super.stop();
-	}
+	
 }

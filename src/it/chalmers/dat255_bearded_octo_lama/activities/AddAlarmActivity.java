@@ -78,8 +78,6 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private String choosenGame;
 	private CheckBox vibration, sound, games;
 	private int snoozeInterval;
-	private Button pickSongsBtn;
-	private SongButtonClickListener songBtnListener;
 	private Days days;
 	private SeekBar volumeSlider;
 	
@@ -163,10 +161,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		
 	}
 	private void initButtons() {
-		pickSongsBtn = (Button) findViewById(R.id.sound_list_btn);
+		Button pickSongsBtn = (Button) findViewById(R.id.sound_list_btn);
 
-		songBtnListener = new SongButtonClickListener();
-		pickSongsBtn.setOnClickListener(songBtnListener);
+		pickSongsBtn.setOnClickListener(new SongButtonClickListener());
 	}
 
 
