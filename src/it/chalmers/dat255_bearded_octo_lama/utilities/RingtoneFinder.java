@@ -28,7 +28,6 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * Class giving utilities to handle Ringtones on the device.
@@ -38,23 +37,20 @@ public enum RingtoneFinder {;
 
 	/**	
 	 * Provides a list of the devices possible ringtones (including alarm and notification sounds).
+	 * WARNING - much IO-activity involved and time demanding method.
 	 * @param currentActivity - Current activity to carry out resource gathering.
 	 * @return - list of ringtones.
 	 */
 	public static List<Ringtone> getRingtones(Activity currentActivity){	
-		//TODO: Cleaner implementation with activity
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Set<Ringtone> tones = new HashSet<Ringtone>();
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-		double t0 = System.currentTimeMillis();
 		while(!c.isAfterLast()){
-			//Adding all tones since it's a set doublets doesn't unimportant.
+			//Adding all tones since it's a set doublets doesn't matter.
 			tones.add(rm.getRingtone(c.getPosition()));				
 			c.moveToNext();
 		}
-		double t1 = (System.currentTimeMillis() - t0)/1000.0;
-		Log.d("RingtoneFinder", "Time taken: "+t1);
 		return new ArrayList<Ringtone>(tones);
 	}
 
@@ -64,13 +60,10 @@ public enum RingtoneFinder {;
 	 * @return - list of ringtones.
 	 */
 	public static List<String> getRingtonesTitle(Activity currentActivity){	
-		//TODO: Cleaner implementation with activity
 		RingtoneManager rm = new RingtoneManager(currentActivity);
-
 		List<String> titles = new ArrayList<String>();
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-		double t0 = System.currentTimeMillis();
 		String title = "";
 		while(!c.isAfterLast()){
 			title = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
@@ -80,8 +73,6 @@ public enum RingtoneFinder {;
 			c.moveToNext();
 			
 		}
-		double t1 = (System.currentTimeMillis() - t0)/1000.0;
-		Log.d("RingtoneFinder", "Time taken for StringURIMap: "+t1);
 		return titles;
 	}
 
@@ -96,14 +87,13 @@ public enum RingtoneFinder {;
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
-
-		Ringtone current;
+		String targetTitle = tone.getTitle(currentActivity);
+		String currentTitle = "";
 		while(!c.isAfterLast()){
-			current = rm.getRingtone(c.getPosition());
-			Log.d("RingtoneFinder", current.getTitle(currentActivity) + " " + tone.getTitle(currentActivity));
-			if(current.getTitle(currentActivity).equals(
-					(tone).getTitle(currentActivity))){
-				return rm.getRingtoneUri(c.getPosition());
+			currentTitle = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
+			if(currentTitle.equals(targetTitle)){
+				//Uses Uri.parse() to make an URI from the string.
+				return Uri.parse(c.getString(RingtoneManager.URI_COLUMN_INDEX));
 			}
 			c.moveToNext();
 		}
@@ -111,21 +101,23 @@ public enum RingtoneFinder {;
 	}
 
 	/**
-	 * Takes a ringtone and returns it's URI.
+	 * Takes a list of ringtone titles and returns a list of their IDs
 	 * @param currentActivity - Activity to carry out the resource gathering.
-	 * @param tone - Ringtone to find ID of.
-	 * @return ID - ID of ringtone if found, otherwise -1.
+	 * @param titles - List of ringtone titles.
+	 * @return ids - List of IDs of ringtones if found, otherwise empty list.
 	 */
-	public static List<Integer> findRingtoneID(Activity currentActivity, List<String> titles){
+	public static List<Integer> findRingtoneIDs(Activity currentActivity, List<String> titles){
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
+		//To handle if a user input a null list.
 		if(titles == null){
 			return ids;
 		}
 
 		while(!c.isAfterLast()){
+			//Check if current cursor row is one of the titles looked after, if so added.
 			if(titles.contains(c.getString(RingtoneManager.TITLE_COLUMN_INDEX))){
 				ids.add(c.getInt(RingtoneManager.ID_COLUMN_INDEX));
 			}
@@ -140,14 +132,14 @@ public enum RingtoneFinder {;
 	 * @param IDs - List of IDs to locate songs from.
 	 * @return - List of Ringtones. 
 	 */
-	public static List<Ringtone> getRingtonesFromID(Activity currentActivity, List<Integer> IDs){
+	public static List<Ringtone> getRingtonesFromID(Activity currentActivity, List<Integer> Ids){
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		List<Ringtone> tones = new ArrayList<Ringtone>();
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		while(!c.isAfterLast()){
-			//If ID matches, add to list
-			if(IDs.contains(c.getInt(RingtoneManager.ID_COLUMN_INDEX))){
+			//If ID matches search list, add to list
+			if(Ids.contains(c.getInt(RingtoneManager.ID_COLUMN_INDEX))){
 				tones.add(rm.getRingtone(c.getPosition()));
 			}
 			c.moveToNext();
