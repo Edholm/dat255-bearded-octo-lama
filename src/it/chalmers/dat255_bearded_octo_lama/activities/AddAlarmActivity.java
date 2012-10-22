@@ -114,6 +114,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 
 
 	private void initSettings() {
+		//Add checkboxes for which days the alarm should repeat.
 		days = new Days();
 		OnCheckedChangeListener checkBoxListener = new RepeatCheckBoxListener();
 		
