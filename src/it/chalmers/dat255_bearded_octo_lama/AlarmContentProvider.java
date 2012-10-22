@@ -153,7 +153,7 @@ public final class AlarmContentProvider extends ContentProvider{
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
         long rowId = db.insert(TABLE_NAME, "", values);
-        if (rowId > 0) {
+        if (rowId >= 0) {
             Uri rowUri = ContentUris.withAppendedId(Alarm.Columns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(rowUri, null);
             return rowUri;
