@@ -43,6 +43,9 @@ import android.net.Uri;
 public enum AlarmController {
 	INSTANCE;
 	
+	/** The request code to send with the intents */
+	private static final int REQUEST_CODE = 1337;
+	
 	/**
 	 * Add a new alarm to the database.
 	 * @param c the context
@@ -77,6 +80,17 @@ public enum AlarmController {
 		renewAlarmQueue(c);
 		return uri;
 	}
+	
+	private Alarm updateAlarmTime(Context c, int alarmID, long newTime) {
+		ContentResolver cr = c.getContentResolver();
+		ContentValues values = new ContentValues(1);
+		values.put(Alarm.Columns.TIME.getLeft(), newTime);
+		
+		Uri alarmUri = Alarm.Columns.CONTENT_URI.buildUpon().appendPath(alarmID + "").build();
+		cr.update(alarmUri, values, null, null);
+		
+		return getAlarm(c, alarmID);
+	}
 
 	private ContentValues constructContentValues(Calendar cal, boolean enabled, Alarm.Extras extras) {
 		ContentValues values = new ContentValues(extras.toContentValues());
@@ -101,6 +115,9 @@ public enum AlarmController {
 		renewAlarmQueue(c);
 	}
 	
+	/**
+	 * Toggles the enabled state of the specified alarm
+	 */
 	public void toggleAlarm(Context c, int alarmID) {
 		ContentResolver cr = c.getContentResolver();
 		Alarm alarm = getAlarm(c, alarmID);
@@ -188,6 +205,7 @@ public enum AlarmController {
 		
 		if(a != null) {
 			enableAlarmManager(c, a);
+			return;
 		}
 		
 		disableAlarmManager(c);
@@ -205,10 +223,16 @@ public enum AlarmController {
 		
 		long minTime = Long.MAX_VALUE, now = System.currentTimeMillis();
 		Alarm theAlarm = null;
+		int daysLeft = -1;
 		for(Alarm a : alarms) {
+			daysLeft = a.getExtras().getRepetitionDays().daysLeft();
 			
-			// If alarm time has passed, disable alarm.
-			if(a.getTimeInMS() < now) {
+			if(daysLeft >= 0) {
+				// Repeating alarm, therefore update time.
+				Long ms = Time.timeInMsAt(a.getHour(), a.getMinute(), daysLeft);
+				a = updateAlarmTime(context, a.getId(), ms);
+			} else if(a.getTimeInMS() < now) {
+				// If alarm time has passed, disable alarm.
 				toggleAlarm(context, a.getId());
 				continue;
 			}
@@ -245,8 +269,8 @@ public enum AlarmController {
 		Intent intent = new Intent(c, AlarmReceiver.class);
 		intent.putExtra(Alarm.Columns._ID, a.getId());
 		
-		int zeroSeparatedNumber = 1337;
-		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, zeroSeparatedNumber, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, REQUEST_CODE, 
+				intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		am.set(AlarmManager.RTC_WAKEUP, a.getTimeInMS(), alarmIntent);
 	}
@@ -254,7 +278,8 @@ public enum AlarmController {
 	/** Disable/cancel the pending intent in the AlarmManager */
 	private void disableAlarmManager(Context c) {
 		AlarmManager am = (AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, 0, new Intent(c, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(c, REQUEST_CODE, 
+				new Intent(c, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
 	
 		am.cancel(alarmIntent);
 	}
