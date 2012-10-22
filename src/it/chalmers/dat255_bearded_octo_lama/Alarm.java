@@ -70,7 +70,8 @@ public class Alarm {
 		                      .gameNotification(c.getInt(Columns.idOf(Columns.GAME_NOTIFICATION)) == 1)
 		                      .gameName(c.getString(Columns.idOf(Columns.GAME_NAME)))
 		                      .snoozeInterval(c.getInt(Columns.idOf(Columns.SNOOZE_INTERVAL)))
-		                      .repetitionDays(Days.decode(c.getInt(Columns.idOf(Columns.REPETITION_DAYS))));
+		                      .repetitionDays(Days.decode(c.getInt(Columns.idOf(Columns.REPETITION_DAYS))))
+		                      .volume(c.getDouble(Columns.idOf(Columns.VOLUME)));
 
 		String[] toneID = c.getString(Columns.idOf(Columns.RINGTONE)).split(",");
 		for(String s : toneID){
@@ -163,6 +164,7 @@ public class Alarm {
 		private final String        gameName;
 		private final int 			snoozeInterval;
 		private final Days          repetitionDays;
+		private final double		volume;
 		
 		public Extras(Parcel p) {
 			this.useSound            = p.readInt() == 1;
@@ -178,6 +180,7 @@ public class Alarm {
 			this.gameName            = p.readString();
 			this.snoozeInterval		 = p.readInt();
 			this.repetitionDays      = Days.decode(p.readInt());
+			this.volume				 = p.readDouble();
 		}
 
 		private Extras(Builder b) {
@@ -188,6 +191,7 @@ public class Alarm {
 			this.gameName         = b.gameName;
 			this.snoozeInterval	  = b.snoozeInterval;
 			this.repetitionDays   = b.repetitionDays;
+			this.volume			  = b.volume;
 		}
 
 		@Override
@@ -249,6 +253,9 @@ public class Alarm {
 		/** @return the number of minutes the alarm will sleep/snooze */
 		public int getSnoozeInterval(){ return snoozeInterval; }
 		
+		/** @return volume-factor of the alarm. */
+		public double getVolume(){ return volume; }
+		
 		/** Returns a immutable copy of the repetition days */
 		public Days getRepetitionDays() { return new Days(repetitionDays); }
 
@@ -262,6 +269,7 @@ public class Alarm {
 			private String              gameName          = "";
 			private Integer				snoozeInterval	  = 1;
 			private Days 				repetitionDays    = new Days();
+			private double				volume	          = 1.0;
 
 			public Builder useSound(boolean value)
 				{ useSound = value; 	return this; }
@@ -284,6 +292,10 @@ public class Alarm {
 			public Builder snoozeInterval(Integer time)
 				{ snoozeInterval = time; return this; }
 
+			public Builder volume(double value)
+			{ volume = value; return this; }
+
+			
 			public Builder repetitionDays(Days days) 
 				{ repetitionDays = new Days(days); return this; }
 			
@@ -344,6 +356,7 @@ public class Alarm {
 		public static final Tuple<String, String> GAME_NAME              = strCol("GAME_NAME");
 		public static final Tuple<String, String> SNOOZE_INTERVAL        = intCol("SNOOZE_INTERVAL");
 		public static final Tuple<String, String> REPETITION_DAYS        = intCol("REPETITION_DAYS");
+		public static final Tuple<String, String> VOLUME		         = Tuple.valueOf("VOLUME", "REAL");
 
 		/** The list is sorted alphabetically after the field names. */
 		public static final String[] ALL_COLUMN_NAMES               = getColumnNames();

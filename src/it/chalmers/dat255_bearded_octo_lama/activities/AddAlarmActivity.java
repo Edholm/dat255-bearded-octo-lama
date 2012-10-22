@@ -55,6 +55,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private Button pickSongsBtn;
 	private SongButtonClickListener songBtnListener;
 	private Days days;
+	private SeekBar volumeSlider;
 	
 	
 	
@@ -276,7 +278,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
 								.snoozeInterval(snoozeInterval)
-								.repetitionDays(days);
+								.repetitionDays(days)
+								.volume(vol);
 								
 		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
 		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneIDs(this, ringtones);

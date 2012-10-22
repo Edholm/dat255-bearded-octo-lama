@@ -52,12 +52,26 @@ public class SoundNotification extends NotificationDecorator {
 	private int origVolume;
 	private static boolean isPlaying = false;
 	private final String logString = "SoundNotification";
+	private final double volume;
 
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
+	/**
+	 * 
+	 * @param decoratedNotification - Notification to be decorated.
+	 * @param ringtones - List of ringtones to pick from.
+	 * @param act - Activity.
+	 * @param volume - Volume between 0.0 and 1.0.
+	 */
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act, double volume) {
 		super(decoratedNotification);
 		this.context = act;
 		this.act = act;
 		notificationSounds = ringtones;
+		//To make sure volume falls within range.
+		if(volume < 1.001 && volume > 0){
+			this.volume = volume;
+		} else {
+			this.volume = 1.0;
+		}
 	}
 
 	@Override
@@ -82,10 +96,11 @@ public class SoundNotification extends NotificationDecorator {
 				if(selectedSound != null){
 					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);	
 					AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
-					//Saves volume to reset to previous state.
+					//Saves volume to be able to reset to previous state after playback.
 					origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
 					int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-					audio.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+					int vol = (int) (maxVolume * volume);
+					audio.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
 					mp = new MediaPlayer();
 					try {
 						mp.reset();
@@ -98,12 +113,16 @@ public class SoundNotification extends NotificationDecorator {
 						isPlaying = true;
 					} catch (IllegalArgumentException e) {
 						Log.e(logString, "IllegalArgumentException");
+						returnVolume();
 					} catch (SecurityException e) {
 						Log.e(logString, "SecurityException");
+						returnVolume();
 					} catch (IllegalStateException e) {
 						Log.e(logString, "IllegalStateException");
+						returnVolume();
 					} catch (IOException e) {
 						Log.e(logString, "IOException");
+						returnVolume();
 					}
 				}
 			}
@@ -114,12 +133,16 @@ public class SoundNotification extends NotificationDecorator {
 	@Override
 	public void stop() {
 		super.stop();
-		//Gets the audiomanager and return volume to system original
-		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
-		.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, 0);
+		returnVolume();
 		if(mp != null && mp.isPlaying()){
 			mp.stop();
 			isPlaying = false;
 		}
+	}
+	
+	private void returnVolume(){
+		//Gets the audiomanager and return volume to system original
+		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
+			.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, 0);
 	}
 }
