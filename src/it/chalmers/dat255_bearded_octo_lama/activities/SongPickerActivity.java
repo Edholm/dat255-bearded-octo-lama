@@ -21,13 +21,13 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import it.chalmers.dat255_bearded_octo_lama.AlarmController;
 import it.chalmers.dat255_bearded_octo_lama.R;
+import it.chalmers.dat255_bearded_octo_lama.RingtoneStorage;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,20 +42,25 @@ import android.widget.TextView;
 public class SongPickerActivity extends AbstractActivity {
 
 
-	private RingtoneAdapter adapter;
-	private Intent intent;
+	private RingtoneAdapter    adapter;
+	private final List<String> selectedTitles = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_alarms);
-		intent = getIntent();
+		
 		List<String> allTones = RingtoneFinder.getRingtonesTitle(this);
-		adapter = new RingtoneAdapter(this, R.layout.row_ringtone, allTones, intent);
+		adapter = new RingtoneAdapter(this, R.layout.row_ringtone, allTones, selectedTitles);
 
 		ListView lv = (ListView)findViewById(R.id.listView);
 		lv.setAdapter(adapter);
-		registerForContextMenu(lv);
+	}
+	
+	@Override
+	public void onBackPressed() { 
+		RingtoneStorage.INSTANCE.setSelectedRingtones(selectedTitles);
+		super.onBackPressed();
 	}
 
 
@@ -67,12 +72,10 @@ public class SongPickerActivity extends AbstractActivity {
 	 */
 	private static class RingtoneAdapter extends ArrayAdapter<String> {
 
-		private final List<String>    titles;
-		private final List<String> selectedTitles = new ArrayList<String>();
+		private final List<String>   selectedTitles;
 		private final int            viewID;
 		private final LayoutInflater inflater;
 		private SongCheckboxListener listener;
-		private final Intent intent;
 		
 		/**
 		 * @param context the context
@@ -80,13 +83,13 @@ public class SongPickerActivity extends AbstractActivity {
 		 * @param items a list of all the items to adapt.
 		 * @see AlarmController#getAllAlarms
 		 */
-		public RingtoneAdapter(Context context, int textViewResourceId, List<String> titles, Intent intent) {
-			super(context, textViewResourceId, titles);
+		public RingtoneAdapter(Context context, int textViewResourceId, 
+				List<String> allTones, List<String> selectedTitles) {
+			super(context, textViewResourceId, allTones);
 
-			this.viewID  = textViewResourceId;
-			this.titles   = titles;
-			this.inflater = LayoutInflater.from(context);
-			this.intent = intent;
+			this.viewID         = textViewResourceId;
+			this.selectedTitles = selectedTitles;
+			this.inflater       = LayoutInflater.from(context);
 		}
 
 		@Override
@@ -106,15 +109,14 @@ public class SongPickerActivity extends AbstractActivity {
 				holder = (RingtoneHolder)row.getTag();
 			}
 
-			String title = titles.get(position);
+			String title = this.getItem(position);
 			holder.title.setText(title);
 			holder.enabled.setChecked(false);
 
 			// Make the checkbox change listenable.
 			holder.enabled.setTag(title);
-			listener = new SongCheckboxListener(holder.enabled, selectedTitles, intent);
+			listener = new SongCheckboxListener(holder.enabled, selectedTitles);
 			holder.enabled.setOnClickListener(listener);
-
 			
 			return row;
 		}
@@ -130,34 +132,24 @@ public class SongPickerActivity extends AbstractActivity {
 		private class SongCheckboxListener implements OnClickListener {
 			private final List<String> selectedTitles;
 			private final CheckBox checkbox;
-			private final Intent intent;
 			
-			public SongCheckboxListener(CheckBox checkbox, List<String> selectedTitles, Intent intent){
+			public SongCheckboxListener(CheckBox checkbox, List<String> selectedTitles){
 				this.checkbox = checkbox;
-				this.selectedTitles = selectedTitles;
-				this.intent = intent;
+				this.selectedTitles = selectedTitles;;
 			}
 			
 			public void onClick(View v) {
 				String title = (String)v.getTag();
+				if(title == null){
+					Log.d("SongPickerActivity", "title is null");
+					return;
+				}
+				
 				if(checkbox.isChecked()){
-					if(title == null){
-						Log.d("SongPickerActivity", "title is null");
-					}
 					selectedTitles.add(title);
-				} else if(!checkbox.isChecked()){
+				} else {
 					selectedTitles.remove(title);
 				}
-				if(intent == null){
-					Log.d("SongPickerActivity", "intent is null");
-				} else if(selectedTitles == null){
-					Log.d("SongPickerActivity", "selectedtitles is null");
-				}
-				if(selectedTitles.isEmpty()){
-					Log.d("SongPickerActivity", "Empty list");
-				}
-				intent.putStringArrayListExtra("pickedSongs", new ArrayList<String>(selectedTitles));
-				
 			}
 		}
 	}

@@ -25,6 +25,7 @@ import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.R.array;
 import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
+import it.chalmers.dat255_bearded_octo_lama.RingtoneStorage;
 import it.chalmers.dat255_bearded_octo_lama.games.GameManager;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
@@ -32,12 +33,12 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -245,15 +246,19 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		}
 		AlarmController ac = AlarmController.INSTANCE;
 		// Defines the options for the alarm.
-		Alarm.Extras extras = new Alarm.Extras.Builder()
+		Alarm.Extras.Builder builder = new Alarm.Extras.Builder()
 								.useVibration(vibration.isChecked())
 								.useSound(sound.isChecked())
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
-								.snoozeInterval(snoozeInterval)
-								.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, songBtnListener.getIntent().getStringArrayListExtra("pickedSongs")))
-								.build();
-		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, extras);
+								.snoozeInterval(snoozeInterval);
+		
+		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
+		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneID(this, ringtones);
+		
+		builder.addRingtoneIDs(parsedRingtones);
+				
+		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, builder.build());
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
 
 		Toast.makeText(getApplicationContext(), "Alarm added at " + hour + ":" + minute + ". Time left: " + Time.getTimeLeft(a.getTimeInMS()), Toast.LENGTH_SHORT).show();
@@ -369,12 +374,6 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, countdown);
 		
-		if(songBtnListener.getIntent() == null){
-			Log.d("AddAlarmActivity", "pickedSongsIntent is null");
-		}
-		if(songBtnListener.getIntent().getStringArrayListExtra("pickedSongs") == null){
-			Log.d("AddAlarmActivity", "pickedSongs is null");
-		}
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
 									.useVibration(vibration.isChecked())
@@ -382,7 +381,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, songBtnListener.getIntent().getStringArrayListExtra("pickedSongs")))
+									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -424,22 +423,10 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	}
 	
 	private class SongButtonClickListener implements OnClickListener {
-		
-		private Intent intent;
-		
 		public void onClick(View v) {
-			intent = new Intent(getBaseContext(), SongPickerActivity.class);
-			startActivity(intent);
-		}
-		
-		public Intent getIntent() {
-			return intent;
+			Intent i = new Intent(getApplicationContext(), SongPickerActivity.class);
+			startActivity(i);
 		}
 		
 	}
-	
-	
-	
-	
-	
 }
