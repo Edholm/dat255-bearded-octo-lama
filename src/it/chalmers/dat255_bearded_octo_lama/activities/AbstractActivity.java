@@ -25,7 +25,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-
+/**
+ * An abstract class for activities.
+ * @author Johan Gustafsson
+ *
+ */
 public abstract class AbstractActivity extends Activity {
 	
 	@Override

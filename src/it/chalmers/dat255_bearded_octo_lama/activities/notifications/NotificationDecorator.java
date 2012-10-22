@@ -21,7 +21,11 @@
 package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
 
 
-
+/**
+ * An abstract class for decorating Notifications.
+ * @author Johan Andersson
+ * @date 13-oct 2012
+ */
 public abstract class NotificationDecorator implements Notification {
 
 	protected final Notification decoratedNotification;

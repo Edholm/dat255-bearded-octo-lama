@@ -30,7 +30,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.util.Log;
-
+/**
+ * A factory for building Notifications.
+ * @author Johan Andersson
+ * @date 10 oct 2012
+ *
+ */
 public enum NotificationFactory {
 	;
 	public static Notification create(Alarm.Extras extras, Activity act){
@@ -41,7 +46,7 @@ public enum NotificationFactory {
 			List<Integer> toneIDs = extras.getRingtoneIDs();
 			Log.d("NotificationFactory", toneIDs.toString());
 			n = new SoundNotification(n, 
-					RingtoneFinder.getRingtonesFromIDs(act, toneIDs), act);
+					RingtoneFinder.getRingtonesFromID(act, toneIDs), act);
 		}
 		if(extras.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);

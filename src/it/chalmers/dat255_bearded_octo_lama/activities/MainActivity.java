@@ -34,7 +34,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+/**
+ * The applications main activity, i.e. the starting screen.
+ * @author Johan Gustafsson
+ *
+ */
 public class MainActivity extends Activity {
 	private TextView currentTimeView, currentDateView;
 	private Button listAlarmsBtn, newAlaramBtn;

@@ -72,7 +72,9 @@ public class Alarm {
 
 		String[] toneID = c.getString(Columns.idOf(Columns.RINGTONE)).split(",");
 		for(String s : toneID){
-			if(s.isEmpty()) continue;
+			if(s.isEmpty()){
+				continue;
+			}
 
 			//Put try-catch inside of loop if an ID in the middle would fail
 			//I would still like rest of IDs to be parsed.
@@ -123,7 +125,7 @@ public class Alarm {
 		return enabled;
 	}
 
-	/** Retrieve any extra information stored with the alarm */
+	/** Retrieve any extra information stored with the alarm. */
 	public Extras getExtras() {
 		return extras;
 	}
@@ -310,7 +312,7 @@ public class Alarm {
 	}
 
 	/** 
-	 * This class describes the columns for use with a ContentProvider 
+	 * This class describes the columns for use with a ContentProvider. 
 	 * @see http://www.androidcompetencycenter.com/2009/01/basics-of-android-part-iv-android-content-providers/
 	 */
 	public static class Columns implements BaseColumns {
@@ -331,12 +333,12 @@ public class Alarm {
 		public static final Tuple<String, String> GAME_NAME              = strCol("GAME_NAME");
 		public static final Tuple<String, String> SNOOZE_INTERVAL        = intCol("SNOOZE_INTERVAL");
 
-		/** The list is sorted alphabetically after the field names */
+		/** The list is sorted alphabetically after the field names. */
 		public static final String[] ALL_COLUMN_NAMES               = getColumnNames();
 		public static final List<Tuple<String, String>> ALL_COLUMNS = getColumns();
 
 
-		/** Retrieves the ID/index of a specified db column */
+		/** Retrieves the ID/index of a specified db column. */
 		public static<E, T> int idOf(Tuple<String, T> column) {
 			return ALL_COLUMNS.indexOf(column);
 		}

@@ -34,11 +34,11 @@ import android.util.Log;
  * Class giving utilities to handle Ringtones on the device.
  * 
  */
-public class RingtoneFinder {
+public enum RingtoneFinder {;
 
-	/**	Provides a list of the devices possible ringtones (including alarm and notification sounds)
-	 * 
-	 * @param currentActivity - Current activity to carry out resource gathering
+	/**	
+	 * Provides a list of the devices possible ringtones (including alarm and notification sounds).
+	 * @param currentActivity - Current activity to carry out resource gathering.
 	 * @return - list of ringtones.
 	 */
 	public static List<Ringtone> getRingtones(Activity currentActivity){	
@@ -58,9 +58,9 @@ public class RingtoneFinder {
 		return new ArrayList<Ringtone>(tones);
 	}
 
-	/**	Provides a list of the devices possible ringtones (including alarm and notification sounds)
-	 * 
-	 * @param currentActivity - Current activity to carry out resource gathering
+	/**	
+	 * Provides a list of the devices possible ringtones (including alarm and notification sounds).
+	 * @param currentActivity - Current activity to carry out resource gathering.
 	 * @return - list of ringtones.
 	 */
 	public static List<String> getRingtonesTitle(Activity currentActivity){	
@@ -74,9 +74,11 @@ public class RingtoneFinder {
 		String title = "";
 		while(!c.isAfterLast()){
 			title = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-			if(!titles.contains(title))
+			if(!titles.contains(title)){
 				titles.add(title);
+			}
 			c.moveToNext();
+			
 		}
 		double t1 = (System.currentTimeMillis() - t0)/1000.0;
 		Log.d("RingtoneFinder", "Time taken for StringURIMap: "+t1);
@@ -131,11 +133,11 @@ public class RingtoneFinder {
 
 	/**
 	 * 
-	 * @param currentActivity 
+	 * @param currentActivity.
 	 * @param IDs - List of IDs to locate songs from.
-	 * @return - List of Ringtones 
+	 * @return - List of Ringtones. 
 	 */
-	public static List<Ringtone> getRingtonesFromIDs(Activity currentActivity, List<Integer> IDs){
+	public static List<Ringtone> getRingtonesFromID(Activity currentActivity, List<Integer> IDs){
 		RingtoneManager rm = new RingtoneManager(currentActivity);
 		List<Ringtone> tones = new ArrayList<Ringtone>();
 		Cursor c = rm.getCursor();
