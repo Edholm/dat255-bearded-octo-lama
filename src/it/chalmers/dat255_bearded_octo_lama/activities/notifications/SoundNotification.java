@@ -91,44 +91,53 @@ public class SoundNotification extends NotificationDecorator {
 					selectedSound = RingtoneManager.getRingtone(context.getApplicationContext(), 
 							Settings.System.DEFAULT_ALARM_ALERT_URI);
 				}
-				//If clause if you use a device without sound/default alarm.
+				
 				Uri uri = null;
+				//If clause if you use a device without sound/default alarm.
 				if(selectedSound != null){
 					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);
 					if(uri == null){
 						uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
 					}
-					AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
-					//Saves volume to be able to reset to previous state after playback.
-					origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
-					int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-					int vol = (int) (maxVolume * volumeFactor);
-					audio.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
-					mp = new MediaPlayer();
-					try {
-						mp.reset();
-						mp.setDataSource(context, uri);
-						mp.setAudioStreamType(AudioManager.STREAM_ALARM);
-						mp.setLooping(true);
-						mp.setVolume((float)volumeFactor,(float)volumeFactor);
-						mp.prepare();
-						mp.start();
-						isPlaying = true;
-					} catch (IllegalArgumentException e) {
-						Log.e(logString, "IllegalArgumentException");
-						returnVolume();
-					} catch (SecurityException e) {
-						Log.e(logString, "SecurityException");
-						returnVolume();
-					} catch (IllegalStateException e) {
-						Log.e(logString, "IllegalStateException");
-						returnVolume();
-					} catch (IOException e) {
-						Log.e(logString, "IOException");
-						returnVolume();
-					}
+				playTone(uri);
 				}
 			}
+		}
+	}
+	
+	private void playTone(Uri uri){
+		AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
+		//Saves volume to be able to reset to previous state after playback.
+		origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
+		int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+		int vol = (int) ((maxVolume * volumeFactor) + 0.5);
+		//Overrides system volume to make sure our alarm plays 
+		//(if user put phone on silent mode etc)
+		audio.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
+		
+		//Creates a MediaPlayer and sets approperiate settings for playback.
+		mp = new MediaPlayer();
+		try {
+			mp.reset();
+			mp.setDataSource(context, uri);
+			mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+			mp.setLooping(true);
+			mp.setVolume(1f,1f);
+			mp.prepare();
+			mp.start();
+			isPlaying = true;
+		} catch (IllegalArgumentException e) {
+			Log.e(logString, "IllegalArgumentException");
+			returnVolume();
+		} catch (SecurityException e) {
+			Log.e(logString, "SecurityException");
+			returnVolume();
+		} catch (IllegalStateException e) {
+			Log.e(logString, "IllegalStateException");
+			returnVolume();
+		} catch (IOException e) {
+			Log.e(logString, "IOException");
+			returnVolume();
 		}
 	}
 
