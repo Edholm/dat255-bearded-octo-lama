@@ -81,9 +81,9 @@ public class SoundNotification extends NotificationDecorator {
 		if(!(Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))){
 			//If clause to make sure a second sound loop doesn't start
 			if(!isPlaying){
-				//Using random song of those listed.
-				Collections.shuffle(notificationSounds);
 				if(!notificationSounds.isEmpty()){
+					//Using random song of those listed.
+					Collections.shuffle(notificationSounds);
 					selectedSound = notificationSounds.get(0);
 				} else {
 					Log.d(logString, "notificationSounds is empty");
