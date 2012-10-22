@@ -19,6 +19,7 @@
  */
 package it.chalmers.dat255_bearded_octo_lama;
 
+import it.chalmers.dat255_bearded_octo_lama.utilities.Days;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Tuple;
 
 import java.lang.reflect.Field;
@@ -64,11 +65,13 @@ public class Alarm {
 		this.timeInMS = c.getLong(Columns.idOf(Columns.TIME));
 		this.enabled  = c.getInt(Columns.idOf(Columns.ENABLED)) == 1;
 		Extras.Builder b = new Extras.Builder()
-		.useSound(c.getInt(Columns.idOf(Columns.SOUND_NOTIFICATION)) == 1)
-		.useVibration(c.getInt(Columns.idOf(Columns.VIBRATION_NOTIFICATION)) == 1)
-		.gameNotification(c.getInt(Columns.idOf(Columns.GAME_NOTIFICATION)) == 1)
-		.gameName(c.getString(Columns.idOf(Columns.GAME_NAME)))
-		.snoozeInterval(c.getInt(Columns.idOf(Columns.SNOOZE_INTERVAL)));
+		                      .useSound(c.getInt(Columns.idOf(Columns.SOUND_NOTIFICATION)) == 1)
+		                      .useVibration(c.getInt(Columns.idOf(Columns.VIBRATION_NOTIFICATION)) == 1)
+		                      .gameNotification(c.getInt(Columns.idOf(Columns.GAME_NOTIFICATION)) == 1)
+		                      .gameName(c.getString(Columns.idOf(Columns.GAME_NAME)))
+		                      .snoozeInterval(c.getInt(Columns.idOf(Columns.SNOOZE_INTERVAL)))
+		                      .repetitionDays(Days.decode(c.getInt(Columns.idOf(Columns.REPETITION_DAYS))))
+		                      .volume(c.getInt(Columns.idOf(Columns.VOLUME)));
 
 		String[] toneID = c.getString(Columns.idOf(Columns.RINGTONE)).split(",");
 		for(String s : toneID){
@@ -139,7 +142,6 @@ public class Alarm {
 				"\n\tIs enabled: " + enabled + 
 				"\n\t" + extras.toString() + 
 				"\n}";
-		//TODO update
 	}
 
 	/**
@@ -160,6 +162,8 @@ public class Alarm {
 		private final boolean       gameNotification;  
 		private final String        gameName;
 		private final int 			snoozeInterval;
+		private final Days          repetitionDays;
+		private final int   		volume;
 		
 		public Extras(Parcel p) {
 			this.useSound            = p.readInt() == 1;
@@ -174,15 +178,19 @@ public class Alarm {
 			this.gameNotification    = p.readInt() == 1;
 			this.gameName            = p.readString();
 			this.snoozeInterval		 = p.readInt();
+			this.repetitionDays      = Days.decode(p.readInt());
+			this.volume				 = p.readInt();
 		}
 
 		private Extras(Builder b) {
-			this.useSound            = b.useSound;
-			this.useVibration        = b.useVibration;
-			this.ringtoneIDs         = b.ringtoneIDs;
-			this.gameNotification    = b.gameNotification;
-			this.gameName            = b.gameName;
-			this.snoozeInterval		 = b.snoozeInterval;
+			this.useSound         = b.useSound;
+			this.useVibration     = b.useVibration;
+			this.ringtoneIDs      = b.ringtoneIDs;
+			this.gameNotification = b.gameNotification;
+			this.gameName         = b.gameName;
+			this.snoozeInterval	  = b.snoozeInterval;
+			this.repetitionDays   = b.repetitionDays;
+			this.volume			  = b.volume;
 		}
 
 		@Override
@@ -193,6 +201,8 @@ public class Alarm {
 					"\n\tGame notification: " + gameNotification +
 					"\n\tGame name: " + gameName +
 					"\n\tSnooze Interval: " + snoozeInterval +
+					"\n\t" + repetitionDays.toString() +
+					"\n\tVolume: " + volume + 
 					"\n}";
 		}
 
@@ -202,11 +212,13 @@ public class Alarm {
 		public ContentValues toContentValues() {
 			ContentValues values = new ContentValues();
 
-			values.put(Alarm.Columns.SOUND_NOTIFICATION.getLeft(), useSound ? 1 : 0);
-			values.put(Alarm.Columns.VIBRATION_NOTIFICATION.getLeft(), useVibration ? 1 : 0);
-			values.put(Alarm.Columns.GAME_NOTIFICATION.getLeft(), gameNotification ? 1 : 0);
-			values.put(Alarm.Columns.GAME_NAME.getLeft(), gameName);
-			values.put(Alarm.Columns.SNOOZE_INTERVAL.getLeft(), snoozeInterval);
+			values.put(Columns.SOUND_NOTIFICATION.getLeft(), useSound ? 1 : 0);
+			values.put(Columns.VIBRATION_NOTIFICATION.getLeft(), useVibration ? 1 : 0);
+			values.put(Columns.GAME_NOTIFICATION.getLeft(), gameNotification ? 1 : 0);
+			values.put(Columns.GAME_NAME.getLeft(), gameName);
+			values.put(Columns.SNOOZE_INTERVAL.getLeft(), snoozeInterval);
+			values.put(Columns.REPETITION_DAYS.getLeft(), repetitionDays.encode());
+			values.put(Columns.VOLUME.getLeft(), volume);
 
 			String s = "";
 			for(Integer i : ringtoneIDs){
@@ -241,42 +253,88 @@ public class Alarm {
 
 		/** @return the number of minutes the alarm will sleep/snooze */
 		public int getSnoozeInterval(){ return snoozeInterval; }
+		
+		/** @return volume-factor of the alarm. */
+		public int getVolume(){ return volume; }
+		
+		/** Returns a immutable copy of the repetition days */
+		public Days getRepetitionDays() { return new Days(repetitionDays); }
 
 		/** Uses the builder pattern to create Alarm extras. */
 		public static class Builder {
 			// The optional fields set to their default value.
-			private boolean             useSound            = true;
-			private boolean             useVibration        = true;
-			private final List<Integer> ringtoneIDs         = new ArrayList<Integer>();
-			private boolean             gameNotification    = false;
-			private String              gameName            = "";
-			private Integer				snoozeInterval		= 1;
-
+			private boolean             useSound          = true;
+			private boolean             useVibration      = true;
+			private final List<Integer> ringtoneIDs       = new ArrayList<Integer>();
+			private boolean             gameNotification  = false;
+			private String              gameName          = "";
+			private Integer				snoozeInterval	  = 1;
+			private Days 				repetitionDays    = new Days();
+			private int					volume			  = 100;
+			/**
+			 * Sets the boolean useSound to value.
+			 * @param value 
+			 * @return the builder.
+			 */
 			public Builder useSound(boolean value)
-			{ useSound = value; 	return this; }
-
+				{ useSound = value; 	return this; }
+			/**
+			 * Sets the boolean useVibration to value.
+			 * @param value
+			 * @return the builder.
+			 */
 			public Builder useVibration(boolean value)
-			{ useVibration = value; 	return this; }
-
+				{ useVibration = value; 	return this; }
+			/**
+			 * Sets the addRingtoneID to id.
+			 * @param id
+			 * @return the builder.
+			 */
 			public Builder addRingtoneID(Integer id)
-			{ ringtoneIDs.add(id); 	return this; }
-
-			public Builder addRingtoneIDs(List<Integer> id){ 
-				for(Integer i:id){
-					ringtoneIDs.add(i);
-				}	
-				return this; 
-			}
-
+				{ ringtoneIDs.add(id); 	return this; }	
+			/**
+			 * Add multiple ids to ringtoneIDs.
+			 * @param ids
+			 * @return the builder.
+			 */
+			public Builder addAllRingtoneIDs(List<Integer> ids)
+				{ ringtoneIDs.addAll(ids); return this; }
+			/**
+			 * Sets the boolean gameNotification to value.
+			 * @param value
+			 * @return the builder.
+			 */
 			public Builder gameNotification(boolean value)
-			{ gameNotification = value; 	return this; }
-
+				{ gameNotification = value; 	return this; }
+			/**
+			 * Sets the gameName to name
+			 * @param name
+			 * @return the builder.
+			 */
 			public Builder gameName(String name)
-			{ gameName = name; 	return this; }
-
+				{ gameName = name; 	return this; }
+			/**
+			 * Sets the interval of the snoozetimer
+			 * @param time
+			 * @return the builder.
+			 */
 			public Builder snoozeInterval(Integer time)
-			{ snoozeInterval = time; return this; }
-
+				{ snoozeInterval = time; return this; }
+			/**
+			 * Sets which days the alarm should be activated on.
+			 * @param days
+			 * @return the builder.
+			 */
+			public Builder repetitionDays(Days days) 
+				{ repetitionDays = new Days(days); return this; }
+			/**
+			 * Sets the volume.
+			 * @param value
+			 * @return the builder
+			 */
+			public Builder volume(int value)
+				{ volume = value; return this; }
+			
 			public Extras build() {
 				return new Extras(this);
 			}
@@ -308,6 +366,7 @@ public class Alarm {
 			dest.writeInt(gameNotification ? 1 : 0);
 			dest.writeString(gameName);
 			dest.writeInt(snoozeInterval);
+			dest.writeInt(repetitionDays.encode());
 		}
 	}
 
@@ -332,11 +391,14 @@ public class Alarm {
 		public static final Tuple<String, String> GAME_NOTIFICATION      = intCol("GAME_NOTIFICATION");
 		public static final Tuple<String, String> GAME_NAME              = strCol("GAME_NAME");
 		public static final Tuple<String, String> SNOOZE_INTERVAL        = intCol("SNOOZE_INTERVAL");
+		public static final Tuple<String, String> REPETITION_DAYS        = intCol("REPETITION_DAYS");
+		public static final Tuple<String, String> VOLUME		         = intCol("VOLUME");
 
 		/** The list is sorted alphabetically after the field names. */
 		public static final String[] ALL_COLUMN_NAMES               = getColumnNames();
 		public static final List<Tuple<String, String>> ALL_COLUMNS = getColumns();
 
+		
 
 		/** Retrieves the ID/index of a specified db column. */
 		public static<E, T> int idOf(Tuple<String, T> column) {

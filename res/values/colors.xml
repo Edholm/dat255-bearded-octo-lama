@@ -11,4 +11,5 @@
     <color name="blue">#41A9FF</color>
     <color name="medium_blue">#008BFF</color>
     <color name="dark_blue">#005BA7</color>
+    <color name="light_grey">#C2C2C2</color>
 </resources>

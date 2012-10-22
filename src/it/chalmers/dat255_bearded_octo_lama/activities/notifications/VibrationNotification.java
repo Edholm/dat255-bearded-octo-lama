@@ -36,7 +36,7 @@ public class VibrationNotification extends NotificationDecorator {
 	private final int repeat = 0;
 	
 	/**
-	 * @param decoratedNotification is an Alarm that is decorated with different notifications
+	 * @param decoratedNotification is a notification that is decorated with different notifications
 	 * @param c is the Context
 	 */
 	public VibrationNotification(Notification decoratedNotification, Context c) {

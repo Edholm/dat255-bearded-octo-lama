@@ -1,6 +1,27 @@
+/**
+ * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
+ *
+ * This file is part of dat255-bearded-octo-lama
+ *
+ *  dat255-bearded-octo-lama is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  dat255-bearded-octo-lama is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package it.chalmers.dat255_bearded_octo_lama.test.robotium;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.AddAlarmActivity;
+import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -30,13 +51,15 @@ public class TestAddAlarmActivity extends
 		solo.clickOnText("2");
 		solo.clickOnText("3");
 		solo.clickOnText("4");
-		solo.sendKey(Solo.MENU);
-		solo.sleep(250);
-		solo.sendKey(Solo.MENU);
-		solo.clickOnText("Add test");
-		solo.sleep(7000);
-		solo.clickOnButton("Dismiss alarm");
-		solo.sleep(250);
+		// Check that the device android version is Honeycomb or higher to use ActionBar API.
+	    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+	        solo.clickOnView(solo.getView(R.id.menu_add));
+	    }
+	    else {
+			solo.sendKey(Solo.MENU);
+			solo.sleep(250);
+			solo.clickOnText("Add alarm");
+	    }
 	}
 	public void testSettings(){
 		solo.assertCurrentActivity("Check on activity", AddAlarmActivity.class);
@@ -47,9 +70,13 @@ public class TestAddAlarmActivity extends
 		solo.sleep(250);
 		solo.clickOnCheckBox(2);
 		solo.sleep(250);
-		solo.clickOnCheckBox(1);
-		solo.pressSpinnerItem(1, 3);
+		solo.clickOnCheckBox(2);
 		solo.sleep(250);
-		solo.pressSpinnerItem(2, 2);
+		solo.clickOnCheckBox(1);
+		solo.sleep(250);
+		solo.clickOnCheckBox(0);
+		solo.pressSpinnerItem(0, 3);
+		solo.sleep(250);
+		solo.pressSpinnerItem(1, 2);
 	}
 }

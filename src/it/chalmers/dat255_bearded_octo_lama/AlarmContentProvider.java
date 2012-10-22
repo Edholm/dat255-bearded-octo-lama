@@ -37,6 +37,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Handles the contact with the database.
@@ -102,8 +103,8 @@ public final class AlarmContentProvider extends ContentProvider{
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        	// Should probably add a debug message here. "Upgrading from oldVersion to newVersion" or some such...
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        	Log.d("AlarmContentProvider", "Updating database from " + oldVersion + " to " + newVersion);
+        	db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
     }
@@ -138,7 +139,6 @@ public final class AlarmContentProvider extends ContentProvider{
         
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         c.setNotificationUri(getContext().getContentResolver(), uri);
-        // TODO: Handle failure from the query. (c == null)
 
         return c;
 	}
@@ -153,7 +153,7 @@ public final class AlarmContentProvider extends ContentProvider{
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
         long rowId = db.insert(TABLE_NAME, "", values);
-        if (rowId > 0) {
+        if (rowId >= 0) {
             Uri rowUri = ContentUris.withAppendedId(Alarm.Columns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(rowUri, null);
             return rowUri;

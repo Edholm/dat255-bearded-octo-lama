@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!-- 
  * Copyright (C) 2012 Emil Edholm, Emil Johansson, Johan Andersson, Johan Gustafsson
  *
@@ -19,11 +18,24 @@
  *  along with dat255-bearded-octo-lama.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<ListView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/listView"
+    android:id="@+id/repeatLinear"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-</ListView>
+    android:layout_height="wrap_content"
+    android:layout_weight="1" 
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+    
+    <TextView
+        android:id="@+id/repeatTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"/>
+    
+    <CheckBox
+        android:id="@+id/repeatCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
+</LinearLayout>

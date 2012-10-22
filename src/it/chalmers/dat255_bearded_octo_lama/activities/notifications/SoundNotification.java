@@ -52,12 +52,26 @@ public class SoundNotification extends NotificationDecorator {
 	private int origVolume;
 	private static boolean isPlaying = false;
 	private final String logString = "SoundNotification";
+	private final double volumeFactor;
 
-	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act) {
+	/**
+	 * 
+	 * @param decoratedNotification - Notification to be decorated.
+	 * @param ringtones - List of ringtones to pick from.
+	 * @param act - Activity.
+	 * @param volume - Volume between 0.0 and 1.0.
+	 */
+	public SoundNotification(Notification decoratedNotification, List<Ringtone> ringtones, Activity act, int volume) {
 		super(decoratedNotification);
 		this.context = act;
 		this.act = act;
 		notificationSounds = ringtones;
+		//To make sure volume falls within range.
+		if(volume <= 100 && volume >= 0){
+			this.volumeFactor = volume/100.0D;
+		} else {
+			this.volumeFactor = 1.0;
+		}
 	}
 
 	@Override
@@ -67,9 +81,9 @@ public class SoundNotification extends NotificationDecorator {
 		if(!(Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))){
 			//If clause to make sure a second sound loop doesn't start
 			if(!isPlaying){
-				//Using random song of those listed.
-				Collections.shuffle(notificationSounds);
 				if(!notificationSounds.isEmpty()){
+					//Using random song of those listed.
+					Collections.shuffle(notificationSounds);
 					selectedSound = notificationSounds.get(0);
 				} else {
 					Log.d(logString, "notificationSounds is empty");
@@ -77,36 +91,53 @@ public class SoundNotification extends NotificationDecorator {
 					selectedSound = RingtoneManager.getRingtone(context.getApplicationContext(), 
 							Settings.System.DEFAULT_ALARM_ALERT_URI);
 				}
-				//If clause if you use a device without sound/default alarm.
+				
 				Uri uri = null;
+				//If clause if you use a device without sound/default alarm.
 				if(selectedSound != null){
-					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);	
-					AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
-					//Saves volume to reset to previous state.
-					origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
-					int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-					audio.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-					mp = new MediaPlayer();
-					try {
-						mp.reset();
-						mp.setDataSource(context, uri);
-						mp.setAudioStreamType(AudioManager.STREAM_ALARM);
-						mp.setLooping(true);
-						mp.setVolume(1f,1.f);
-						mp.prepare();
-						mp.start();
-						isPlaying = true;
-					} catch (IllegalArgumentException e) {
-						Log.e(logString, "IllegalArgumentException");
-					} catch (SecurityException e) {
-						Log.e(logString, "SecurityException");
-					} catch (IllegalStateException e) {
-						Log.e(logString, "IllegalStateException");
-					} catch (IOException e) {
-						Log.e(logString, "IOException");
+					uri = RingtoneFinder.findRingtoneUri(act, selectedSound);
+					if(uri == null){
+						uri = Settings.System.DEFAULT_ALARM_ALERT_URI;
 					}
+				playTone(uri);
 				}
 			}
+		}
+	}
+	
+	private void playTone(Uri uri){
+		AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
+		//Saves volume to be able to reset to previous state after playback.
+		origVolume = audio.getStreamVolume(AudioManager.STREAM_ALARM);
+		int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+		int vol = (int) ((maxVolume * volumeFactor) + 0.5);
+		//Overrides system volume to make sure our alarm plays 
+		//(if user put phone on silent mode etc)
+		audio.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
+		
+		//Creates a MediaPlayer and sets approperiate settings for playback.
+		mp = new MediaPlayer();
+		try {
+			mp.reset();
+			mp.setDataSource(context, uri);
+			mp.setAudioStreamType(AudioManager.STREAM_ALARM);
+			mp.setLooping(true);
+			mp.setVolume(1f,1f);
+			mp.prepare();
+			mp.start();
+			isPlaying = true;
+		} catch (IllegalArgumentException e) {
+			Log.e(logString, "IllegalArgumentException");
+			returnVolume();
+		} catch (SecurityException e) {
+			Log.e(logString, "SecurityException");
+			returnVolume();
+		} catch (IllegalStateException e) {
+			Log.e(logString, "IllegalStateException");
+			returnVolume();
+		} catch (IOException e) {
+			Log.e(logString, "IOException");
+			returnVolume();
 		}
 	}
 
@@ -114,12 +145,16 @@ public class SoundNotification extends NotificationDecorator {
 	@Override
 	public void stop() {
 		super.stop();
-		//Gets the audiomanager and return volume to system original
-		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
-		.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, 0);
+		returnVolume();
 		if(mp != null && mp.isPlaying()){
 			mp.stop();
 			isPlaying = false;
 		}
+	}
+	
+	private void returnVolume(){
+		//Gets the audiomanager and return volume to system original
+		((AudioManager) act.getSystemService(Context.AUDIO_SERVICE))
+			.setStreamVolume(AudioManager.STREAM_ALARM, origVolume, 0);
 	}
 }

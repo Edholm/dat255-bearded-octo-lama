@@ -27,9 +27,11 @@ import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.RingtoneStorage;
 import it.chalmers.dat255_bearded_octo_lama.games.GameManager;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Days;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Weekday;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +52,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -72,8 +78,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private String choosenGame;
 	private CheckBox vibration, sound, games;
 	private int snoozeInterval;
-	private Button pickSongsBtn;
-	private SongButtonClickListener songBtnListener;
+	private Days days;
+	private SeekBar volumeSlider;
+	
 	
 	
 	@Override
@@ -101,12 +108,33 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		spinner.setAdapter(foodadapter);
 		spinner.setOnItemSelectedListener(this);
 		
+		//VolumeSlider for sound notification volume
+		volumeSlider = (SeekBar)findViewById(R.id.volumeSlider);
+		
 		// Set to the first (hour 0) button.
 		selectTimeButton(id.h0);
 	}
 
 
-	private void initSettings() {		
+	private void initSettings() {
+		//Add checkboxes for which days the alarm should repeat.
+		days = new Days();
+		OnCheckedChangeListener checkBoxListener = new RepeatCheckBoxListener();
+		
+		LinearLayout repeatLayout = (LinearLayout)findViewById(R.id.repeatOnDayLayout);
+		Weekday[] weekdays = Weekday.values();
+		
+		for(Weekday d : weekdays) {			
+			View checkBoxLayout = getLayoutInflater().inflate(R.layout.repeat_checkbox, repeatLayout, false);
+			TextView dayText = (TextView)checkBoxLayout.findViewById(R.id.repeatTextView);
+			CheckBox checkBox = (CheckBox)checkBoxLayout.findViewById(R.id.repeatCheckBox);
+			
+			checkBox.setOnCheckedChangeListener(checkBoxListener);
+			checkBox.setTag(d);
+			dayText.setText(d.toShortString());
+			repeatLayout.addView(checkBoxLayout);
+		}
+		
 		//Checkboxes for turning on/off sound, vibration and games
 		vibration = (CheckBox)findViewById(id.vibration);
 		sound = (CheckBox)findViewById(id.sound);
@@ -133,10 +161,9 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		
 	}
 	private void initButtons() {
-		pickSongsBtn = (Button) findViewById(R.id.sound_list_btn);
+		Button pickSongsBtn = (Button) findViewById(R.id.sound_list_btn);
 
-		songBtnListener = new SongButtonClickListener();
-		pickSongsBtn.setOnClickListener(songBtnListener);
+		pickSongsBtn.setOnClickListener(new SongButtonClickListener());
 	}
 
 
@@ -250,12 +277,14 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.useSound(sound.isChecked())
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
-								.snoozeInterval(snoozeInterval);
-		
+								.snoozeInterval(snoozeInterval)
+								.repetitionDays(days)
+								.volume(volumeSlider.getProgress());
+								
 		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
-		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneID(this, ringtones);
+		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneIDs(this, ringtones);
 		
-		builder.addRingtoneIDs(parsedRingtones);
+		builder.addAllRingtoneIDs(parsedRingtones);
 				
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, builder.build());
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -342,6 +371,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		return true;
 	}
 
+	/** Used for filtering out illegal numbers when using the numpad. */
 	private static class TimeFilter implements Filter<Integer> {
 		private int selectedTimeButtonId, h0;
 
@@ -376,11 +406,13 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		// Defines the options for the test alarm.
 		Alarm.Extras extras = new Alarm.Extras.Builder()
 									.useVibration(vibration.isChecked())
-									.useSound(sound.isChecked())
+									.useSound((sound.isChecked()))
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
+									.addAllRingtoneIDs(RingtoneFinder.findRingtoneIDs(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
+									.repetitionDays(days)
+									.volume(volumeSlider.getProgress())
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -423,6 +455,29 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 
 	}
 	
+	/**
+	 * Listener for keeping track of the changes from the reapting days checkboxes.
+	 * @author Johan Gustafsson
+	 * 22 okt 2012
+	 */
+	private class RepeatCheckBoxListener implements OnCheckedChangeListener {
+
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if(isChecked) {
+				days.add((Weekday)buttonView.getTag());
+			}
+			else {
+				days.remove(buttonView.getTag());
+			}
+		}
+		
+	}
+	/**
+	 * Listener for keeping track of which songs is selected.
+	 * @author Johan Andersson
+	 *
+	 */
 	private class SongButtonClickListener implements OnClickListener {
 		public void onClick(View v) {
 			Intent i = new Intent(getApplicationContext(), SongPickerActivity.class);

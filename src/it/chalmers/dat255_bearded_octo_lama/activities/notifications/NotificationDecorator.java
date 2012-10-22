@@ -28,18 +28,22 @@ package it.chalmers.dat255_bearded_octo_lama.activities.notifications;
  */
 public abstract class NotificationDecorator implements Notification {
 
-	protected final Notification decoratedNotification;
+	private final Notification decoratedNotification;
 	/**
 	 * @param decoratedNotification is the notification that should be decorated
 	 */
 	public NotificationDecorator(Notification decoratedNotification) {
 		this.decoratedNotification = decoratedNotification;
 	}
-
+	/**
+	 * A call method for activating the notification.
+	 */
 	public void start() {
 		decoratedNotification.start();
 	}
-	
+	/**
+	 * A call method for deactivating the notification.
+	 */
 	public void stop() {
 		decoratedNotification.stop();
 	}

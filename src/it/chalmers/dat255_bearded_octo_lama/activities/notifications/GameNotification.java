@@ -37,11 +37,14 @@ import android.widget.RelativeLayout;
  * @date 22 okt 2012
  */
 public class GameNotification extends NotificationDecorator {
-	private RelativeLayout mainContentHolder;
-	private LinearLayout dismissAlarmLayout;
 	private final Activity act;
 	private final String gameName;
-
+	
+	/**
+	 * @param decoratedNotification is a notification that is decorated with different notifications.
+	 * @param act the Activity that runs the game.
+	 * @param gameName The name of the game that will be started.
+	 */
 	public GameNotification(Notification decoratedNotification, Activity act, String gameName) {
 		super(decoratedNotification);
 		
@@ -54,6 +57,9 @@ public class GameNotification extends NotificationDecorator {
 		super.start();
 		
 		AbstractGameView gameView = GameManager.createGame(gameName, act);
+		
+		RelativeLayout mainContentHolder;
+		LinearLayout dismissAlarmLayout;
 		
 		mainContentHolder = (RelativeLayout) act.findViewById(R.id.mainContentLayout);
 		dismissAlarmLayout = (LinearLayout) act.findViewById(R.id.dismissAlarmLayout);
@@ -72,9 +78,5 @@ public class GameNotification extends NotificationDecorator {
 		} 
 		gameView.resume();
 	}
-
-	@Override
-	public void stop() {
-		super.stop();
-	}
+	
 }
