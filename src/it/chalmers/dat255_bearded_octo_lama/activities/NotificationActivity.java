@@ -92,15 +92,17 @@ public class NotificationActivity extends AbstractActivity {
 		snoozeAlarm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				n.stop();
-				AlarmController ac = AlarmController.INSTANCE;
-				int snoozeInterval = alarm.getExtras().getSnoozeInterval();
-				
-				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.MINUTE, snoozeInterval);
-
-				ac.addAlarm(getApplicationContext(), true, cal.getTimeInMillis(), alarm.getExtras());
-				Log.d("NotificationActivity", "Snooze activated");
-				Log.d("NotificationActivity", "Snooze interval" + snoozeInterval);
+				if(alarm != null) {
+					AlarmController ac = AlarmController.INSTANCE;
+					int snoozeInterval = alarm.getExtras().getSnoozeInterval();
+					
+					Calendar cal = Calendar.getInstance();
+					cal.add(Calendar.MINUTE, snoozeInterval);
+	
+					ac.addAlarm(getApplicationContext(), true, cal.getTimeInMillis(), alarm.getExtras());
+					Log.d("NotificationActivity", "Snooze activated");
+					Log.d("NotificationActivity", "Snooze interval" + snoozeInterval);
+				}
 				finish();
 			}
 		});

@@ -1,6 +1,8 @@
 package it.chalmers.dat255_bearded_octo_lama.test.robotium;
 
+import it.chalmers.dat255_bearded_octo_lama.R;
 import it.chalmers.dat255_bearded_octo_lama.activities.MainActivity;
+import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -29,14 +31,19 @@ public class TestListAlarmsActivity extends
 		solo.assertCurrentActivity("Check on activity", MainActivity.class);
 		solo.clickOnButton("Add alarm");
 		solo.clickOnText("1");
-		solo.sleep(250);
-		solo.sendKey(Solo.MENU);
-		solo.sleep(250);
-		solo.clickOnText("Add alarm");
+		// Check that the device android version is Honeycomb or higher to use ActionBar API.
+	    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+	        solo.clickOnView(solo.getView(R.id.menu_add));
+	    }
+	    else {
+			solo.sendKey(Solo.MENU);
+			solo.sleep(250);
+			solo.clickOnText("Add alarm");
+	    }
 		solo.clickOnButton("Alarms");
 		solo.clickLongOnText("10:00");
 		solo.sleep(250);
 		solo.clickOnText("Delete");
-		solo.sleep(250);
+		solo.goBack();
 	}
 }
