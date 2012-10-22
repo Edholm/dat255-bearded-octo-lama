@@ -27,7 +27,9 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.media.Ringtone;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +43,7 @@ import android.widget.TextView;
 
 public class SongPickerActivity extends AbstractActivity {
 
-
+	private static Ringtone    currentTone;
 	private RingtoneAdapter    adapter;
 	private final List<String> selectedTitles = new ArrayList<String>();
 
@@ -51,7 +53,7 @@ public class SongPickerActivity extends AbstractActivity {
 		setContentView(R.layout.activity_list_alarms);
 		
 		List<String> allTones = RingtoneFinder.getRingtonesTitle(this);
-		adapter = new RingtoneAdapter(this, R.layout.row_ringtone, allTones, selectedTitles);
+		adapter = new RingtoneAdapter(this, this, R.layout.row_ringtone, allTones, selectedTitles);
 
 		ListView lv = (ListView)findViewById(R.id.listView);
 		lv.setAdapter(adapter);
@@ -59,10 +61,12 @@ public class SongPickerActivity extends AbstractActivity {
 	
 	@Override
 	public void onBackPressed() { 
+		if(currentTone != null && currentTone.isPlaying()){
+			currentTone.stop();
+		}
 		RingtoneStorage.INSTANCE.setSelectedRingtones(selectedTitles);
 		super.onBackPressed();
 	}
-
 
 	/**
 	 * This class adapts an Rington for use in a {@code ListView}.
@@ -76,20 +80,23 @@ public class SongPickerActivity extends AbstractActivity {
 		private final int            viewID;
 		private final LayoutInflater inflater;
 		private SongCheckboxListener listener;
+		private final Activity act;
 		
 		/**
+		 * @param act - the activity.
 		 * @param context the context
 		 * @param textViewResourceId id of the layout file for displaying each ListView item.
 		 * @param items a list of all the items to adapt.
 		 * @see AlarmController#getAllAlarms
 		 */
-		public RingtoneAdapter(Context context, int textViewResourceId, 
+		public RingtoneAdapter(Activity act, Context context, int textViewResourceId, 
 				List<String> allTones, List<String> selectedTitles) {
 			super(context, textViewResourceId, allTones);
-
+			
 			this.viewID         = textViewResourceId;
 			this.selectedTitles = selectedTitles;
 			this.inflater       = LayoutInflater.from(context);
+			this.act			= act;
 		}
 
 		@Override
@@ -115,8 +122,10 @@ public class SongPickerActivity extends AbstractActivity {
 
 			// Make the checkbox change listenable.
 			holder.enabled.setTag(title);
+			holder.title.setTag(title);
 			listener = new SongCheckboxListener(holder.enabled, selectedTitles);
 			holder.enabled.setOnClickListener(listener);
+			holder.title.setOnClickListener(new SongTextClickListener(act));
 			
 			return row;
 		}
@@ -151,6 +160,37 @@ public class SongPickerActivity extends AbstractActivity {
 					selectedTitles.remove(title);
 				}
 			}
+		}
+		
+		private class SongTextClickListener implements OnClickListener {
+			
+			private final Activity act;
+			public SongTextClickListener(Activity act) {
+				this.act = act;
+			}
+			
+			public void onClick(View v) {
+				String title = (String)v.getTag();
+				playPreviewOfTone(title);
+			}
+			
+			private void playPreviewOfTone(String title){
+				List<String> titleList = new ArrayList<String>();
+				titleList.add(title);
+				List<Integer> ids = RingtoneFinder.findRingtoneID(act, titleList);
+				List<Ringtone> tones = RingtoneFinder.getRingtonesFromIDs(act, ids);
+				
+				if(!tones.isEmpty()){
+					Ringtone tone = tones.get(0);
+					if(currentTone != null && currentTone.isPlaying()){
+						currentTone.stop();
+					}
+					currentTone = tone;
+					currentTone.play();
+				}
+				
+			}
+			
 		}
 	}
 
