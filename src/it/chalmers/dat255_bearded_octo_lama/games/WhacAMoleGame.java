@@ -34,9 +34,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+/**
+ * This game will show the user a set numbers of squares with red and green colors.
+ * The goal is to press all the red squares, if this is done the game will end.
+ * @author Johan Gustafsson
+ * @date 22 okt 2012
+ */
 @Game(name = "WhacAMole")
 public class WhacAMoleGame extends AbstractGameView {
-	
 	//Set all background color attributes.
 	private static final int ALPHA = 255;
 	private static final int RED   = 61;
@@ -80,51 +85,46 @@ public class WhacAMoleGame extends AbstractGameView {
 	 */
 	@SuppressWarnings("deprecation")
 	private void initUI() {
+		//Create new layout parameters that match our desired layout.
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, 
+				LayoutParams.MATCH_PARENT, 1);
 		
 		//Initiate ui components and add them to the view.
 		LinearLayout uiLayout = new LinearLayout(getContext());
 		
 		uiLayout.setOrientation(LinearLayout.VERTICAL);
-		uiLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		uiLayout.setLayoutParams(layoutParams);
 		uiLayout.setWeightSum(NUMBER_OF_BUTTONS);
 		
-		//Using nested LinearLayout's instead of a GridLayout to make it work properly on low API Levels.
+		//Using nested LinearLayout's instead of a GridLayout
+		//to make it work properly on low API Levels.
 		LinearLayout horizontalLayout1 = new LinearLayout(getContext());
-		horizontalLayout1.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
-				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
+		horizontalLayout1.setLayoutParams(layoutParams);
 		horizontalLayout1.setWeightSum(NUMBER_OF_BUTTONS);
 		LinearLayout horizontalLayout2 = new LinearLayout(getContext());
-		horizontalLayout2.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
-				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
+		horizontalLayout2.setLayoutParams(layoutParams);
 		horizontalLayout2.setWeightSum(NUMBER_OF_BUTTONS);
 		LinearLayout horizontalLayout3 = new LinearLayout(getContext());
-		horizontalLayout3.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
-				, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
+		horizontalLayout3.setLayoutParams(layoutParams);
 		horizontalLayout3.setWeightSum(NUMBER_OF_BUTTONS);
 		
 		uiLayout.addView(horizontalLayout1);
 		uiLayout.addView(horizontalLayout2);
 		uiLayout.addView(horizontalLayout3);
 		
-		OnClickListener btnListener = new OnClickListener() {
-			
-			public void onClick(View v) {
-				onItemClick(v);
-			}
-		};
+		OnClickListener btnListener = new WhacAButtonListener();
 		
 		//Here we add all the buttons that represent each colored square on the gameboard.
-		int numberOfRowsAndCols = 3;
 		int count = 1;
-		for(int y = 1; y <= numberOfRowsAndCols; y++) {
-			for(int x = 1; x <= numberOfRowsAndCols; x++) {
+		for(int y = 1; y <= NUMBER_OF_BUTTONS; y++) {
+			for(int x = 1; x <= NUMBER_OF_BUTTONS; x++) {
 				Button btn = new Button(getContext());
 				btn.setId(count);
 				btn.setOnClickListener(btnListener);
-				btn.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT
-						, android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
+				btn.setLayoutParams(layoutParams);
 				
-				//Using deprecated method instead of it's new equivalent since the new one requires API level 16.
+				//Using deprecated method instead of it's new equivalent 
+				//since the new one requires API level 16.
 				btn.setBackgroundDrawable(null);
 				
 				//Check what row we are to place the button in.
@@ -177,8 +177,19 @@ public class WhacAMoleGame extends AbstractGameView {
 			//Calculate row and column placement based on the button value.
 			int x = (i-1)%NUMBER_OF_BUTTONS;
 			int y = (i-1)/NUMBER_OF_BUTTONS;
-			c.drawRect(new Rect(currentWidth*x, currentHeight*(y), currentWidth*(x+1), currentHeight*(y+1)), getPainter());
+			c.drawRect(new Rect(currentWidth*x, currentHeight*(y), 
+									currentWidth*(x+1), currentHeight*(y+1)), getPainter());
 		}
 	}
 	
+	/**
+	 * This inner class will handle the button inputs from the WhacAMoleGame
+	 * @author Johan Gustafsson
+	 * @date 22 okt 2012
+	 */
+	private class WhacAButtonListener implements OnClickListener {
+		public void onClick(View v) {
+			onItemClick(v);
+		}
+	}
 }

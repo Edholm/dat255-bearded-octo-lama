@@ -5,9 +5,13 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
 
+/**
+ * This will test the ListAlarmsActivity by using robotium.
+ * @author Emil Johansson
+ * @date 22 okt 2012
+ */
 public class TestListAlarmsActivity extends
-ActivityInstrumentationTestCase2<MainActivity> {
-
+			ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;
 
 	public TestListAlarmsActivity() {
