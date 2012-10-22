@@ -37,6 +37,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Handles the contact with the database.
@@ -102,8 +103,8 @@ public final class AlarmContentProvider extends ContentProvider{
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        	// Should probably add a debug message here. "Upgrading from oldVersion to newVersion" or some such...
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        	Log.d("AlarmContentProvider", "Updating database from " + oldVersion + " to " + newVersion);
+        	db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
     }

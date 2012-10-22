@@ -26,6 +26,7 @@
     <string name="vibration">Vibration</string>
     <string name="sound">Sound</string>
     <string name="games">Challenge before dismiss</string>
+    <string name="repeatOnDays">Repeat on days</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="pick_songs">Ringtones</string>

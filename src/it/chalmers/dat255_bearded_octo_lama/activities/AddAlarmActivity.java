@@ -27,9 +27,11 @@ import it.chalmers.dat255_bearded_octo_lama.R.id;
 import it.chalmers.dat255_bearded_octo_lama.R.layout;
 import it.chalmers.dat255_bearded_octo_lama.RingtoneStorage;
 import it.chalmers.dat255_bearded_octo_lama.games.GameManager;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Days;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Filter;
 import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import it.chalmers.dat255_bearded_octo_lama.utilities.Time;
+import it.chalmers.dat255_bearded_octo_lama.utilities.Weekday;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +52,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -74,6 +79,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	private int snoozeInterval;
 	private Button pickSongsBtn;
 	private SongButtonClickListener songBtnListener;
+	private Days days;
+	
 	
 	
 	@Override
@@ -106,7 +113,24 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 	}
 
 
-	private void initSettings() {		
+	private void initSettings() {
+		days = new Days();
+		OnCheckedChangeListener checkBoxListener = new RepeatCheckBoxListener();
+		
+		LinearLayout repeatLayout = (LinearLayout)findViewById(R.id.repeatOnDayLayout);
+		Weekday[] weekdays = Weekday.values();
+		
+		for(Weekday d : weekdays) {			
+			View checkBoxLayout = getLayoutInflater().inflate(R.layout.repeat_checkbox, repeatLayout, false);
+			TextView dayText = (TextView)checkBoxLayout.findViewById(R.id.repeatTextView);
+			CheckBox checkBox = (CheckBox)checkBoxLayout.findViewById(R.id.repeatCheckBox);
+			
+			checkBox.setOnCheckedChangeListener(checkBoxListener);
+			checkBox.setTag(d);
+			dayText.setText(d.toShortString());
+			repeatLayout.addView(checkBoxLayout);
+		}
+		
 		//Checkboxes for turning on/off sound, vibration and games
 		vibration = (CheckBox)findViewById(id.vibration);
 		sound = (CheckBox)findViewById(id.sound);
@@ -250,12 +274,13 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.useSound(sound.isChecked())
 								.gameNotification(games.isChecked())
 								.gameName(choosenGame)
-								.snoozeInterval(snoozeInterval);
-		
+								.snoozeInterval(snoozeInterval)
+								.repetitionDays(days);
+								
 		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
 		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneID(this, ringtones);
 		
-		builder.addRingtoneIDs(parsedRingtones);
+		builder.addAllRingtoneIDs(parsedRingtones);
 				
 		Uri uri = ac.addAlarm(getApplicationContext(), true, hour, minute, builder.build());
 		Alarm a = ac.getAlarm(this, ac.extractIDFromUri(uri));
@@ -342,6 +367,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		return true;
 	}
 
+	/** Used for filtering out illegal numbers when using the numpad. */
 	private static class TimeFilter implements Filter<Integer> {
 		private int selectedTimeButtonId, h0;
 
@@ -380,7 +406,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
+									.addAllRingtoneIDs(RingtoneFinder.findRingtoneID(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
+									.repetitionDays(days)
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);
@@ -421,6 +448,25 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 			// Do Nothing		
 		}
 
+	}
+	
+	/**
+	 * Listener for keeping track of the changes from the reapting days checkboxes.
+	 * @author Johan Gustafsson
+	 * 22 okt 2012
+	 */
+	private class RepeatCheckBoxListener implements OnCheckedChangeListener {
+
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if(isChecked) {
+				days.add((Weekday)buttonView.getTag());
+			}
+			else {
+				days.remove(buttonView.getTag());
+			}
+		}
+		
 	}
 	
 	private class SongButtonClickListener implements OnClickListener {

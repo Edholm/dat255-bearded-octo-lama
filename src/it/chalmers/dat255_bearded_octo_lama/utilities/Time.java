@@ -76,4 +76,14 @@ public enum Time {;
 		
 		return time.getTimeInMillis();
 	}
+	
+	public static long timeInMsAt(int hour, int minute, int daysFromNow) {
+		long l = timeInMsAt(hour, minute);
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(l);
+		
+		cal.add(Calendar.DAY_OF_WEEK, daysFromNow);
+		
+		return cal.getTimeInMillis();
+	}
 }
