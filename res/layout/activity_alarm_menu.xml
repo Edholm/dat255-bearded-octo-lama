@@ -321,6 +321,23 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left" />
                 
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeatOnDays"
+                    android:textColor="#000000"
+                    android:textSize="18dp"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"/>
+                
+                <LinearLayout 
+                    android:id="@+id/repeatOnDayLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+                
             </LinearLayout>
 
         </FrameLayout>
