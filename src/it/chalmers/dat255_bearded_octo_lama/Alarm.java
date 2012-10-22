@@ -142,7 +142,6 @@ public class Alarm {
 				"\n\tIs enabled: " + enabled + 
 				"\n\t" + extras.toString() + 
 				"\n}";
-		//TODO update
 	}
 
 	/**
@@ -203,6 +202,7 @@ public class Alarm {
 					"\n\tGame name: " + gameName +
 					"\n\tSnooze Interval: " + snoozeInterval +
 					"\n\t" + repetitionDays.toString() +
+					"\n\tVolume: " + volume + 
 					"\n}";
 		}
 
