@@ -29,7 +29,7 @@ import it.chalmers.dat255_bearded_octo_lama.utilities.RingtoneFinder;
 import java.util.List;
 
 import android.app.Activity;
-import android.util.Log;
+import android.media.Ringtone;
 /**
  * A factory for building Notifications.
  * @author Johan Andersson
@@ -38,15 +38,20 @@ import android.util.Log;
  */
 public enum NotificationFactory {
 	;
+	
+	/** Creates a notification from an alarm.
+	 * 
+	 * @param extras - extras
+	 * @param act - Activity to handle playing and gathering of resources.
+	 * @return - A decorated notification built from the settings in the alarm object.
+	 */
 	public static Notification create(Alarm.Extras extras, Activity act){
 		Notification n = new BaseNotification();
 	
-		// TODO fix ringtones
 		if(extras.hasSoundNotification()){
 			List<Integer> toneIDs = extras.getRingtoneIDs();
-			Log.d("NotificationFactory", toneIDs.toString());
-			n = new SoundNotification(n, 
-					RingtoneFinder.getRingtonesFromID(act, toneIDs), act);
+			List<Ringtone> tones = RingtoneFinder.getRingtonesFromID(act, toneIDs);
+			n = new SoundNotification(n, tones, act);
 		}
 		if(extras.hasVibrationNotification()){
 			n = new VibrationNotification(n, act);
