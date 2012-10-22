@@ -218,12 +218,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/buttonAddTest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="addTestAlarm"
-                    android:text="Add test alarm (in 5 sec)" />
             </LinearLayout>
 
             <ScrollView 

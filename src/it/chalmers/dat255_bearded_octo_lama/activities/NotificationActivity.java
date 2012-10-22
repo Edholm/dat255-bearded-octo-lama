@@ -168,5 +168,13 @@ public class NotificationActivity extends AbstractActivity {
 		}
 	}
 
+	@Override
+	public void onBackPressed() {
+		//Remove the super call of this method to remove the 
+		//functionality of the back button in this activity.
+		//The user should not be able to press the back button
+		//while the alarm is going off.
+		return;
+	}
 
 }
