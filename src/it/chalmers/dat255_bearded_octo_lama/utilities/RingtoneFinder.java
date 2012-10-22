@@ -92,8 +92,7 @@ public enum RingtoneFinder {;
 		while(!c.isAfterLast()){
 			currentTitle = c.getString(RingtoneManager.TITLE_COLUMN_INDEX);
 			if(currentTitle.equals(targetTitle)){
-				//Uses Uri.parse() to make an URI from the string.
-				return Uri.parse(c.getString(RingtoneManager.URI_COLUMN_INDEX));
+				return rm.getRingtoneUri(c.getPosition());
 			}
 			c.moveToNext();
 		}
