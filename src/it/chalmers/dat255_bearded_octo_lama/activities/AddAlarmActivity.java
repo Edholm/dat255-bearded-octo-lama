@@ -389,6 +389,8 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 		Toast.makeText(getApplicationContext(), "Alarm added 5 seconds from now", Toast.LENGTH_SHORT).show();
 		finish();
 	}
+	
+	/**
 	 * Private class for listening to the Spinner in settings that chooses which sound to play.
 	 * @author E
 	 * @date 18-oct 2012
