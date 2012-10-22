@@ -119,6 +119,9 @@ public class RingtoneFinder {
 		Cursor c = rm.getCursor();
 		c.moveToFirst();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
+		if(titles == null){
+			return ids;
+		}
 
 		while(!c.isAfterLast()){
 			if(titles.contains(c.getString(RingtoneManager.TITLE_COLUMN_INDEX))){

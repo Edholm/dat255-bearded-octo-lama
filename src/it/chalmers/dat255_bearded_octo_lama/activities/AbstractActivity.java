@@ -21,7 +21,6 @@ package it.chalmers.dat255_bearded_octo_lama.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -47,10 +46,7 @@ public abstract class AbstractActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
-	            // Back button in action bar clicked; go home
-	            Intent intent = new Intent(this, MainActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
+	        	onBackPressed();
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);

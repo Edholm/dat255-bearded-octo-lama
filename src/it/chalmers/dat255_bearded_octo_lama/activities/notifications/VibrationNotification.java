@@ -28,7 +28,8 @@ import android.util.Log;
 public class VibrationNotification extends NotificationDecorator {
 	
 	private final Vibrator vib;
-	long[] standardPattern = {100,100,50,100,50,100,50,100};
+	private final long[] standardPattern = {100,100,50,100,50,100,50,100};
+	private final int repeat = 0;
 	
 	/**
 	 * @param decoratedNotification is an Alarm that is decorated with different notifications
@@ -45,8 +46,8 @@ public class VibrationNotification extends NotificationDecorator {
 		// Should use a check vib.hasVibrator() to make sure that the used device has a vibrator
 		// but according to the method call we have to use API level 11, and we are using level 10
 		super.start();
-		Log.d("VibrationNotification", "Called start()");
-			vib.vibrate(standardPattern, 0);
+		vib.vibrate(standardPattern, repeat);
+		
 	}
 	
 	@Override
