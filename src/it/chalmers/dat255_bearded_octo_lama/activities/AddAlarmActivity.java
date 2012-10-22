@@ -253,7 +253,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 								.snoozeInterval(snoozeInterval);
 		
 		List<String> ringtones = RingtoneStorage.INSTANCE.getSelectedRingtones();
-		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneID(this, ringtones);
+		List<Integer> parsedRingtones = RingtoneFinder.findRingtoneIDs(this, ringtones);
 		
 		builder.addRingtoneIDs(parsedRingtones);
 				
@@ -380,7 +380,7 @@ public final class AddAlarmActivity extends AbstractActivity implements OnItemSe
 									.gameNotification(games.isChecked())
 									.gameName(choosenGame)
 									.snoozeInterval(snoozeInterval)
-									.addRingtoneIDs(RingtoneFinder.findRingtoneID(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
+									.addRingtoneIDs(RingtoneFinder.findRingtoneIDs(this, RingtoneStorage.INSTANCE.getSelectedRingtones()))
 									.build();
 
 		ac.addAlarm(this, true, cal.getTimeInMillis(), extras);

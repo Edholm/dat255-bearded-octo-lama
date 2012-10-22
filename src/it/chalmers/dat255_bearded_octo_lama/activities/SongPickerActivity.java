@@ -178,7 +178,7 @@ public class SongPickerActivity extends AbstractActivity {
 			private void playPreviewOfTone(String title){
 				List<String> titleList = new ArrayList<String>();
 				titleList.add(title);
-				List<Integer> ids = RingtoneFinder.findRingtoneID(act, titleList);
+				List<Integer> ids = RingtoneFinder.findRingtoneIDs(act, titleList);
 				List<Ringtone> tones = RingtoneFinder.getRingtonesFromID(act, ids);
 				
 				if(!tones.isEmpty()){
