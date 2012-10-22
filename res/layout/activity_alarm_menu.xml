@@ -242,7 +242,7 @@
 	                    android:layout_height="wrap_content"
 	                    android:text="@string/sound"
 	                    android:textColor="#000000"
-	                    android:textSize="18dp"
+	                    android:textSize="19dp"
 	                    android:shadowColor="@color/grey"
 	                    android:shadowDx="1"
 	                    android:shadowDy="1"
@@ -254,21 +254,62 @@
 	                    android:layout_height="wrap_content"
 	                    android:checked="true"
 	                    android:text="@string/enabled"/>
-	
-                <Button
-                    android:id="@+id/sound_list_btn"
-                    style="@style/DefaultButtonText"
-	                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_layout"
-                    android:text="@string/pick_songs" />
+					
+	                <ImageView
+	                    android:contentDescription="divider"
+					    xmlns:android="http://schemas.android.com/apk/res/android"
+					    android:src="@color/light_grey"
+					    android:layout_width="match_parent"
+					    android:layout_height="1dp"
+					    android:scaleType="fitXY"
+					    android:paddingLeft="10dp"
+					    android:paddingRight="10dp"
+					    android:paddingBottom="2dp"
+					    android:paddingTop="2dp" />
+		                
+                	<Button
+	                    android:id="@+id/sound_list_btn"
+	                    android:layout_height="wrap_content"
+		                android:layout_width="match_parent"
+	                    android:text="@string/pick_songs"
+	                    android:layout_marginLeft="5dp"
+	                    android:background="@color/transparent"
+	                    android:gravity="center_vertical"/>
+                	
+                	<ImageView
+	                    android:contentDescription="divider"
+					    xmlns:android="http://schemas.android.com/apk/res/android"
+					    android:src="@color/light_grey"
+					    android:layout_width="match_parent"
+					    android:layout_height="1dp"
+					    android:scaleType="fitXY"
+					    android:paddingLeft="10dp"
+					    android:paddingRight="10dp"
+					    android:paddingBottom="2dp"
+					    android:paddingTop="2dp" />
+                	
+                	<TextView 
+                	    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:text="@string/volume"
+	                    android:textColor="#000000"
+	                    android:paddingTop="5dp"
+	                    android:layout_marginLeft="5dp"
+	                    android:textSize="17dp"/>
+                	
+                	<SeekBar
+                	    android:id="@+id/volumeSlider"
+                	    android:layout_width="match_parent"
+                	    android:layout_height="wrap_content"
+                	    android:max="100"
+                	    android:progress="50" />
 	                
 	                <TextView 
 	                    android:layout_width="match_parent"
 	                    android:layout_height="wrap_content"
 	                    android:text="@string/vibration"
 	                    android:textColor="#000000"
-	                    android:textSize="18dp"
+	                    android:textSize="19dp"
 	                    android:shadowColor="@color/grey"
 	                    android:shadowDx="1"
 	                    android:shadowDy="1"
@@ -287,7 +328,7 @@
 	                    android:layout_height="wrap_content"
 	                    android:text="@string/snoozeInterval"
 	                    android:textColor="#000000"
-	                    android:textSize="18dp"
+	                    android:textSize="19dp"
 	                    android:shadowColor="@color/grey"
 	                    android:shadowDx="1"
 	                    android:shadowDy="1"
@@ -304,7 +345,7 @@
 	                    android:layout_height="wrap_content"
 	                    android:text="@string/games"
 	                    android:textColor="#000000"
-	                    android:textSize="18dp"
+	                    android:textSize="19dp"
 	                    android:shadowColor="@color/grey"
 	                    android:shadowDx="1"
 	                    android:shadowDy="1"
@@ -327,7 +368,7 @@
 	                    android:layout_height="wrap_content"
 	                    android:text="@string/repeatOnDays"
 	                    android:textColor="#000000"
-	                    android:textSize="18dp"
+	                    android:textSize="19dp"
 	                    android:shadowColor="@color/grey"
 	                    android:shadowDx="1"
 	                    android:shadowDy="1"

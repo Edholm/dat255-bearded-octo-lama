@@ -29,7 +29,8 @@
     <string name="repeatOnDays">Repeat on days</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
-    <string name="pick_songs">Ringtones</string>
+    <string name="pick_songs">Select alarmsound...</string>
+    <string name="volume">Volume</string>
     
     <string name="contextMenuDelete">Delete</string>
     <string name="contextMenuEdit">Edit</string>
